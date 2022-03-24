@@ -1,0 +1,52 @@
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 386-347-139
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /departments
+DEBUG:logger:GET /departments - parse
+DEBUG:logger:(Decimal('10'), 'Contabilidade', 'Condeixa')
+DEBUG:logger:(Decimal('20'), 'Investigacao', 'Mealhada')
+DEBUG:logger:(Decimal('30'), 'Vendas', 'Coimbra')
+DEBUG:logger:(Decimal('40'), 'Planeamento', 'Montemor')
+INFO:werkzeug:127.0.0.1 - - [20/Mar/2022 20:10:08] "GET /departments/ HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [20/Mar/2022 20:10:29] "[32mGET /departments/10 HTTP/1.1[0m" 308 -
+INFO:logger:GET /departments/<ndep>
+DEBUG:logger:ndep: 10
+DEBUG:logger:GET /departments/<ndep> - parse
+DEBUG:logger:(Decimal('10'), 'Contabilidade', 'Condeixa')
+INFO:werkzeug:127.0.0.1 - - [20/Mar/2022 20:10:29] "GET /departments/10/ HTTP/1.1" 200 -
+INFO:logger:POST /departments
+DEBUG:logger:POST /departments - payload: {'ndep': 69, 'localidade': 'Polo II', 'nome': 'Informatica'}
+INFO:werkzeug:127.0.0.1 - - [20/Mar/2022 20:10:32] "POST /departments/ HTTP/1.1" 200 -
+INFO:logger:GET /departments
+DEBUG:logger:GET /departments - parse
+DEBUG:logger:(Decimal('10'), 'Contabilidade', 'Condeixa')
+DEBUG:logger:(Decimal('20'), 'Investigacao', 'Mealhada')
+DEBUG:logger:(Decimal('30'), 'Vendas', 'Coimbra')
+DEBUG:logger:(Decimal('40'), 'Planeamento', 'Montemor')
+DEBUG:logger:(Decimal('69'), 'Polo II', 'Informatica')
+INFO:werkzeug:127.0.0.1 - - [20/Mar/2022 20:10:38] "GET /departments/ HTTP/1.1" 200 -
+INFO:logger:PUT /departments/<ndep>
+DEBUG:logger:PUT /departments/<ndep> - payload: {'localidade': 'Figueira da Foz'}
+INFO:werkzeug:127.0.0.1 - - [20/Mar/2022 20:10:44] "PUT /departments/69 HTTP/1.1" 200 -
+INFO:logger:GET /departments
+DEBUG:logger:GET /departments - parse
+DEBUG:logger:(Decimal('10'), 'Contabilidade', 'Condeixa')
+DEBUG:logger:(Decimal('20'), 'Investigacao', 'Mealhada')
+DEBUG:logger:(Decimal('30'), 'Vendas', 'Coimbra')
+DEBUG:logger:(Decimal('40'), 'Planeamento', 'Montemor')
+DEBUG:logger:(Decimal('69'), 'Polo II', 'Figueira da Foz')
+INFO:werkzeug:127.0.0.1 - - [20/Mar/2022 20:10:52] "GET /departments/ HTTP/1.1" 200 -
+INFO:logger:PUT /departments/<ndep>
+DEBUG:logger:PUT /departments/<ndep> - payload: {'localidade': 'Figueira da Foz'}
+INFO:werkzeug:127.0.0.1 - - [20/Mar/2022 20:10:58] "PUT /departments/69 HTTP/1.1" 200 -
+INFO:logger:GET /departments
+DEBUG:logger:GET /departments - parse
+DEBUG:logger:(Decimal('10'), 'Contabilidade', 'Condeixa')
+DEBUG:logger:(Decimal('20'), 'Investigacao', 'Mealhada')
+DEBUG:logger:(Decimal('30'), 'Vendas', 'Coimbra')
+DEBUG:logger:(Decimal('40'), 'Planeamento', 'Montemor')
+DEBUG:logger:(Decimal('69'), 'Polo II', 'Figueira da Foz')
+INFO:werkzeug:127.0.0.1 - - [20/Mar/2022 20:11:05] "GET /departments/ HTTP/1.1" 200 -
+INFO:logger:API v1.1 online: http://127.0.0.1:8080
+INFO:logger:API v1.1 online: http://127.0.0.1:8080
