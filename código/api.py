@@ -17,7 +17,9 @@
 
 
 import flask
-import logging, psycopg2, time
+import logging
+import psycopg2
+import time
 
 app = flask.Flask(__name__)
 
@@ -34,11 +36,11 @@ StatusCodes = {
 
 def db_connection():
     db = psycopg2.connect(
-        user="aulaspl",
-        password="aulaspl",
-        host="db",
-        port="5432",
-        database="dbfichas"
+        user='aulaspl',
+        password='aulaspl',
+        host='127.0.0.1',
+        port='5432',
+        database='dbfichas'
     )
 
     return db
@@ -53,7 +55,7 @@ def db_connection():
 def landing_page():
     return """
 
-    Hello World (Python)!  <br/>
+    Hello World (Python Native)!  <br/>
     <br/>
     Check the sources for instructions on how to use the endpoints!<br/>
     <br/>
@@ -245,12 +247,9 @@ def update_departments(ndep):
     return flask.jsonify(response)
 
 
-##########################################################
-## MAIN
-##########################################################
-if __name__ == "__main__":
-    # Set up the logging
-    logging.basicConfig(filename="logs/log_file.log")
+if __name__ == '__main__':
+    # set up logging
+    logging.basicConfig(filename='log_file.log')
     logger = logging.getLogger('logger')
     logger.setLevel(logging.DEBUG)
     ch = logging.StreamHandler()
@@ -261,12 +260,7 @@ if __name__ == "__main__":
     ch.setFormatter(formatter)
     logger.addHandler(ch)
 
-    time.sleep(1)  # just to let the DB start before this print :-)
-
-    logger.info("\n---------------------------------------------------------------\n" +
-                "API v1.1 online: http://localhost:8080/departments/\n\n")
-
-    app.run(host="0.0.0.0", debug=True, threaded=True)
-
-
-
+    host = '127.0.0.1'
+    port = 8080
+    app.run(host=host, debug=True, threaded=True, port=port)
+    logger.info(f'API v1.1 online: http://{host}:{port}')
