@@ -1,3 +1,4 @@
+/* Create table products */
 CREATE TABLE products (
 	product_id		 INTEGER,
 	version		 TIMESTAMP,
@@ -9,6 +10,7 @@ CREATE TABLE products (
 	PRIMARY KEY(product_id,version)
 );
 
+/* Create table computers */
 CREATE TABLE computers (
 	screen_size	 FLOAT(8),
 	cpu		 VARCHAR(512),
@@ -20,6 +22,7 @@ CREATE TABLE computers (
 	PRIMARY KEY(products_product_id,products_version)
 );
 
+/* Create table televisions */
 CREATE TABLE televisions (
 	screen_size	 FLOAT(8),
 	screen_type	 VARCHAR(512),
@@ -31,6 +34,7 @@ CREATE TABLE televisions (
 	PRIMARY KEY(products_product_id,products_version)
 );
 
+/* Create table smartphones */
 CREATE TABLE smartphones (
 	screen_size	 FLOAT(8),
 	os			 VARCHAR(512),
@@ -41,6 +45,7 @@ CREATE TABLE smartphones (
 	PRIMARY KEY(products_product_id,products_version)
 );
 
+/* Create table users */
 CREATE TABLE users (
 	user_id	 INTEGER,
 	username VARCHAR(512) UNIQUE NOT NULL,
@@ -48,11 +53,13 @@ CREATE TABLE users (
 	PRIMARY KEY(user_id)
 );
 
+/* Create table admins */
 CREATE TABLE admins (
 	users_user_id INTEGER,
 	PRIMARY KEY(users_user_id)
 );
 
+/* Create table sellers */
 CREATE TABLE sellers (
 	nif		 INTEGER NOT NULL,
 	shipping_addr VARCHAR(512) NOT NULL,
@@ -60,6 +67,7 @@ CREATE TABLE sellers (
 	PRIMARY KEY(users_user_id)
 );
 
+/* Create table buyers */
 CREATE TABLE buyers (
 	nif		 INTEGER NOT NULL,
 	home_addr	 VARCHAR(512) NOT NULL,
@@ -67,6 +75,7 @@ CREATE TABLE buyers (
 	PRIMARY KEY(users_user_id)
 );
 
+/* Create table orders */
 CREATE TABLE orders (
 	id				 INTEGER,
 	order_date			 DATE NOT NULL,
@@ -77,6 +86,7 @@ CREATE TABLE orders (
 	PRIMARY KEY(id)
 );
 
+/* Create table ratings */
 CREATE TABLE ratings (
 	comment		 VARCHAR(512),
 	classification	 SMALLINT NOT NULL,
@@ -87,6 +97,7 @@ CREATE TABLE ratings (
 	PRIMARY KEY(orders_id,products_product_id,products_version)
 );
 
+/* Create table questions */
 CREATE TABLE questions (
 	question_id			 INTEGER,
 	question_text		 VARCHAR(512) NOT NULL,
@@ -99,6 +110,7 @@ CREATE TABLE questions (
 	PRIMARY KEY(question_id,users_user_id)
 );
 
+/* Create table campaigns */
 CREATE TABLE campaigns (
 	campaign_id		 INTEGER,
 	description		 VARCHAR(512),
@@ -109,6 +121,7 @@ CREATE TABLE campaigns (
 	PRIMARY KEY(campaign_id)
 );
 
+/* Create table coupons */
 CREATE TABLE coupons (
 	coupon_id		 INTEGER,
 	used			 BOOL NOT NULL,
@@ -119,6 +132,7 @@ CREATE TABLE coupons (
 	PRIMARY KEY(coupon_id,campaigns_campaign_id)
 );
 
+/* Create table notifications */
 CREATE TABLE notifications (
 	notification_id INTEGER,
 	content	 VARCHAR(512) NOT NULL,
@@ -127,6 +141,7 @@ CREATE TABLE notifications (
 	PRIMARY KEY(notification_id)
 );
 
+/* Create table product_quantities */
 CREATE TABLE product_quantities (
 	quantity		 INTEGER NOT NULL,
 	orders_id		 INTEGER,
@@ -135,6 +150,7 @@ CREATE TABLE product_quantities (
 	PRIMARY KEY(orders_id,products_product_id,products_version)
 );
 
+/* Create table sellers_orders */
 CREATE TABLE sellers_orders (
 	sellers_users_user_id INTEGER,
 	orders_id		 INTEGER,
