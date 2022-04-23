@@ -36,11 +36,11 @@ StatusCodes = {
 
 def db_connection():
     db = psycopg2.connect(
-        user='aulaspl',
-        password='aulaspl',
+        user='projuser',
+        password='projuser',
         host='127.0.0.1',
         port='5432',
-        database='dbfichas'
+        database='dbproj'
     )
 
     return db
@@ -62,47 +62,6 @@ def landing_page():
     BD 2022 Team<br/>
     <br/>
     """
-
-
-##
-## Demo GET
-##
-## Obtain all departments in JSON format
-##
-## To use it, access:
-##
-## http://localhost:8080/departments/
-##
-
-@app.route('/departments/', methods=['GET'])
-def get_all_departments():
-    logger.info('GET /departments')
-
-    conn = db_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute('SELECT ndep, nome, local FROM dep')
-        rows = cur.fetchall()
-
-        logger.debug('GET /departments - parse')
-        Results = []
-        for row in rows:
-            logger.debug(row)
-            content = {'ndep': int(row[0]), 'nome': row[1], 'localidade': row[2]}
-            Results.append(content)  # appending to the payload to be returned
-
-        response = {'status': StatusCodes['success'], 'results': Results}
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'GET /departments - error: {error}')
-        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-
-    finally:
-        if conn is not None:
-            conn.close()
-
-    return flask.jsonify(response)
 
 
 ##
@@ -139,56 +98,6 @@ def get_department(ndep):
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /departments/<ndep> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-
-    finally:
-        if conn is not None:
-            conn.close()
-
-    return flask.jsonify(response)
-
-
-##
-## Demo POST
-##
-## Add a new department in a JSON payload
-##
-## To use it, you need to use postman or curl:
-##
-## curl -X POST http://localhost:8080/departments/ -H 'Content-Type: application/json' -d '{'localidade': 'Polo II', 'ndep': 69, 'nome': 'Seguranca'}'
-##
-
-@app.route('/departments/', methods=['POST'])
-def add_departments():
-    logger.info('POST /departments')
-    payload = flask.request.get_json()
-
-    conn = db_connection()
-    cur = conn.cursor()
-
-    logger.debug(f'POST /departments - payload: {payload}')
-
-    # do not forget to validate every argument, e.g.,:
-    if 'ndep' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'ndep value not in payload'}
-        return flask.jsonify(response)
-
-    # parameterized queries, good for security and performance
-    statement = 'INSERT INTO dep (ndep, nome, local) VALUES (%s, %s, %s)'
-    values = (payload['ndep'], payload['localidade'], payload['nome'])
-
-    try:
-        cur.execute(statement, values)
-
-        # commit the transaction
-        conn.commit()
-        response = {'status': StatusCodes['success'], 'results': f'Inserted dep {payload["ndep"]}'}
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'POST /departments - error: {error}')
-        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-
-        # an error occurred, rollback
-        conn.rollback()
 
     finally:
         if conn is not None:
@@ -247,6 +156,76 @@ def update_departments(ndep):
     return flask.jsonify(response)
 
 
+@app.route('/users/', methods=['GET'])
+def get_all_users():
+    logger.info('GET /users')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute('SELECT user_id, username, password FROM users')  # FIXME: password
+        rows = cur.fetchall()
+
+        logger.debug('GET /users - parse')
+        Results = []
+        for row in rows:
+            logger.debug(row)
+            content = {'user_id': row[0], 'username': row[1], 'password': row[2]}
+            Results.append(content)  # appending to the payload to be returned
+
+        response = {'status': StatusCodes['success'], 'results': Results}
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'GET /users - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+
+@app.route('/users/', methods=['POST'])
+def register_user():
+    logger.info('POST /users')
+    payload = flask.request.get_json()
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    logger.debug(f'POST /users - payload: {payload}')
+
+    if 'user_id' not in payload:
+        response = {'status': StatusCodes['api_error'], 'results': 'user_id not in payload'}
+        return flask.jsonify(response)
+
+    # parameterized queries, good for security and performance
+    statement = 'INSERT INTO users (user_id, username, password) VALUES (%s, %s, %s)'
+    values = (payload['user_id'], payload['username'], payload['password'])
+
+    try:
+        cur.execute(statement, values)
+
+        # commit the transaction
+        conn.commit()
+        response = {'status': StatusCodes['success'], 'results': f'Inserted user {payload["username"]}'}
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'POST /users - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+        # an error occurred, rollback
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+
 if __name__ == '__main__':
     # set up logging
     logging.basicConfig(filename='log_file.log')
@@ -263,4 +242,4 @@ if __name__ == '__main__':
     host = '127.0.0.1'
     port = 8080
     app.run(host=host, debug=True, threaded=True, port=port)
-    logger.info(f'API v1.1 online: http://{host}:{port}')
+    logger.info(f'API online: http://{host}:{port}')
