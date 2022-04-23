@@ -61,17 +61,17 @@ CREATE TABLE admins (
 
 /* Create table sellers */
 CREATE TABLE sellers (
+	users_user_id INTEGER,
 	nif		 INTEGER NOT NULL,
 	shipping_addr VARCHAR(512) NOT NULL,
-	users_user_id INTEGER,
 	PRIMARY KEY(users_user_id)
 );
 
 /* Create table buyers */
 CREATE TABLE buyers (
+	users_user_id INTEGER,
 	nif		 INTEGER NOT NULL,
 	home_addr	 VARCHAR(512) NOT NULL,
-	users_user_id INTEGER,
 	PRIMARY KEY(users_user_id)
 );
 
@@ -144,7 +144,6 @@ CREATE TABLE notifications (
 /* Create table product_quantities */
 CREATE TABLE product_quantities (
 	quantity		 INTEGER NOT NULL,
-	orders_id		 INTEGER,
 	products_product_id INTEGER,
 	products_version	 TIMESTAMP,
 	PRIMARY KEY(orders_id,products_product_id,products_version)
