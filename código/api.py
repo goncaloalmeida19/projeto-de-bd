@@ -1,21 +1,3 @@
-##
-## =============================================
-## ============== Bases de Dados ===============
-## ============== LEI  2021/2022 ===============
-## =============================================
-## =================== Demo ====================
-## =============================================
-## =============================================
-## === Department of Informatics Engineering ===
-## =========== University of Coimbra ===========
-## =============================================
-##
-## Authors:
-##   Nuno Antunes <nmsa@dei.uc.pt>
-##   BD 2022 Team - https://dei.uc.pt/lei/
-##   University of Coimbra
-
-
 import flask
 import logging
 import psycopg2
@@ -28,6 +10,11 @@ StatusCodes = {
     'api_error': 400,
     'internal_error': 500
 }
+
+
+class AuthenticationException(Exception):
+    def __init__(self, message='User must be administrator'):
+        super(AuthenticationException, self).__init__(message)
 
 
 ##########################################################
@@ -159,11 +146,22 @@ def update_departments(ndep):
 @app.route('/users/', methods=['GET'])
 def get_all_users():
     logger.info('GET /users')
-
+    user_token = flask.request.headers.get('Authorization').split(' ')[1]
+    print(user_token)
     conn = db_connection()
     cur = conn.cursor()
 
     try:
+        if not user_token.isnumeric():
+            raise AuthenticationException()
+
+        admin_validation = 'SELECT * FROM admins WHERE users_user_id = %s'
+
+        cur.execute(admin_validation, [int(user_token)])
+        login_result = cur.fetchone()
+        if login_result is None:
+            raise AuthenticationException()
+
         cur.execute('SELECT user_id, username, password FROM users')  # FIXME: password
         rows = cur.fetchall()
 
@@ -214,6 +212,46 @@ def register_user():
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'POST /users - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+        # an error occurred, rollback
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+
+@app.route('/users/', methods=['PUT'])
+def login_user():
+    logger.info('PUT /users')
+    payload = flask.request.get_json()
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    logger.debug(f'PUT /users - payload: {payload}')
+
+    if 'username' not in payload or 'password' not in payload:
+        response = {'status': StatusCodes['api_error'], 'results': 'username and password are required for login'}
+        return flask.jsonify(response)
+
+    statement = 'SELECT user_id FROM users WHERE username = %s AND password = %s'
+    values = (payload['username'], payload['password'])
+
+    try:
+        cur.execute(statement, values)
+        row = cur.fetchone()
+
+        response = {'status': StatusCodes['success'], 'token': row[0]}  # TODO: JWT authent
+
+        # commit the transaction
+        conn.commit()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(error)
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
         # an error occurred, rollback
