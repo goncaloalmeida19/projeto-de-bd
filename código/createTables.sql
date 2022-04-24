@@ -144,6 +144,7 @@ CREATE TABLE notifications (
 /* Create table product_quantities */
 CREATE TABLE product_quantities (
 	quantity		 INTEGER NOT NULL,
+	orders_id		 INTEGER,
 	products_product_id INTEGER,
 	products_version	 TIMESTAMP,
 	PRIMARY KEY(orders_id,products_product_id,products_version)
