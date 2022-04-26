@@ -155,12 +155,24 @@ def get_all_users():
         if not user_token.isnumeric():
             raise AuthenticationException()
 
-        admin_validation = 'SELECT * FROM admins WHERE users_user_id = %s'
+        admin_validation = "DO $$" \
+                           "DECLARE" \
+                           "    v_admin admin%ROWTYPE" \
+                           "BEGIN" \
+                           "    SELECT * INTO STRICT v_admin FROM admins WHERE users_user_id = %s" \
+                           "EXCEPTION" \
+                           "    WHEN no_data_found THEN" \
+                           "        RAISE EXCEPTION 'User is not administrator''" \
+                           "END;" \
+                           "$$"
+        #admin_validation =  "SELECT * FROM admins WHERE users_user_id = %s"
 
         cur.execute(admin_validation, [int(user_token)])
         login_result = cur.fetchone()
+
         if login_result is None:
             raise AuthenticationException()
+
 
         cur.execute('SELECT user_id, username, password FROM users')  # FIXME: password
         rows = cur.fetchall()

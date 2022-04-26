@@ -1,0 +1,60 @@
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 386-347-139
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /users
+ERROR:logger:GET /users - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:33:06] "GET /users/ HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:34:09] "[32mPUT /users HTTP/1.1[0m" 308 -
+INFO:logger:PUT /users
+DEBUG:logger:PUT /users - payload: {'username': 'admin', 'password': 'dbproj'}
+INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:34:09] "PUT /users/ HTTP/1.1" 200 -
+INFO:logger:GET /users
+ERROR:logger:GET /users - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:34:12] "GET /users/ HTTP/1.1" 200 -
+INFO:logger:GET /users
+ERROR:logger:GET /users - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:34:14] "GET /users/ HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 386-347-139
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 386-347-139
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /users
+DEBUG:logger:GET /users - parse
+DEBUG:logger:(0, 'admin', 'dbproj')
+DEBUG:logger:(1, 'Worten', 'wortensempre')
+DEBUG:logger:(2, 'gui', 'tcsw')
+DEBUG:logger:(8, 'oliw', 'rpanda')
+INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:34:29] "GET /users/ HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 386-347-139
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /users
+ERROR:logger:GET /users - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:34:34] "GET /users/ HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 386-347-139
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /users
+ERROR:logger:GET /users - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:35:34] "GET /users/ HTTP/1.1" 200 -
+INFO:logger:GET /users
+ERROR:logger:GET /users - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:35:34] "GET /users/ HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 386-347-139
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
