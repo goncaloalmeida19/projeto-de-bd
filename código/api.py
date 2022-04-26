@@ -61,29 +61,30 @@ def landing_page():
 ## http://localhost:8080/departments/10
 ##
 
-@app.route('/departments/<ndep>/', methods=['GET'])
-def get_department(ndep):
-    logger.info('GET /departments/<ndep>')
+@app.route('/product/<product_id>', methods=['GET'])
+def get_product(product_id):
+    logger.info('GET /product/<product_id>')
 
-    logger.debug(f'ndep: {ndep}')
+    #logger.debug(f'ndep: {ndep}')
 
     conn = db_connection()
     cur = conn.cursor()
 
     try:
-        cur.execute('SELECT ndep, nome, local FROM dep where ndep = %s', (ndep,))
+        cur.execute('SELECT ndep, nome, local FROM dep where ndep = %s', (product_id,))
         rows = cur.fetchall()
 
         row = rows[0]
 
         logger.debug('GET /departments/<ndep> - parse')
         logger.debug(row)
-        content = {'ndep': int(row[0]), 'nome': row[1], 'localidade': row[2]}
+        content = {'description': row[0], 'name': row[1], 'stock': row[1], 'prices': row[1], 'rating': row[2], 'comments': row[3]}
 
         response = {'status': StatusCodes['success'], 'results': content}
+        # "errors": errors( if any occurs)},
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'GET /departments/<ndep> - error: {error}')
+        logger.error(f'GET /product/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
     finally:
