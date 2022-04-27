@@ -21,15 +21,15 @@ INSERT INTO televisions VALUES (55, 'LCD-LED', '4K Ultra HD', true, 'G', 7390626
 INSERT INTO products (product_id, version, name, price, stock, sellers_users_user_id) VALUES (7390626, '2022-04-27 14:46:57', 'Smart TV Sony 4K', 849.99, 5, 1);
 INSERT INTO televisions VALUES (55, 'LCD-LED', '4K Ultra HD', true, 'G', 7390626, '2022-04-27 14:46:57');
 
+insert into product_quantities values (1, 1, 7390626, '2022-04-27 14:46:57');
 insert into orders values (1, '2022-10-11', 55, null, null, 2);
-
 insert into ratings values ('espetaculo antigo', 5, 1, 7390626, '2022-04-27 14:46:57', 2);
 
+insert into product_quantities values (1, 2, 7390626, '2022-04-24 19:40:00');
 insert into orders values (2, '2022-11-10', 55, null, null, 2);
-
 insert into ratings values ('espetaculo', 5, 2, 7390626, '2022-04-24 19:40:00', 2);
 
+insert into product_quantities values (1, 3, 7390626, '2022-04-24 19:40:00');
 insert into orders values (3, '2022-12-10', 55, null, null, 2);
-
 insert into ratings values ('espetaculo novo', 1, 3, 7390626, '2022-04-24 19:40:00', 2);
 
