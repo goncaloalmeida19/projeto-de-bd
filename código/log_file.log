@@ -407,3 +407,116 @@ INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:API online: http://127.0.0.1:8080
 INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:20:47] "GET /products/7390626 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:20:52] "[31m[1mPOST /rating/7390626 HTTP/1.1[0m" 405 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: None
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:22:26] "[35m[1mPOST /rating/7390626 HTTP/1.1[0m" 500 -
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: None
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:22:35] "[35m[1mPOST /rating/7390626 HTTP/1.1[0m" 500 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: None
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:23:50] "[35m[1mPOST /rating/7390626?rating=4&comment=amazing HTTP/1.1[0m" 500 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
+ERROR:logger:unsupported format character 'd' (0x64) at index 33
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:25:29] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
+DEBUG:logger:[(1, datetime.datetime(2022, 4, 27, 14, 46, 57), 2), (2, datetime.datetime(2022, 4, 24, 19, 40), 2), (3, datetime.datetime(2022, 4, 24, 19, 40), 2)]
+ERROR:logger:unsupported format character 'd' (0x64) at index 33
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:26:32] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
+DEBUG:logger:[(1, datetime.datetime(2022, 4, 27, 14, 46, 57), 2), (2, datetime.datetime(2022, 4, 24, 19, 40), 2), (3, datetime.datetime(2022, 4, 24, 19, 40), 2)]
+ERROR:logger:unsupported format character 'd' (0x64) at index 33
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:29:12] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
+DEBUG:logger:('amazing', 5, 1, '7390626', '2022-04-27 14:46:57', 2)
+ERROR:logger:unsupported format character 'd' (0x64) at index 33
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:29:42] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
+DEBUG:logger:('amazing', 5, 1, '7390626', '2022-04-27 14:46:57', 2)
+ERROR:logger:unsupported format character 'd' (0x64) at index 33
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:30:52] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
+DEBUG:logger:('amazing', 5, 1, '7390626', '2022-04-27 14:46:57', 2)
+ERROR:logger:unsupported format character 'd' (0x64) at index 33
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:31:04] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
+DEBUG:logger:('amazing', 5, 1, '7390626', '2022-04-27 14:46:57', 2)
+ERROR:logger:unsupported format character 'd' (0x64) at index 33
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:31:32] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
+DEBUG:logger:('amazing', 5, 1, '7390626', '2022-04-27 14:46:57', 2)
+ERROR:logger:duplicate key value violates unique constraint "ratings_pkey"
+DETAIL:  Key (orders_id, products_product_id, products_version)=(1, 7390626, 2022-04-27 14:46:57) already exists.
+
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:32:53] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
+DEBUG:logger:('amazing', 5, 1, '7390626', '2022-04-27 14:46:57', 2)
+DEBUG:logger:POST /rating/<product_id> - res: None
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:34:17] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
+ERROR:logger:list index out of range
+INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:36:35] "POST /rating/7423493 HTTP/1.1" 200 -

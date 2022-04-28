@@ -110,7 +110,7 @@ def get_product(product_id):
 ## http://localhost:8080/rating/7390626
 ##
 
-@app.route('/rating/<product_id>', methods=['PUT'])
+@app.route('/rating/<product_id>', methods=['POST'])
 def give_rating_feedback(product_id):
     logger.info('POST /rating/<product_id>')
     payload = flask.request.get_json()
@@ -133,19 +133,19 @@ def give_rating_feedback(product_id):
                       'where product_quantities.products_product_id = %s ' \
                       'and product_quantities.orders_id = orders.id'
     first_values = (product_id,)
-    order_id = buyer_id = 0
-    version = ""
-    second_statement = 'insert into ratings values (%s, %d, %d, %d, %s, %d)'
-    second_values = (payload['comment'], int(payload['rating']), order_id, product_id, version, buyer_id)
+    second_statement = 'insert into ratings values (%s, %s, %s, %s, %s, %s)'
 
     try:
         cur.execute(first_statement, first_values)
         rows = cur.fetchall()
-        order_id = int(rows[0][0])
-        version = rows[0][1]
-        buyer_id = int(rows[0][2])
+        order_id = rows[0][0]
+        version = rows[0][1].strftime("%Y-%m-%d %H:%M:%S")
+        buyer_id = rows[0][2]
+        second_values = (payload['comment'], payload['rating'], order_id, product_id, version, buyer_id)
+        #logger.debug(f'{second_values}')
         res = cur.execute(second_statement, second_values)
-        response = {'status': StatusCodes['success'], 'results': f'Updated: {cur.rowcount}'}
+        #logger.debug(f'POST /rating/<product_id> - res: {res}')
+        response = {'status': StatusCodes['success']}
 
         # commit the transaction
         conn.commit()
