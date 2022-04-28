@@ -15,12 +15,12 @@ INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:34:12] "GET /users/ HTTP/1.1" 200 -
 INFO:logger:GET /users
 ERROR:logger:GET /users - error: list index out of range
 INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:34:14] "GET /users/ HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\cï¿½digo\\api.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 386-347-139
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\cï¿½digo\\api.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 386-347-139
@@ -32,7 +32,7 @@ DEBUG:logger:(1, 'Worten', 'wortensempre')
 DEBUG:logger:(2, 'gui', 'tcsw')
 DEBUG:logger:(8, 'oliw', 'rpanda')
 INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:34:29] "GET /users/ HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\cï¿½digo\\api.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 386-347-139
@@ -40,7 +40,7 @@ INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /users
 ERROR:logger:GET /users - error: list index out of range
 INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:34:34] "GET /users/ HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\cï¿½digo\\api.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 386-347-139
@@ -51,7 +51,7 @@ INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:35:34] "GET /users/ HTTP/1.1" 200 -
 INFO:logger:GET /users
 ERROR:logger:GET /users - error: list index out of range
 INFO:werkzeug:127.0.0.1 - - [26/Apr/2022 11:35:34] "GET /users/ HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\Gui\\Desktop\\BD\\projeto-de-bd\\cï¿½digo\\api.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 386-347-139
@@ -79,22 +79,22 @@ INFO:logger:GET /users
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:22:43] "[35m[1mGET /users/ HTTP/1.1[0m" 500 -
 INFO:logger:POST /users
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:22:54] "[35m[1mPOST /users/ HTTP/1.1[0m" 500 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api.py', reloading
 INFO:werkzeug: * Restarting with stat
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
@@ -114,8 +114,8 @@ INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:34:21] "[33mGET /products/7390626 H
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:35:06] "[33mGET /products/7390626 HTTP/1.1[0m" 404 -
 INFO:logger:GET /users
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:35:10] "[35m[1mGET /users/ HTTP/1.1[0m" 500 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
@@ -125,8 +125,8 @@ INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:35:54] "[33mGET /products/7390626 HTTP/1.1[0m" 404 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
@@ -135,8 +135,8 @@ WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
@@ -146,8 +146,8 @@ INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:36:22] "[33mGET /products/7390626 HTTP/1.1[0m" 404 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
@@ -186,17 +186,17 @@ INFO:logger:GET /products/<product_id>
 DEBUG:logger:GET /departments/<product_id> - parse
 DEBUG:logger:('Smart TV Sony 4K',)
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:39:30] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
@@ -206,36 +206,36 @@ INFO:logger:GET /products/<product_id>
 DEBUG:logger:GET /departments/<product_id> - parse
 DEBUG:logger:('Smart TV Sony 4K', 5, None)
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:49:50] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:50:32] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:51:57] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
@@ -243,7 +243,7 @@ INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 ERROR:logger:GET /product/<product_id> - error: list index out of range
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:53:57] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
@@ -251,7 +251,7 @@ INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 ERROR:logger:GET /product/<product_id> - error: list index out of range
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 14:54:18] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
@@ -263,7 +263,7 @@ LINE 1: ...at, commentfrom products, ratingswhere product_id = '7390626...
                                                              ^
 
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 15:11:11] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
@@ -271,7 +271,7 @@ INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 DEBUG:logger:('Smart TV Sony 4K', 5, None, 5.0, 'espetaculo')
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 15:11:29] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
@@ -279,7 +279,7 @@ INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 DEBUG:logger:('Smart TV Sony 4K', 5, None, 5.0, 'espetaculo')
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 15:11:41] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
@@ -287,12 +287,12 @@ INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 DEBUG:logger:('Smart TV Sony 4K', 5, None, 5.0, 'espetaculo')
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 15:11:54] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
@@ -300,7 +300,7 @@ INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 DEBUG:logger:('Smart TV Sony 4K', 5, None, 5.0, 'espetaculo')
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 15:12:18] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
@@ -308,24 +308,24 @@ INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 DEBUG:logger:('Smart TV Sony 4K', 5, None, 5.0, 'espetaculo')
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 15:13:43] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 15:14:18] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
@@ -333,121 +333,77 @@ INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 15:17:16] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:GET /products/<product_id>
 INFO:werkzeug:127.0.0.1 - - [27/Apr/2022 15:53:55] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\cï¿½digo\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:API online: http://127.0.0.1:8080
 INFO:logger:API online: http://127.0.0.1:8080
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 758-211-982
-INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:logger:GET /products/<product_id>
-INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 15:08:52] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:logger:API online: http://127.0.0.1:8080
-INFO:logger:API online: http://127.0.0.1:8080
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 758-211-982
-INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:logger:GET /products/<product_id>
-ERROR:logger:GET /product/<product_id> - error: type "double" does not exist
-LINE 1: ...tock, description, (select avg(classification) :: double fro...
-                                                             ^
-
-INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 15:09:23] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:logger:GET /products/<product_id>
-ERROR:logger:GET /product/<product_id> - error: type "double" does not exist
-LINE 1: ...tock, description, (select avg(classification) :: double fro...
-                                                             ^
-
-INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 15:09:25] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:logger:API online: http://127.0.0.1:8080
-INFO:logger:API online: http://127.0.0.1:8080
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 758-211-982
-INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:logger:GET /products/<product_id>
-INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 15:09:37] "GET /products/7390626 HTTP/1.1" 200 -
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 758-211-982
-INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
-INFO:werkzeug: * Restarting with stat
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 758-211-982
-INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
-INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
-INFO:werkzeug: * Restarting with stat
