@@ -81,11 +81,12 @@ def get_product(product_id):
 
         row = rows[0]
         # logger.debug('GET /departments/<product_id> - parse')
-        #logger.debug(row)
+        # logger.debug(row)
 
         prices = [f"{i[6]} - {i[5]}" for i in rows]
         comments = [i[4] for i in rows]
-        content = {'name': row[0], 'stock': row[1], 'description': row[2], 'prices': prices, 'rating': rows[len(rows) - 1][3], 'comments': comments}
+        content = {'name': row[0], 'stock': row[1], 'description': row[2], 'prices': prices, 'rating': row[3],
+                   'comments': comments}
 
         response = {'status': StatusCodes['success'], 'results': content}
         # "errors": errors( if any occurs)},
@@ -127,17 +128,23 @@ def give_rating_feedback(product_id):
         response = {'status': StatusCodes['api_error'], 'results': 'comment is required to update'}
         return flask.jsonify(response)
 
+    first_statement = 'select orders.id, product_quantities.products_version, orders.buyers_users_user_id ' \
+                      'from product_quantities, orders ' \
+                      'where product_quantities.products_product_id = %s ' \
+                      'and product_quantities.orders_id = orders.id'
+    first_values = (product_id,)
+    order_id = buyer_id = 0
+    version = ""
+    second_statement = 'insert into ratings values (%s, %d, %d, %d, %s, %d)'
+    second_values = (payload['comment'], int(payload['rating']), order_id, product_id, version, buyer_id)
 
-    #statement =
-    values = (payload['comment'], int(payload['rating']), product_id)
-    #order_id[0]
-    #select orders.id, version from product_quantities, orders, products where product_quantities.products_product_id = 7390626 and product_quantities.products_product_id = products.product_id group by orders.id, version
     try:
-        rows = cur.execute('select orders.id '
-                               'from product_quantities, orders '
-                               'where product_quantities.products_product_id = %s '
-                               'group by orders.id', (product_id, )).fetchall()
-        res = cur.execute('insert into ratings values (%s, %d, %s, %d, product_version, user_id)', values)
+        cur.execute(first_statement, first_values)
+        rows = cur.fetchall()
+        order_id = int(rows[0][0])
+        version = rows[0][1]
+        buyer_id = int(rows[0][2])
+        res = cur.execute(second_statement, second_values)
         response = {'status': StatusCodes['success'], 'results': f'Updated: {cur.rowcount}'}
 
         # commit the transaction
