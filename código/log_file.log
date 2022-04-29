@@ -520,3 +520,69 @@ INFO:logger:POST /rating/<product_id>
 DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'amazing'}
 ERROR:logger:list index out of range
 INFO:werkzeug:127.0.0.1 - - [28/Apr/2022 17:36:35] "POST /rating/7423493 HTTP/1.1" 200 -
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:POST /product - payload: {'description': 'very good', 'type': 'smartphones', 'price': 69.99, 'stock': 420, 'name': 'pocophone f1', 'screen_size': 5.2, 'os': 'Oreo', 'storage': '32Gb', 'color': 'black'}
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 10:00:51] "[35m[1mPOST /product HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:POST /product - payload: {'description': 'very good', 'type': 'smartphones', 'price': 69.99, 'stock': 420, 'name': 'pocophone f1', 'screen_size': 5.2, 'os': 'Oreo', 'storage': '32Gb', 'color': 'black'}
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 10:01:09] "[35m[1mPOST /product HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:POST /product - payload: {'description': 'very good', 'type': 'smartphones', 'price': 69.99, 'stock': 420, 'name': 'pocophone f1', 'screen_size': 5.2, 'os': 'Oreo', 'storage': '32Gb', 'color': 'black'}
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 10:02:42] "[35m[1mPOST /product HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:POST /product - payload: {'description': 'very good', 'type': 'smartphones', 'price': 69.99, 'stock': 420, 'name': 'pocophone f1', 'screen_size': 5.2, 'os': 'Oreo', 'storage': '32Gb', 'color': 'black'}
+ERROR:logger:syntax error at or near "'products'"
+LINE 1: insert into 'products' values ('69420', '2022-04-29 00:00:00...
+                    ^
+
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 10:03:47] "POST /product HTTP/1.1" 200 -
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:POST /product - payload: {'description': 'very good', 'type': 'smartphones', 'price': 69.99, 'stock': 420, 'name': 'pocophone f1', 'screen_size': 5.2, 'os': 'Oreo', 'storage': '32Gb', 'color': 'black'}
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 10:05:22] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:POST /product - payload: {'description': 'very good', 'type': 'smartphones', 'price': 69.99, 'stock': 420, 'name': 'pocophone f1', 'screen_size': 5.2, 'os': 'Oreo', 'storage': '32Gb', 'color': 'black'}
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 10:08:57] "POST /product HTTP/1.1" 200 -

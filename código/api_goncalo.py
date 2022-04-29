@@ -1,3 +1,4 @@
+from datetime import datetime
 import flask
 import logging
 import psycopg2
@@ -122,10 +123,10 @@ def give_rating_feedback(product_id):
 
     # do not forget to validate every argument, e.g.,:
     if 'rating' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'rating is required to update'}
+        response = {'status': StatusCodes['api_error'], 'results': 'rating is required to rate a product'}
         return flask.jsonify(response)
     elif 'comment' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'comment is required to update'}
+        response = {'status': StatusCodes['api_error'], 'results': 'comment is required to rate a product'}
         return flask.jsonify(response)
 
     first_statement = 'select orders.id, product_quantities.products_version, orders.buyers_users_user_id ' \
@@ -142,11 +143,132 @@ def give_rating_feedback(product_id):
         version = rows[0][1].strftime("%Y-%m-%d %H:%M:%S")
         buyer_id = rows[0][2]
         second_values = (payload['comment'], payload['rating'], order_id, product_id, version, buyer_id)
-        #logger.debug(f'{second_values}')
+        # logger.debug(f'{second_values}')
         res = cur.execute(second_statement, second_values)
-        #logger.debug(f'POST /rating/<product_id> - res: {res}')
+        # logger.debug(f'POST /rating/<product_id> - res: {res}')
         response = {'status': StatusCodes['success']}
 
+        # commit the transaction
+        conn.commit()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(error)
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+        # an error occurred, rollback
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+
+##
+# Add product
+##
+# To use it, you need to use postman or curl:
+##
+# http://localhost:8080/product
+##
+
+@app.route('/product', methods=['POST'])
+def add_product():
+    logger.info('POST /product')
+    payload = flask.request.get_json()
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    logger.debug(f'POST /product - payload: {payload}')
+
+    if 'description' not in payload:
+        response = {'status': StatusCodes['api_error'], 'results': 'description is required to add a product'}
+        return flask.jsonify(response)
+    elif 'type' not in payload:
+        response = {'status': StatusCodes['api_error'], 'results': 'type is required to add a product'}
+        return flask.jsonify(response)
+    elif 'stock' not in payload:
+        response = {'status': StatusCodes['api_error'], 'results': 'stock is required to add a product'}
+        return flask.jsonify(response)
+    elif 'price' not in payload:
+        response = {'status': StatusCodes['api_error'], 'results': 'price is required to add a product'}
+        return flask.jsonify(response)
+    elif 'name' not in payload:
+        response = {'status': StatusCodes['api_error'], 'results': 'name is required to add a product'}
+        return flask.jsonify(response)
+
+    version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    product_id = "69420"
+    seller_id = "1"
+
+    product_statement = 'insert into products values (%s, %s, %s, %s, %s, %s, %s)'
+    product_values = (product_id, version, payload['name'], payload['price'], payload['stock'], payload['description'],
+                      seller_id)
+
+    if payload['type'] == 'smartphones':
+        if 'screen_size' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'screen_size is required to add a smartphone'}
+            return flask.jsonify(response)
+        elif 'os' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'os is required to add a smartphone'}
+            return flask.jsonify(response)
+        elif 'storage' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'storage is required to add a smartphone'}
+            return flask.jsonify(response)
+        elif 'color' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'color is required to add a smartphone'}
+            return flask.jsonify(response)
+        type_statement = 'insert into smartphones values (%s, %s, %s, %s, %s, %s)'
+        type_values = (payload['screen_size'], payload['os'], payload['storage'], payload['color'], product_id,
+            version,)
+    elif payload['type'] == 'televisions':
+        if 'screen_size' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'screen_size is required to add a television'}
+            return flask.jsonify(response)
+        elif 'screen_type' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'screen_type is required to add a television'}
+            return flask.jsonify(response)
+        elif 'resolution' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'resolution is required to add a television'}
+            return flask.jsonify(response)
+        elif 'smart' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'smart is required to add a television'}
+            return flask.jsonify(response)
+        elif 'efficiency' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'efficiency is required to add a television'}
+            return flask.jsonify(response)
+        type_statement = 'insert into televisions values (%s, %s, %s, %s, %s, %s, %s)'
+        type_values = (payload['screen_size'], payload['screen_type'], payload['resolution'], payload['smart'],
+            payload['efficiency'], product_id, version,)
+    elif payload['type'] == 'computers':
+        if 'screen_size' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'screen_size is required to add computer'}
+            return flask.jsonify(response)
+        elif 'cpu' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'cpu is required to add a computer'}
+            return flask.jsonify(response)
+        elif 'gpu' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'gpu is required to add a computer'}
+            return flask.jsonify(response)
+        elif 'storage' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'storage is required to add a computer'}
+            return flask.jsonify(response)
+        elif 'refresh_rate' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'refresh_rate is required to add a computer'}
+            return flask.jsonify(response)
+        type_statement = 'insert into computers values (%s, %s, %s, %s, %s, %s, %s)'
+        type_values = (payload['screen_size'], payload['cpu'], payload['gpu'], payload['storage'],
+                       payload['refresh_rate'], product_id, version,)
+    else:
+        response = {'status': StatusCodes['api_error'], 'results': 'valid type is required to add a product'}
+        return flask.jsonify(response)
+
+    try:
+        cur.execute(product_statement, product_values)
+        cur.execute(type_statement, type_values)
+        response = {'status': StatusCodes['success'], 'results': f'{product_id}'}
         # commit the transaction
         conn.commit()
 
