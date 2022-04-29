@@ -15,8 +15,8 @@ products_columns_names = ['product_id', 'version', 'name', 'price', 'stock', 'de
 smartphones_columns_names = ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version']
 televisions_columns_names = ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
                              'products_version']
-computers_column_names = ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id',
-                          'products_version']
+computers_columns_names = ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id',
+                           'products_version']
 
 
 class AuthenticationException(Exception):
@@ -70,33 +70,25 @@ def landing_page():
 def get_product(product_id):
     logger.info('GET /products/<product_id>')
 
-    # logger.debug(f'product_id: {product_id}')
-
     conn = db_connection()
     cur = conn.cursor()
 
-    # parameterized queries, good for security and performance
-    statement = 'select name, stock, description, (select avg(classification) :: float from ratings), comment, price, version ' \
-                'from products, ratings ' \
-                'group by products_product_id, name, stock, description, comment, price, version, product_id, ratings.products_version ' \
-                'having products_product_id = %s and product_id = %s and products.version = ratings.products_version'
-    values = (product_id, product_id)
-
     try:
+        # Get info about the product that have the product_id correspondent to the one given
+        statement = 'select name, stock, description, (select avg(classification) :: float from ratings), comment, price, version ' \
+                    'from products, ratings ' \
+                    'group by products_product_id, name, stock, description, comment, price, version, product_id, ratings.products_version ' \
+                    'having products_product_id = %s and product_id = %s and products.version = ratings.products_version'
+        values = (product_id, product_id)
         cur.execute(statement, values)
         rows = cur.fetchall()
-
-        row = rows[0]
-        # logger.debug('GET /departments/<product_id> - parse')
-        # logger.debug(row)
-
         prices = [f"{i[6]} - {i[5]}" for i in rows]
         comments = [i[4] for i in rows]
-        content = {'name': row[0], 'stock': row[1], 'description': row[2], 'prices': prices, 'rating': row[3],
-                   'comments': comments}
+        content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
+                   'rating': rows[0][3], 'comments': comments}
 
+        # Response of the status of obtaining a product and the information obtained
         response = {'status': StatusCodes['success'], 'results': content}
-        # "errors": errors( if any occurs)},
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /product/<product_id> - error: {error}')
@@ -127,7 +119,7 @@ def give_rating_feedback(product_id):
 
     logger.debug(f'POST /rating/<product_id> - payload: {payload}')
 
-    # do not forget to validate every argument, e.g.,:
+    # Verification of the required parameters to do a rating to a product
     if 'rating' not in payload:
         response = {'status': StatusCodes['api_error'], 'results': 'rating is required to rate a product'}
         return flask.jsonify(response)
@@ -135,23 +127,27 @@ def give_rating_feedback(product_id):
         response = {'status': StatusCodes['api_error'], 'results': 'comment is required to rate a product'}
         return flask.jsonify(response)
 
-    first_statement = 'select orders.id, product_quantities.products_version, orders.buyers_users_user_id ' \
-                      'from product_quantities, orders ' \
-                      'where product_quantities.products_product_id = %s ' \
-                      'and product_quantities.orders_id = orders.id'
-    first_values = (product_id,)
-    second_statement = 'insert into ratings values (%s, %s, %s, %s, %s, %s)'
+    buyer_id = "2"
 
     try:
-        cur.execute(first_statement, first_values)
+        # Get info about the product that will be rated (the one already bought)
+        statement = 'select orders.id, product_quantities.products_version ' \
+                    'from product_quantities, orders ' \
+                    'where product_quantities.products_product_id = %s ' \
+                    'and product_quantities.orders_id = orders.id ' \
+                    'and orders.buyers_users_user_id = %s'
+        values = (product_id, buyer_id,)
+        cur.execute(statement, values)
         rows = cur.fetchall()
         order_id = rows[0][0]
         version = rows[0][1].strftime("%Y-%m-%d %H:%M:%S")
-        buyer_id = rows[0][2]
-        second_values = (payload['comment'], payload['rating'], order_id, product_id, version, buyer_id)
-        # logger.debug(f'{second_values}')
-        res = cur.execute(second_statement, second_values)
-        # logger.debug(f'POST /rating/<product_id> - res: {res}')
+
+        # Insert the rating info in the "ratings" table
+        statement = 'insert into ratings values (%s, %s, %s, %s, %s, %s)'
+        values = (payload['comment'], payload['rating'], order_id, product_id, version, buyer_id)
+        cur.execute(statement, values)
+
+        # Response of the rating status
         response = {'status': StatusCodes['success']}
 
         # commit the transaction
@@ -187,64 +183,71 @@ def add_product():
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'POST /product - payload: {payload}')
+    required_product_input_info = products_columns_names[2:len(products_columns_names) - 1].copy()
+    required_product_input_info.append('type')  # The type of the product is essential
 
-    if 'description' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'description is required to add a product'}
-        return flask.jsonify(response)
-    elif 'type' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'type is required to add a product'}
-        return flask.jsonify(response)
-    elif 'stock' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'stock is required to add a product'}
-        return flask.jsonify(response)
-    elif 'price' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'price is required to add a product'}
-        return flask.jsonify(response)
-    elif 'name' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'name is required to add a product'}
-        return flask.jsonify(response)
+    # logger.debug(f'POST /product - required_product_input_info: {required_product_input_info}')
+
+    # Verification of the required parameters to add a product
+    for i in required_product_input_info:
+        if i not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a product'}
+            return flask.jsonify(response)
 
     version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    product_id = "69420"
+    product_id = "69424"
     seller_id = "1"
 
+    # Statement and values about the info that will be insert to the "products" table
     product_statement = 'insert into products values (%s, %s, %s, %s, %s, %s, %s)'
     product_values = (product_id, version, payload['name'], payload['price'], payload['stock'], payload['description'],
                       seller_id)
 
+    # Statement and values about the info that will be insert to the table that corresponds to the same type of product
     if payload['type'] == 'smartphones':
-        for i in smartphones_columns_names[:len(smartphones_columns_names) - 2]:
+        required_smartphone_input_info = smartphones_columns_names[:len(smartphones_columns_names) - 2]
+        for i in required_smartphone_input_info:
             if i not in payload:
                 response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a smartphone'}
                 return flask.jsonify(response)
         type_statement = 'insert into smartphones values (%s, %s, %s, %s, %s, %s)'
-        type_values = (payload['screen_size'], payload['os'], payload['storage'], payload['color'], product_id,
-                       version,)
+        type_values = (
+        payload['screen_size'], payload['os'], payload['storage'], payload['color'], product_id, version,)
     elif payload['type'] == 'televisions':
-        for i in televisions_columns_names[:len(smartphones_columns_names) - 2]:
+        required_television_input_info = televisions_columns_names[:len(televisions_columns_names) - 2]
+
+        for i in required_television_input_info:
             if i not in payload:
                 response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a smartphone'}
                 return flask.jsonify(response)
         type_statement = 'insert into televisions values (%s, %s, %s, %s, %s, %s, %s)'
-        type_values = (payload['screen_size'], payload['screen_type'], payload['resolution'], payload['smart'],
-                       payload['efficiency'], product_id, version,)
+        type_values = (
+        payload['screen_size'], payload['screen_type'], payload['resolution'], payload['smart'], payload['efficiency'],
+        product_id, version,)
     elif payload['type'] == 'computers':
-        for i in computers_column_names[:len(smartphones_columns_names) - 2]:
+        required_computer_input_info = computers_columns_names[:len(computers_columns_names) - 2]
+        for i in required_computer_input_info:
             if i not in payload:
                 response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a smartphone'}
                 return flask.jsonify(response)
         type_statement = 'insert into computers values (%s, %s, %s, %s, %s, %s, %s)'
-        type_values = (payload['screen_size'], payload['cpu'], payload['gpu'], payload['storage'],
-                       payload['refresh_rate'], product_id, version,)
+        type_values = (
+        payload['screen_size'], payload['cpu'], payload['gpu'], payload['storage'], payload['refresh_rate'], product_id,
+        version,)
     else:
         response = {'status': StatusCodes['api_error'], 'results': 'valid type is required to add a product'}
         return flask.jsonify(response)
 
     try:
+        # Insert new product info in "products" table
         cur.execute(product_statement, product_values)
+
+        # Insert new product info in table that corresponds to the same type of product
         cur.execute(type_statement, type_values)
+
+        # Response of the adding the product status
         response = {'status': StatusCodes['success'], 'results': f'{product_id}'}
+
         # commit the transaction
         conn.commit()
 
@@ -260,6 +263,7 @@ def add_product():
             conn.close()
 
     return flask.jsonify(response)
+
 
 def get_product_type(product_id):
     logger.info('GET /products/<product_id>')
@@ -287,8 +291,10 @@ def get_product_type(product_id):
 
     return product_type
 
+
 def get_product_to_update(product_id):
     return
+
 
 ##
 # Update a product based on a JSON payload
@@ -328,7 +334,7 @@ def update_product(product_id):
                     values_table.append((payload[i], product_id,))
         elif payload['type'] == 'computers':
             for i in payload.keys:
-                if i in computers_column_names:
+                if i in computers_columns_names:
                     statements.append('update computers set i = %s where products_product_id = %s')
                     values_table.append((payload[i], product_id,))
                 else:
@@ -365,6 +371,7 @@ def update_product(product_id):
 
     return flask.jsonify(response)
 
+
 ##
 # Buy products, an order, based on a JSON payload
 ##
@@ -381,7 +388,7 @@ def buy_products():
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'POST /order - payload: {payload}')
+    #logger.debug(f'POST /order - payload: {payload}')
 
     coupon_id = -1
 
@@ -404,12 +411,12 @@ def buy_products():
     buyers_id = "2"
 
     try:
-        cur.execute(order_id_statement,)
+        cur.execute(order_id_statement, )
         order_id = cur.fetchall()[0][0] + 1
         # logger.debug(f'{order_id}')
 
         if coupon_id != -1:
-            campaign_values = (coupon_id, )
+            campaign_values = (coupon_id,)
             cur.execute(campaign_statement, campaign_values)
             campaign_id = cur.fetchall()[0][0]
             order_with_campaign_values = (order_id, order_date, buyers_id, coupon_id, campaign_id)
@@ -421,7 +428,7 @@ def buy_products():
         for i in payload['cart']:
             # logger.debug(f'{i}')
 
-            product_version_values = (i['product_id'], )
+            product_version_values = (i['product_id'],)
             cur.execute(product_version_statement, product_version_values)
             rows = cur.fetchall()
             version = rows[0][0].strftime("%Y-%m-%d %H:%M:%S")
@@ -451,6 +458,7 @@ def buy_products():
             conn.close()
 
     return flask.jsonify(response)
+
 
 @app.route('/users/', methods=['GET'])
 def get_all_users():
