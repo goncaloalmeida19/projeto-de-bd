@@ -12,6 +12,11 @@ StatusCodes = {
     'internal_error': 500
 }
 
+products_columns_names = ['product_id', 'version', 'name', 'price', 'stock', 'description', 'sellers_users_user_id']
+smartphones_columns_names = ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version']
+televisions_columns_names = ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id', 'products_version']
+computers_column_names = ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id', 'products_version']
+
 
 class AuthenticationException(Exception):
     def __init__(self, message='User must be administrator'):
@@ -104,11 +109,11 @@ def get_product(product_id):
 
 
 ##
-# Give rating/feedback
+# Give rating/feedback based on a JSON payload
 ##
-## To use it, you need to use postman or curl:
+# To use it, you need to use postman:
 ##
-## http://localhost:8080/rating/7390626
+# http://localhost:8080/rating/7390626
 ##
 
 @app.route('/rating/<product_id>', methods=['POST'])
@@ -166,9 +171,9 @@ def give_rating_feedback(product_id):
 
 
 ##
-# Add product
+# Add product based on a JSON payload
 ##
-# To use it, you need to use postman or curl:
+# To use it, you need to use postman:
 ##
 # http://localhost:8080/product
 ##
@@ -222,7 +227,7 @@ def add_product():
             return flask.jsonify(response)
         type_statement = 'insert into smartphones values (%s, %s, %s, %s, %s, %s)'
         type_values = (payload['screen_size'], payload['os'], payload['storage'], payload['color'], product_id,
-            version,)
+                       version,)
     elif payload['type'] == 'televisions':
         if 'screen_size' not in payload:
             response = {'status': StatusCodes['api_error'], 'results': 'screen_size is required to add a television'}
@@ -241,7 +246,7 @@ def add_product():
             return flask.jsonify(response)
         type_statement = 'insert into televisions values (%s, %s, %s, %s, %s, %s, %s)'
         type_values = (payload['screen_size'], payload['screen_type'], payload['resolution'], payload['smart'],
-            payload['efficiency'], product_id, version,)
+                       payload['efficiency'], product_id, version,)
     elif payload['type'] == 'computers':
         if 'screen_size' not in payload:
             response = {'status': StatusCodes['api_error'], 'results': 'screen_size is required to add computer'}
@@ -276,6 +281,58 @@ def add_product():
         logger.error(error)
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
+        # an error occurred, rollback
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+
+##
+# Update a product based on a JSON payload
+##
+# To use it, you need to use postman:
+##
+# http://localhost:8080/product/69420
+##
+@app.route('/product/<product_id>', methods=['PUT'])
+def update_product(product_id):
+    logger.info('PUT /product/<product_id>')
+
+    payload = flask.request.get_json()
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    logger.debug(f'PUT /product/<product_id> - payload: {payload}')
+
+    product_statements = []
+    product_values_table = []
+    if 'type' not in payload:
+        for i in payload.keys:
+            product_statements.append('update products set i = %s where product_id = %s')
+            product_values_table.append((payload[i], product_id,))
+    else:
+        type_statements = []
+        type_values_table = []
+        if payload['type'] == 'smartphones':
+            for i in payload.keys:
+                if i in smartphones_columns_names:
+                    product_statements.append('update smartphones set i = %s where product_id = %s')
+                    product_values_table.append((payload[i], product_id,))
+
+    try:
+        res = cur.execute(product_statement, product_values)
+        response = {'status': StatusCodes['success'], 'results': f'Updated: {cur.rowcount}'}
+        # commit the transaction
+        conn.commit()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(error)
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
         # an error occurred, rollback
         conn.rollback()
 
