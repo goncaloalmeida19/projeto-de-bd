@@ -2,7 +2,6 @@ from datetime import datetime
 import flask
 import logging
 import psycopg2
-import time
 
 app = flask.Flask(__name__)
 
@@ -215,56 +214,26 @@ def add_product():
                       seller_id)
 
     if payload['type'] == 'smartphones':
-        if 'screen_size' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'screen_size is required to add a smartphone'}
-            return flask.jsonify(response)
-        elif 'os' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'os is required to add a smartphone'}
-            return flask.jsonify(response)
-        elif 'storage' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'storage is required to add a smartphone'}
-            return flask.jsonify(response)
-        elif 'color' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'color is required to add a smartphone'}
-            return flask.jsonify(response)
+        for i in smartphones_columns_names[:len(smartphones_columns_names) - 2]:
+            if i not in payload:
+                response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a smartphone'}
+                return flask.jsonify(response)
         type_statement = 'insert into smartphones values (%s, %s, %s, %s, %s, %s)'
         type_values = (payload['screen_size'], payload['os'], payload['storage'], payload['color'], product_id,
                        version,)
     elif payload['type'] == 'televisions':
-        if 'screen_size' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'screen_size is required to add a television'}
-            return flask.jsonify(response)
-        elif 'screen_type' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'screen_type is required to add a television'}
-            return flask.jsonify(response)
-        elif 'resolution' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'resolution is required to add a television'}
-            return flask.jsonify(response)
-        elif 'smart' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'smart is required to add a television'}
-            return flask.jsonify(response)
-        elif 'efficiency' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'efficiency is required to add a television'}
-            return flask.jsonify(response)
+        for i in televisions_columns_names[:len(smartphones_columns_names) - 2]:
+            if i not in payload:
+                response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a smartphone'}
+                return flask.jsonify(response)
         type_statement = 'insert into televisions values (%s, %s, %s, %s, %s, %s, %s)'
         type_values = (payload['screen_size'], payload['screen_type'], payload['resolution'], payload['smart'],
                        payload['efficiency'], product_id, version,)
     elif payload['type'] == 'computers':
-        if 'screen_size' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'screen_size is required to add computer'}
-            return flask.jsonify(response)
-        elif 'cpu' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'cpu is required to add a computer'}
-            return flask.jsonify(response)
-        elif 'gpu' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'gpu is required to add a computer'}
-            return flask.jsonify(response)
-        elif 'storage' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'storage is required to add a computer'}
-            return flask.jsonify(response)
-        elif 'refresh_rate' not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': 'refresh_rate is required to add a computer'}
-            return flask.jsonify(response)
+        for i in computers_column_names[:len(smartphones_columns_names) - 2]:
+            if i not in payload:
+                response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a smartphone'}
+                return flask.jsonify(response)
         type_statement = 'insert into computers values (%s, %s, %s, %s, %s, %s, %s)'
         type_values = (payload['screen_size'], payload['cpu'], payload['gpu'], payload['storage'],
                        payload['refresh_rate'], product_id, version,)
@@ -422,10 +391,10 @@ def buy_products():
     if 'coupon' in payload:
         coupon_id = payload['coupon_id']
 
-    order_id_statement = 'select max(id) from orders'
     product_version_statement = 'select max(version), price from products where product_id = %s group by price'
     product_quantities_statement = 'insert into product_quantities values (%s, %s, %s, %s)'
     campaign_statement = 'select campaigns_campaign_id from coupons where coupon_id = %s'
+    order_id_statement = 'select max(id) from orders'
     order_statement = 'insert into orders (id, order_date, buyers_users_user_id) values (%s, %s, %s)'
     order_with_campaign_statement = 'insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id) values (%s, %s, %s, %s, %s)'
     order_price_update_statement = 'update orders set price_total = %s where id = %s'
@@ -450,15 +419,15 @@ def buy_products():
             cur.execute(order_statement, order_values)
 
         for i in payload['cart']:
-            logger.debug(f'{i}')
+            # logger.debug(f'{i}')
 
             product_version_values = (i['product_id'], )
             cur.execute(product_version_statement, product_version_values)
             rows = cur.fetchall()
             version = rows[0][0].strftime("%Y-%m-%d %H:%M:%S")
-            #logger.debug(f'{rows[0][1]}')
+            # logger.debug(f'{rows[0][1]}')
             total_price += rows[0][1]
-            #logger.debug(f'{version}')
+            # logger.debug(f'{version}')
 
             product_quantities_values = (i['quantity'], order_id, i['product_id'], version)
             cur.execute(product_quantities_statement, product_quantities_values)
