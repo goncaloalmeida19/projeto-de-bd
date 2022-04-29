@@ -667,3 +667,184 @@ INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}]}
+DEBUG:logger:[(3,)]
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 14:46:33] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}]}
+DEBUG:logger:3
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 14:47:09] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}, {'product_id': 7390626, 'quantity': 1}]}
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 14:49:23] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}, {'product_id': 7390626, 'quantity': 1}]}
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 14:49:46] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}, {'product_id': 7390626, 'quantity': 1}]}
+DEBUG:logger:{'product_id': 69420, 'quantity': 420}
+DEBUG:logger:{'product_id': 7390626, 'quantity': 1}
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 14:50:24] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}, {'product_id': 7390626, 'quantity': 1}]}
+DEBUG:logger:2022-04-29 10:08:57
+DEBUG:logger:{'product_id': 69420, 'quantity': 420}
+DEBUG:logger:{'product_id': 7390626, 'quantity': 1}
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 14:53:59] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}, {'product_id': 7390626, 'quantity': 1}]}
+DEBUG:logger:{'product_id': 69420, 'quantity': 420}
+DEBUG:logger:2022-04-29 10:08:57
+DEBUG:logger:{'product_id': 7390626, 'quantity': 1}
+DEBUG:logger:2022-04-27 14:46:57
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 14:56:27] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}, {'product_id': 7390626, 'quantity': 1}]}
+DEBUG:logger:{'product_id': 69420, 'quantity': 420}
+ERROR:logger:insert or update on table "product_quantities" violates foreign key constraint "product_quantities_fk1"
+DETAIL:  Key (orders_id)=(4) is not present in table "orders".
+
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 14:59:39] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}, {'product_id': 7390626, 'quantity': 1}]}
+DEBUG:logger:{'product_id': 69420, 'quantity': 420}
+DEBUG:logger:{'product_id': 7390626, 'quantity': 1}
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 15:15:22] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}, {'product_id': 7390626, 'quantity': 1}]}
+DEBUG:logger:{'product_id': 69420, 'quantity': 420}
+ERROR:logger:column "products.price" must appear in the GROUP BY clause or be used in an aggregate function
+LINE 1: select max(version), price from products where product_id = ...
+                             ^
+
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 15:17:20] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}, {'product_id': 7390626, 'quantity': 1}]}
+DEBUG:logger:{'product_id': 69420, 'quantity': 420}
+DEBUG:logger:69.99
+DEBUG:logger:{'product_id': 7390626, 'quantity': 1}
+DEBUG:logger:849.99
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 15:17:40] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /order
+DEBUG:logger:POST /order - payload: {'cart': [{'product_id': 69420, 'quantity': 420}, {'product_id': 7390626, 'quantity': 1}]}
+DEBUG:logger:{'product_id': 69420, 'quantity': 420}
+DEBUG:logger:69.99
+DEBUG:logger:{'product_id': 7390626, 'quantity': 1}
+DEBUG:logger:849.99
+INFO:werkzeug:127.0.0.1 - - [29/Apr/2022 15:19:58] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 758-211-982
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)

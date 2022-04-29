@@ -328,6 +328,7 @@ def get_product_to_update(product_id):
 ##
 # http://localhost:8080/product/69420
 ##
+
 @app.route('/product/<product_id>', methods=['PUT'])
 def update_product(product_id):
     logger.info('PUT /product/<product_id>')
@@ -395,6 +396,92 @@ def update_product(product_id):
 
     return flask.jsonify(response)
 
+##
+# Buy products, an order, based on a JSON payload
+##
+# To use it, you need to use postman:
+##
+# http://localhost:8080/order
+##
+
+@app.route('/order', methods=['POST'])
+def buy_products():
+    logger.info('POST /order')
+    payload = flask.request.get_json()
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    logger.debug(f'POST /order - payload: {payload}')
+
+    coupon_id = -1
+
+    if 'cart' not in payload:
+        response = {'status': StatusCodes['api_error'], 'results': 'cart is required to buy products'}
+        return flask.jsonify(response)
+    if 'coupon' in payload:
+        coupon_id = payload['coupon_id']
+
+    order_id_statement = 'select max(id) from orders'
+    product_version_statement = 'select max(version), price from products where product_id = %s group by price'
+    product_quantities_statement = 'insert into product_quantities values (%s, %s, %s, %s)'
+    campaign_statement = 'select campaigns_campaign_id from coupons where coupon_id = %s'
+    order_statement = 'insert into orders (id, order_date, buyers_users_user_id) values (%s, %s, %s)'
+    order_with_campaign_statement = 'insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id) values (%s, %s, %s, %s, %s)'
+    order_price_update_statement = 'update orders set price_total = %s where id = %s'
+
+    order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    total_price = 0.0  # Without coupon
+    buyers_id = "2"
+
+    try:
+        cur.execute(order_id_statement,)
+        order_id = cur.fetchall()[0][0] + 1
+        # logger.debug(f'{order_id}')
+
+        if coupon_id != -1:
+            campaign_values = (coupon_id, )
+            cur.execute(campaign_statement, campaign_values)
+            campaign_id = cur.fetchall()[0][0]
+            order_with_campaign_values = (order_id, order_date, buyers_id, coupon_id, campaign_id)
+            cur.execute(order_with_campaign_statement, order_with_campaign_values)
+        else:
+            order_values = (order_id, order_date, buyers_id)
+            cur.execute(order_statement, order_values)
+
+        for i in payload['cart']:
+            logger.debug(f'{i}')
+
+            product_version_values = (i['product_id'], )
+            cur.execute(product_version_statement, product_version_values)
+            rows = cur.fetchall()
+            version = rows[0][0].strftime("%Y-%m-%d %H:%M:%S")
+            #logger.debug(f'{rows[0][1]}')
+            total_price += rows[0][1]
+            #logger.debug(f'{version}')
+
+            product_quantities_values = (i['quantity'], order_id, i['product_id'], version)
+            cur.execute(product_quantities_statement, product_quantities_values)
+
+        order_price_update_values = (total_price, order_id,)
+        cur.execute(order_price_update_statement, order_price_update_values)
+
+        response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
+        # commit the transaction
+        conn.commit()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(error)
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+        # an error occurred, rollback
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
 
 @app.route('/users/', methods=['GET'])
 def get_all_users():
