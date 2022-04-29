@@ -14,8 +14,10 @@ StatusCodes = {
 
 products_columns_names = ['product_id', 'version', 'name', 'price', 'stock', 'description', 'sellers_users_user_id']
 smartphones_columns_names = ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version']
-televisions_columns_names = ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id', 'products_version']
-computers_column_names = ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id', 'products_version']
+televisions_columns_names = ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
+                             'products_version']
+computers_column_names = ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id',
+                          'products_version']
 
 
 class AuthenticationException(Exception):
@@ -290,6 +292,34 @@ def add_product():
 
     return flask.jsonify(response)
 
+def get_product_type(product_id):
+    logger.info('GET /products/<product_id>')
+    product_type = ""
+    # logger.debug(f'product_id: {product_id}')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    # parameterized queries, good for security and performance
+    statement = ''
+    values = ()
+
+    try:
+        cur.execute(statement, values)
+        rows = cur.fetchall()
+
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'Get the product to update - error: {error}')
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return product_type
+
+def get_product_to_update(product_id):
+    return
 
 ##
 # Update a product based on a JSON payload
@@ -309,45 +339,46 @@ def update_product(product_id):
 
     logger.debug(f'PUT /product/<product_id> - payload: {payload}')
 
-    product_statements = []
-    product_values_table = []
+    product = get_product_to_update(product_id)
+
+    statements = []
+    values_table = []
     if 'type' not in payload:
         for i in payload.keys:
-            product_statements.append('update products set i = %s where product_id = %s')
-            product_values_table.append((payload[i], product_id,))
+            statements.append('update products set i = %s where product_id = %s')
+            values_table.append((payload[i], product_id,))
     else:
-        type_statements = []
-        type_values_table = []
         if payload['type'] == 'smartphones':
             for i in payload.keys:
                 if i in smartphones_columns_names:
-                    type_statements.append('update smartphones set i = %s where products_product_id = %s')
-                    type_values_table.append((payload[i], product_id,))
+                    statements.append('update smartphones set i = %s where products_product_id = %s')
+                    values_table.append((payload[i], product_id,))
                 else:
-                    product_statements.append('update products set i = %s where product_id = %s')
-                    product_values_table.append((payload[i], product_id,))
+                    statements.append('update products set i = %s where product_id = %s')
+                    values_table.append((payload[i], product_id,))
         elif payload['type'] == 'computers':
             for i in payload.keys:
                 if i in computers_column_names:
-                    type_statements.append('update computers set i = %s where products_product_id = %s')
-                    type_values_table.append((payload[i], product_id,))
+                    statements.append('update computers set i = %s where products_product_id = %s')
+                    values_table.append((payload[i], product_id,))
                 else:
-                    product_statements.append('update products set i = %s where product_id = %s')
-                    product_values_table.append((payload[i], product_id,))
+                    statements.append('update products set i = %s where product_id = %s')
+                    values_table.append((payload[i], product_id,))
         elif payload['type'] == 'televisions':
             for i in payload.keys:
                 if i in televisions_columns_names:
-                    type_statements.append('update televisions set i = %s where products_product_id = %s')
-                    type_values_table.append((payload[i], product_id,))
+                    statements.append('update televisions set i = %s where products_product_id = %s')
+                    values_table.append((payload[i], product_id,))
                 else:
-                    product_statements.append('update products set i = %s where product_id = %s')
-                    product_values_table.append((payload[i], product_id,))
+                    statements.append('update products set i = %s where product_id = %s')
+                    values_table.append((payload[i], product_id,))
         else:
             response = {'status': StatusCodes['api_error'], 'results': 'valid type is required to update a product'}
             return flask.jsonify(response)
 
     try:
-        res = cur.execute(product_statement, product_values)
+        for i in range(len(statements)):
+            cur.execute(statements[i], values_table[i])
         response = {'status': StatusCodes['success'], 'results': f'Updated: {cur.rowcount}'}
         # commit the transaction
         conn.commit()
