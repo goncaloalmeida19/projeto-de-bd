@@ -321,8 +321,30 @@ def update_product(product_id):
         if payload['type'] == 'smartphones':
             for i in payload.keys:
                 if i in smartphones_columns_names:
-                    product_statements.append('update smartphones set i = %s where product_id = %s')
+                    product_statements.append('update smartphones set i = %s where products_product_id = %s')
                     product_values_table.append((payload[i], product_id,))
+                else:
+                    product_statements.append('update products set i = %s where product_id = %s')
+                    product_values_table.append((payload[i], product_id,))
+        elif payload['type'] == 'computers':
+            for i in payload.keys:
+                if i in computers_column_names:
+                    product_statements.append('update computers set i = %s where products_product_id = %s')
+                    product_values_table.append((payload[i], product_id,))
+                else:
+                    product_statements.append('update products set i = %s where product_id = %s')
+                    product_values_table.append((payload[i], product_id,))
+        elif payload['type'] == 'televisions':
+            for i in payload.keys:
+                if i in televisions_columns_names:
+                    product_statements.append('update televisions set i = %s where products_product_id = %s')
+                    product_values_table.append((payload[i], product_id,))
+                else:
+                    product_statements.append('update products set i = %s where product_id = %s')
+                    product_values_table.append((payload[i], product_id,))
+        else:
+            response = {'status': StatusCodes['api_error'], 'results': 'valid type is required to update a product'}
+            return flask.jsonify(response)
 
     try:
         res = cur.execute(product_statement, product_values)
