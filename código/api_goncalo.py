@@ -11,6 +11,7 @@ StatusCodes = {
     'internal_error': 500
 }
 
+products_types = ["smartphones", "televisions", "computers"]
 products_columns_names = ['product_id', 'version', 'name', 'price', 'stock', 'description', 'sellers_users_user_id']
 smartphones_columns_names = ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version']
 televisions_columns_names = ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
@@ -212,7 +213,7 @@ def add_product():
                 return flask.jsonify(response)
         type_statement = 'insert into smartphones values (%s, %s, %s, %s, %s, %s)'
         type_values = (
-        payload['screen_size'], payload['os'], payload['storage'], payload['color'], product_id, version,)
+            payload['screen_size'], payload['os'], payload['storage'], payload['color'], product_id, version,)
     elif payload['type'] == 'televisions':
         required_television_input_info = televisions_columns_names[:len(televisions_columns_names) - 2]
 
@@ -222,8 +223,9 @@ def add_product():
                 return flask.jsonify(response)
         type_statement = 'insert into televisions values (%s, %s, %s, %s, %s, %s, %s)'
         type_values = (
-        payload['screen_size'], payload['screen_type'], payload['resolution'], payload['smart'], payload['efficiency'],
-        product_id, version,)
+            payload['screen_size'], payload['screen_type'], payload['resolution'], payload['smart'],
+            payload['efficiency'],
+            product_id, version,)
     elif payload['type'] == 'computers':
         required_computer_input_info = computers_columns_names[:len(computers_columns_names) - 2]
         for i in required_computer_input_info:
@@ -232,8 +234,9 @@ def add_product():
                 return flask.jsonify(response)
         type_statement = 'insert into computers values (%s, %s, %s, %s, %s, %s, %s)'
         type_values = (
-        payload['screen_size'], payload['cpu'], payload['gpu'], payload['storage'], payload['refresh_rate'], product_id,
-        version,)
+            payload['screen_size'], payload['cpu'], payload['gpu'], payload['storage'], payload['refresh_rate'],
+            product_id,
+            version,)
     else:
         response = {'status': StatusCodes['api_error'], 'results': 'valid type is required to add a product'}
         return flask.jsonify(response)
@@ -267,20 +270,39 @@ def add_product():
 
 def get_product_type(product_id):
     logger.info('GET /products/<product_id>')
-    product_type = ""
     # logger.debug(f'product_id: {product_id}')
 
     conn = db_connection()
     cur = conn.cursor()
 
     # parameterized queries, good for security and performance
-    statement = ''
-    values = ()
+    statement = 'do $$ ' \
+                'declare ' \
+                'begin ' \
+                'perform products_product_id from smartphones where products_product_id = %s; ' \
+                'return 0;' \
+                'exception ' \
+                '   when no_data_found then ' \
+                '       perform products_product_id from televisions where products_product_id = %s; ' \
+                '       return 1;' \
+                '       exception ' \
+                '           when no_data_found then ' \
+                '               perform products_product_id from computers where products_product_id = %s; ' \
+                '               return 2;' \
+                '               exception ' \
+                '                   when no_data_found then ' \
+                '                       return 3;' \
+                'end; ' \
+                '$$;'
+    values = (product_id, product_id, product_id,)
 
     try:
         cur.execute(statement, values)
         rows = cur.fetchall()
-
+        product_type = rows[0][0]
+        if int(product_type) == len(products_types):
+            return None
+        return products_types[int(product_type)]
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'Get the product to update - error: {error}')
@@ -288,8 +310,6 @@ def get_product_type(product_id):
     finally:
         if conn is not None:
             conn.close()
-
-    return product_type
 
 
 def get_product_to_update(product_id):
@@ -388,7 +408,7 @@ def buy_products():
     conn = db_connection()
     cur = conn.cursor()
 
-    #logger.debug(f'POST /order - payload: {payload}')
+    # logger.debug(f'POST /order - payload: {payload}')
 
     coupon_id = -1
 
