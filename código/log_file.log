@@ -1657,3 +1657,61 @@ INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 948-060-270
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_bernardo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:51:28] "POST /product HTTP/1.1" 200 -
+INFO:logger:PUT /users
+DEBUG:logger:PUT /users - payload: {'username': 'gui', 'password': 'tcsw'}
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:54:00] "PUT /users/ HTTP/1.1" 200 -
+INFO:logger:POST /order
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:54:12] "POST /order HTTP/1.1" 200 -
