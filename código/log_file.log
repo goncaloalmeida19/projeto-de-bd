@@ -1034,3 +1034,626 @@ WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 758-211-982
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:39:21] "[35m[1mGET /products/7390626 HTTP/1.1[0m" 500 -
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:39:33] "[35m[1mGET /products/69424 HTTP/1.1[0m" 500 -
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:39:35] "[35m[1mGET /products/69424 HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:40:23] "[35m[1mPUT /users HTTP/1.1[0m" 500 -
+INFO:logger:PUT /users
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:41:00] "[35m[1mPUT /users/ HTTP/1.1[0m" 500 -
+INFO:logger:PUT /users
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:41:12] "[35m[1mPUT /users/ HTTP/1.1[0m" 500 -
+INFO:logger:POST /users
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:41:51] "[35m[1mPOST /users/ HTTP/1.1[0m" 500 -
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:PUT /users
+DEBUG:logger:PUT /users - payload: {'username': 'gui', 'password': 'tcsw'}
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:45:26] "PUT /users/ HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:45:32] "[35m[1mGET /products/69424 HTTP/1.1[0m" 500 -
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:45:49] "[35m[1mGET /products/69424 HTTP/1.1[0m" 500 -
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:47:05] "GET /products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:48:22] "GET /products/69424 HTTP/1.1" 200 -
+INFO:logger:PUT /users
+DEBUG:logger:PUT /users - payload: {'username': 'gui', 'password': 'tcsw'}
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:48:37] "PUT /users/ HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:48:44] "GET /products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:48:56] "GET /products/69424 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 11:49:03] "GET /products/69424 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /users
+DEBUG:logger:POST /users - payload: {'user_id': 69, 'username': 'alm', 'password': 'almeida'}
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 12:05:44] "POST /users/ HTTP/1.1" 200 -
+INFO:logger:PUT /users
+DEBUG:logger:PUT /users - payload: {'username': 'alm', 'password': 'almeida'}
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 12:06:04] "PUT /users/ HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:PUT /users
+DEBUG:logger:PUT /users - payload: {'username': 'Worten', 'password': 'wortensempre'}
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 12:14:11] "PUT /users/ HTTP/1.1" 200 -
+INFO:logger:POST /product
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 12:14:43] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /users
+DEBUG:logger:POST /users - payload: {'user_id': 69, 'username': 'alm', 'password': 'almeida'}
+ERROR:logger:POST /users - error: duplicate key value violates unique constraint "users_pkey"
+DETAIL:  Key (user_id)=(69) already exists.
+
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 12:16:28] "POST /users/ HTTP/1.1" 200 -
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:'dict_keys' object is not subscriptable
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:10:17] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+ERROR:logger:'dict_keys' object is not subscriptable
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:11:09] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:'dict_keys' object is not subscriptable
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:11:15] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:not here
+ERROR:logger:'dict_keys' object is not subscriptable
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:11:54] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:'dict_keys' object is not subscriptable
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:12:26] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:'dict_keys' object is not subscriptable
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:12:34] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:['products', 'smartphones', 'televisions', 'computers']
+ERROR:logger:'dict_keys' object is not subscriptable
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:15:02] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+DEBUG:logger:['products', 'smartphones', 'televisions', 'computers']
+ERROR:logger:'dict_keys' object is not subscriptable
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:15:16] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:unhashable type: 'slice'
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:15:21] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:unhashable type: 'slice'
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:22:59] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:23:23] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:here
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:38:48] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:here
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:39:13] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+DEBUG:logger:here
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:39:14] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+DEBUG:logger:here
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:39:15] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:here
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:39:31] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:here
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:39:55] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+DEBUG:logger:here
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:40:04] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:40:08] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:40:33] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:41:40] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:45:50] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:45:57] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:46:29] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:7559299
+DEBUG:logger:1
+DEBUG:logger:2022-05-07 20:47:26
+DEBUG:logger:pocophone f7
+DEBUG:logger:69.99
+DEBUG:logger:420
+DEBUG:logger:very very very very very very very good
+DEBUG:logger:1
+DEBUG:logger:smartphones
+DEBUG:logger:5.7
+DEBUG:logger:Pancake
+DEBUG:logger:128Gb
+DEBUG:logger:grey
+DEBUG:logger:smartphones
+DEBUG:logger:7559299
+DEBUG:logger:2022-05-07 20:47:26
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:47:26] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:<class 'int'>
+DEBUG:logger:<class 'str'>
+DEBUG:logger:<class 'str'>
+DEBUG:logger:<class 'str'>
+DEBUG:logger:<class 'float'>
+DEBUG:logger:<class 'int'>
+DEBUG:logger:<class 'str'>
+DEBUG:logger:<class 'str'>
+DEBUG:logger:<class 'str'>
+DEBUG:logger:<class 'float'>
+DEBUG:logger:<class 'str'>
+DEBUG:logger:<class 'str'>
+DEBUG:logger:<class 'str'>
+DEBUG:logger:<class 'str'>
+DEBUG:logger:<class 'int'>
+DEBUG:logger:<class 'str'>
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:48:34] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:49:48] "POST /product HTTP/1.1" 200 -
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+ERROR:logger:unsupported operand type(s) for +: 'type' and 'str'
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:50:28] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+ERROR:logger:unsupported operand type(s) for +: 'type' and 'str'
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:50:50] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:<class 'str'>7559299
+DEBUG:logger:<class 'str'>1
+DEBUG:logger:<class 'str'>2022-05-07 20:50:59
+DEBUG:logger:<class 'str'>pocophone f7
+DEBUG:logger:<class 'str'>69.99
+DEBUG:logger:<class 'int'>420
+DEBUG:logger:<class 'str'>very very very very very very very good
+DEBUG:logger:<class 'str'>1
+DEBUG:logger:<class 'str'>smartphones
+DEBUG:logger:<class 'float'>5.7
+DEBUG:logger:<class 'str'>Pancake
+DEBUG:logger:<class 'str'>128Gb
+DEBUG:logger:<class 'str'>grey
+DEBUG:logger:<class 'str'>smartphones
+DEBUG:logger:<class 'int'>7559299
+DEBUG:logger:<class 'str'>2022-05-07 20:50:59
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:50:59] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:<class 'str'>7559299
+DEBUG:logger:<class 'str'>1
+DEBUG:logger:<class 'str'>2022-05-07 20:51:43
+DEBUG:logger:<class 'str'>pocophone f7
+DEBUG:logger:<class 'str'>69.99
+DEBUG:logger:<class 'int'>420
+DEBUG:logger:<class 'str'>very very very very very very very good
+DEBUG:logger:<class 'str'>1
+DEBUG:logger:<class 'str'>smartphones
+DEBUG:logger:<class 'float'>5.7
+DEBUG:logger:<class 'str'>Pancake
+DEBUG:logger:<class 'str'>128Gb
+DEBUG:logger:<class 'str'>grey
+DEBUG:logger:<class 'str'>smartphones
+DEBUG:logger:<class 'int'>7559299
+DEBUG:logger:<class 'str'>2022-05-07 20:51:43
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:51:43] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:<class 'str'>7559299
+DEBUG:logger:<class 'str'>1
+DEBUG:logger:<class 'str'>2022-05-07 20:51:49
+DEBUG:logger:<class 'str'>pocophone f7
+DEBUG:logger:<class 'str'>69.99
+DEBUG:logger:<class 'str'>420
+DEBUG:logger:<class 'str'>very very very very very very very good
+DEBUG:logger:<class 'str'>1
+DEBUG:logger:<class 'str'>smartphones
+DEBUG:logger:<class 'str'>5.7
+DEBUG:logger:<class 'str'>Pancake
+DEBUG:logger:<class 'str'>128Gb
+DEBUG:logger:<class 'str'>grey
+DEBUG:logger:<class 'str'>smartphones
+DEBUG:logger:<class 'int'>7559299
+DEBUG:logger:<class 'str'>2022-05-07 20:51:49
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:51:49] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:<class 'str'>7559299
+DEBUG:logger:<class 'str'>1
+DEBUG:logger:<class 'str'>2022-05-07 20:52:04
+DEBUG:logger:<class 'str'>pocophone f7
+DEBUG:logger:<class 'str'>69.99
+DEBUG:logger:<class 'str'>420
+DEBUG:logger:<class 'str'>very very very very very very very good
+DEBUG:logger:<class 'str'>1
+DEBUG:logger:<class 'str'>smartphones
+DEBUG:logger:<class 'str'>5.7
+DEBUG:logger:<class 'str'>Pancake
+DEBUG:logger:<class 'str'>128Gb
+DEBUG:logger:<class 'str'>grey
+DEBUG:logger:<class 'str'>smartphones
+DEBUG:logger:<class 'int'>7559299
+DEBUG:logger:<class 'str'>2022-05-07 20:52:04
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:52:04] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:<class 'str'>7559299
+DEBUG:logger:<class 'str'>1
+DEBUG:logger:<class 'str'>2022-05-07 20:52:09
+DEBUG:logger:<class 'str'>pocophone f7
+DEBUG:logger:<class 'str'>69.99
+DEBUG:logger:<class 'str'>420
+DEBUG:logger:<class 'str'>very very very very very very very good
+DEBUG:logger:<class 'str'>1
+DEBUG:logger:<class 'str'>smartphones
+DEBUG:logger:<class 'str'>5.7
+DEBUG:logger:<class 'str'>Pancake
+DEBUG:logger:<class 'str'>128Gb
+DEBUG:logger:<class 'str'>grey
+DEBUG:logger:<class 'str'>smartphones
+DEBUG:logger:<class 'str'>7559299
+DEBUG:logger:<class 'str'>2022-05-07 20:52:09
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:52:09] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:('7559299', '1', '2022-05-07 20:52:51', 'pocophone f7', '69.99', '420', 'very very very very very very very good', '1', 'smartphones', '5.7', 'Pancake', '128Gb', 'grey', 'smartphones', '7559299', '2022-05-07 20:52:51')
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:52:51] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:56:10] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:('7559299', '1', '2022-05-07 20:57:43', 'pocophone f7', '69.99', '420', 'very very very very very very very good', '1', 'smartphones', '5.7', 'Pancake', '128Gb', 'grey', 'smartphones', '7559299', '2022-05-07 20:57:43')
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:57:43] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:('7559299', '1', '2022-05-07 20:58:04', 'pocophone f7', '69.99', '420', 'very very very very very very very good', '1', '5.7', 'Pancake', '128Gb', 'grey', 'smartphones', '7559299', '2022-05-07 20:58:04')
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:58:04] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:('7559299', '1', '2022-05-07 20:59:52', 'pocophone f7', '69.99', '420', 'very very very very very very very good', '1', '5.7', 'Pancake', '128Gb', 'grey', 'smartphones', '7559299', '2022-05-07 20:59:52')
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:59:52] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+ERROR:logger:'NoneType' object is not iterable
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 20:59:56] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+ERROR:logger:'NoneType' object is not iterable
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:02:08] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:['screen_size', 'os', 'storage', 'color', 'type']
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:('7559299', '2022-05-07 21:02:12', 'pocophone f7', '69.99', '420', 'very very very very very very very good', '1', '5.7', 'Pancake', '128Gb', 'grey', 'smartphones', '7559299', '2022-05-07 21:02:12')
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:02:12] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+DEBUG:logger:['screen_size', 'os', 'storage', 'color', 'type']
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:('7559299', '2022-05-07 21:02:25', 'pocophone f7', '69.99', '420', 'very very very very very very very good', '1', '5.7', 'Pancake', '128Gb', 'grey', 'smartphones', '7559299', '2022-05-07 21:02:25')
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:02:25] "POST /product HTTP/1.1" 200 -
+INFO:logger:POST /product
+DEBUG:logger:['screen_size', 'os', 'storage', 'color', 'type']
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:('7559299', '2022-05-07 21:02:26', 'pocophone f7', '69.99', '420', 'very very very very very very very good', '1', '5.7', 'Pancake', '128Gb', 'grey', 'smartphones', '7559299', '2022-05-07 21:02:26')
+ERROR:logger:not all arguments converted during string formatting
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:02:26] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /product
+DEBUG:logger:do $$ begin insert into products values (%s, %s, %s, %s, %s, %s, %s); insert into smartphones values (%s, %s, %s, %s, %s, %s); end;$$;
+DEBUG:logger:('7559299', '2022-05-07 21:02:30', 'pocophone f7', '69.99', '420', 'very very very very very very very good', '1', '5.7', 'Pancake', '128Gb', 'grey', '7559299', '2022-05-07 21:02:30')
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:02:30] "POST /product HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
