@@ -14,8 +14,10 @@ StatusCodes = {
 products_types = ["smartphones", "televisions", "computers"]
 products_columns_names = ['product_id', 'version', 'name', 'price', 'stock', 'description', 'sellers_users_user_id']
 smartphones_columns_names = ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version']
-televisions_columns_names = ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id', 'products_version']
-computers_columns_names = ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id', 'products_version']
+televisions_columns_names = ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
+                             'products_version']
+computers_columns_names = ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id',
+                           'products_version']
 
 
 class AuthenticationException(Exception):
@@ -33,7 +35,7 @@ def db_connection():
         password='postgres',
         host='127.0.0.1',
         port='5432',
-        database='projeto'
+        database='dbproj'
     )
 
     return db
@@ -68,7 +70,7 @@ def landing_page():
 @app.route('/products/<product_id>', methods=['GET'])
 def get_product(product_id):
     logger.info('GET /products/<product_id>')
-
+    user_token = flask.request.headers.get('Authorization').split()[1]
     conn = db_connection()
     cur = conn.cursor()
 
@@ -83,7 +85,8 @@ def get_product(product_id):
         rows = cur.fetchall()
         prices = [f"{i[6]} - {i[5]}" for i in rows]
         comments = [i[4] for i in rows]
-        content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices, 'rating': rows[0][3], 'comments': comments}
+        content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
+                   'rating': rows[0][3], 'comments': comments}
 
         # Response of the status of obtaining a product and the information obtained
         response = {'status': StatusCodes['success'], 'results': content}
@@ -125,7 +128,7 @@ def give_rating_feedback(product_id):
         response = {'status': StatusCodes['api_error'], 'results': 'comment is required to rate a product'}
         return flask.jsonify(response)
 
-    buyer_id = "2"
+    buyer_id = flask.request.headers.get('Authorization').split(' ')[1]
 
     try:
         # Get info about the product that will be rated (the one already bought)
@@ -193,13 +196,12 @@ def add_product():
             return flask.jsonify(response)
 
     version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    product_id = "69424"
-    seller_id = "1"
+    seller_id = flask.request.headers.get('Authorization').split(' ')[1]
+    product_id_statement = 'select max(product_id) from products where sellers_users_user_id = %s'
+    product_id_values = (seller_id,)
 
     # Statement and values about the info that will be insert to the "products" table
     product_statement = 'insert into products values (%s, %s, %s, %s, %s, %s, %s)'
-    product_values = (product_id, version, payload['name'], payload['price'], payload['stock'], payload['description'],
-                      seller_id)
 
     # Statement and values about the info that will be insert to the table that corresponds to the same type of product
     if payload['type'] == 'smartphones':
@@ -209,7 +211,7 @@ def add_product():
                 response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a smartphone'}
                 return flask.jsonify(response)
         type_statement = 'insert into smartphones values (%s, %s, %s, %s, %s, %s)'
-        type_values = tuple(payload[i] for i in required_smartphone_input_info) + (product_id, version)
+        type_values = tuple(payload[i] for i in required_smartphone_input_info)
     elif payload['type'] == 'televisions':
         required_television_input_info = televisions_columns_names[:len(televisions_columns_names) - 2]
         for i in required_television_input_info:
@@ -217,7 +219,7 @@ def add_product():
                 response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a smartphone'}
                 return flask.jsonify(response)
         type_statement = 'insert into televisions values (%s, %s, %s, %s, %s, %s, %s)'
-        type_values = tuple(payload[i] for i in required_television_input_info) + (product_id, version)
+        type_values = tuple(payload[i] for i in required_television_input_info)
     elif payload['type'] == 'computers':
         required_computer_input_info = computers_columns_names[:len(computers_columns_names) - 2]
         for i in required_computer_input_info:
@@ -225,12 +227,21 @@ def add_product():
                 response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a smartphone'}
                 return flask.jsonify(response)
         type_statement = 'insert into computers values (%s, %s, %s, %s, %s, %s, %s)'
-        type_values = tuple(payload[i] for i in required_computer_input_info) + (product_id, version)
+        type_values = tuple(payload[i] for i in required_computer_input_info)
     else:
         response = {'status': StatusCodes['api_error'], 'results': 'valid type is required to add a product'}
         return flask.jsonify(response)
 
     try:
+        # Get new product_id
+        cur.execute(product_id_statement, product_id_values)
+        rows = cur.fetchall()
+        product_id = rows[0][0] + 1
+
+        product_values = (
+            product_id, version, payload['name'], payload['price'], payload['stock'], payload['description'], seller_id)
+        type_values += (product_id, version)
+
         # Insert new product info in "products" table
         cur.execute(product_statement, product_values)
 
