@@ -132,20 +132,20 @@ def give_rating_feedback(product_id):
 
     try:
         # Get info about the product that will be rated (the one already bought) and insert the rating info in the "ratings" table
-        statement = 'do $$' \
-                    'declare' \
-                    'order_id int;' \
-                    'version timestamp;' \
-                    'begin' \
+        statement = 'do $$ ' \
+                    'declare ' \
+                    'order_id int; ' \
+                    'version timestamp; ' \
+                    'begin ' \
                     '   select orders.id, product_quantities.products_version ' \
                     '   from product_quantities, orders ' \
                     '   where product_quantities.products_product_id = %s ' \
                     '   and product_quantities.orders_id = orders.id ' \
                     '   and orders.buyers_users_user_id = %s ' \
-                    '   into order_id, version;' \
+                    '   into order_id, version; ' \
                     '   insert into ratings values (%s, %s, order_id, %s, version, %s); ' \
-                    'end;' \
-                    '$$;'
+                    'end; ' \
+                    '$$; '
         values = (product_id, buyer_id) + tuple(payload[i] for i in columns_names["ratings"][:2]) + (product_id, buyer_id)
 
         cur.execute(statement, values)

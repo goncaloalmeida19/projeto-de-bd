@@ -1715,3 +1715,52 @@ DEBUG:logger:PUT /users - payload: {'username': 'gui', 'password': 'tcsw'}
 INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:54:00] "PUT /users/ HTTP/1.1" 200 -
 INFO:logger:POST /order
 INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:54:12] "POST /order HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:58:48] "[33mGET /rating/ HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:59:10] "[31m[1mGET /rating/7390626 HTTP/1.1[0m" 405 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 21:59:35] "[35m[1mPOST /rating/7390626 HTTP/1.1[0m" 500 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+ERROR:logger:syntax error at or near "declareorder_id"
+LINE 1: do $$declareorder_id int;version timestamp;begin   select or...
+             ^
+
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 22:00:47] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:logger:POST /rating/<product_id>
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+ERROR:logger:duplicate key value violates unique constraint "ratings_pkey"
+DETAIL:  Key (orders_id, products_product_id, products_version)=(1, 7390626, 2022-04-27 14:46:57) already exists.
+CONTEXT:  SQL statement "insert into ratings values ('very very very very very good', 5, order_id, '7390626', version, '2')"
+PL/pgSQL function inline_code_block line 1 at SQL statement
+
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 22:01:13] "POST /rating/7390626 HTTP/1.1" 200 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+INFO:werkzeug:127.0.0.1 - - [07/May/2022 22:03:58] "POST /rating/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
