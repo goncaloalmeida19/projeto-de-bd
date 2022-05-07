@@ -184,8 +184,7 @@ def add_product():
     conn = db_connection()
     cur = conn.cursor()
 
-    required_product_input_info = products_columns_names[2:len(products_columns_names) - 1].copy()
-    required_product_input_info.append('type')  # The type of the product is essential
+    required_product_input_info = products_columns_names[2:len(products_columns_names) - 1] + ['type'] # The type of the product is essential
 
     # logger.debug(f'POST /product - required_product_input_info: {required_product_input_info}')
 
@@ -268,130 +267,6 @@ def add_product():
     return flask.jsonify(response)
 
 
-def get_product_type(product_id):
-    logger.info('GET /products/<product_id>')
-    # logger.debug(f'product_id: {product_id}')
-
-    conn = db_connection()
-    cur = conn.cursor()
-
-    # parameterized queries, good for security and performance
-    statement = 'do $$ ' \
-                'declare ' \
-                'begin ' \
-                'perform products_product_id from smartphones where products_product_id = %s; ' \
-                'return 0;' \
-                'exception ' \
-                '   when no_data_found then ' \
-                '       perform products_product_id from televisions where products_product_id = %s; ' \
-                '       return 1;' \
-                '       exception ' \
-                '           when no_data_found then ' \
-                '               perform products_product_id from computers where products_product_id = %s; ' \
-                '               return 2;' \
-                '               exception ' \
-                '                   when no_data_found then ' \
-                '                       return 3;' \
-                'end; ' \
-                '$$;'
-    values = (product_id, product_id, product_id,)
-
-    try:
-        cur.execute(statement, values)
-        rows = cur.fetchall()
-        product_type = rows[0][0]
-        if int(product_type) == len(products_types):
-            return None
-        return products_types[int(product_type)]
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'Get the product to update - error: {error}')
-
-    finally:
-        if conn is not None:
-            conn.close()
-
-
-def get_product_to_update(product_id):
-    return
-
-
-##
-# Update a product based on a JSON payload
-##
-# To use it, you need to use postman:
-##
-# http://localhost:8080/product/69420
-##
-
-@app.route('/product/<product_id>', methods=['PUT'])
-def update_product(product_id):
-    logger.info('PUT /product/<product_id>')
-
-    payload = flask.request.get_json()
-
-    conn = db_connection()
-    cur = conn.cursor()
-
-    logger.debug(f'PUT /product/<product_id> - payload: {payload}')
-
-    product = get_product_to_update(product_id)
-
-    statements = []
-    values_table = []
-    if 'type' not in payload:
-        for i in payload.keys:
-            statements.append('update products set i = %s where product_id = %s')
-            values_table.append((payload[i], product_id,))
-    else:
-        if payload['type'] == 'smartphones':
-            for i in payload.keys:
-                if i in smartphones_columns_names:
-                    statements.append('update smartphones set i = %s where products_product_id = %s')
-                    values_table.append((payload[i], product_id,))
-                else:
-                    statements.append('update products set i = %s where product_id = %s')
-                    values_table.append((payload[i], product_id,))
-        elif payload['type'] == 'computers':
-            for i in payload.keys:
-                if i in computers_columns_names:
-                    statements.append('update computers set i = %s where products_product_id = %s')
-                    values_table.append((payload[i], product_id,))
-                else:
-                    statements.append('update products set i = %s where product_id = %s')
-                    values_table.append((payload[i], product_id,))
-        elif payload['type'] == 'televisions':
-            for i in payload.keys:
-                if i in televisions_columns_names:
-                    statements.append('update televisions set i = %s where products_product_id = %s')
-                    values_table.append((payload[i], product_id,))
-                else:
-                    statements.append('update products set i = %s where product_id = %s')
-                    values_table.append((payload[i], product_id,))
-        else:
-            response = {'status': StatusCodes['api_error'], 'results': 'valid type is required to update a product'}
-            return flask.jsonify(response)
-
-    try:
-        for i in range(len(statements)):
-            cur.execute(statements[i], values_table[i])
-        response = {'status': StatusCodes['success'], 'results': f'Updated: {cur.rowcount}'}
-        # commit the transaction
-        conn.commit()
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(error)
-        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-        # an error occurred, rollback
-        conn.rollback()
-
-    finally:
-        if conn is not None:
-            conn.close()
-
-    return flask.jsonify(response)
-
-
 ##
 # Buy products, an order, based on a JSON payload
 ##
@@ -428,7 +303,7 @@ def buy_products():
 
     order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     total_price = 0.0  # Without coupon
-    buyers_id = "2"
+    buyers_id = flask.request.headers.get('Authorization').split(' ')[1]
 
     try:
         cur.execute(order_id_statement, )
