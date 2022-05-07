@@ -179,20 +179,36 @@ def update_product(product_id):
     type_statement = 'select gettype(%s);'
     type_values = (product_id,)
 
-
-
     try:
         cur.execute(type_statement, type_values)
         product_type = cur.fetchall()[0][0]
 
-        old_items_statement = f'select * from products, {product_type} where product_id = %s'
-        old_items_value = (product_id,)
-
+        # get the data of the old version of the product
+        old_items_statement = f'select * from products,{product_type} ' \
+                              'where product_id = %s ' \
+                              'and version =(select max(version) from products where product_id = %s) ' \
+                              'and products_product_id = product_id and version = products_version'
+        old_items_value = (product_id, product_id)
         cur.execute(old_items_statement, old_items_value)
-        results = cur.fetchall()
+        results = cur.fetchall()[0]
 
-        #response = {'status': StatusCodes['success'], 'results': results}
+        # change the data, creating a new version
+        new_data_products = tuple([payload[i] if i in list(payload.keys())
+                             else version if i == 'version'
+                             else results[columns_names['products'].index(i)]
+                             for i in columns_names['products']])
+        new_data_product_type = tuple([payload[i] if i in list(payload.keys())
+                                       else version if i == 'products_version'
+                                       else results[columns_names[product_type].index(i) + len(columns_names['products'])]
+                                       for i in columns_names[product_type]])
 
+        # add the new version to the products table and corresponding product type table
+        insert_products_statement = f'insert into products values({("%s,"*len(columns_names["products"]))[:-1]});'
+        insert_product_type_statement = f'insert into {product_type} values({("%s,"*len(columns_names[product_type]))[:-1]});'
+        cur.execute(insert_products_statement, new_data_products)
+        cur.execute(insert_product_type_statement, new_data_product_type)
+        conn.commit()
+        response = {'status': StatusCodes['success'], 'results': f'Updated {",".join(list(payload.keys()))}'}
         """non_changed = list(set(columns_names[product_type] + columns_names['products']) - set(payload.keys()))
 
         old_items_statement = f"select {('%s,'*len(non_changed))[:-1]} from products, {product_type} where product_id = %s"
@@ -204,9 +220,6 @@ def update_product(product_id):
 
         response = {'status': StatusCodes['success'], 'results': results}"""
 
-        #conn.close()
-        #return flask.jsonify(response)
-
         #logger.debug('PUT /product/<product_id> - parse')
         #logger.debug(product_type)
         #content = {'ndep': int(row[0]), 'nome': row[1], 'localidade': row[2]}
@@ -214,18 +227,13 @@ def update_product(product_id):
         #response = {'status': StatusCodes['success'], 'results': content}
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'GET /departments/<ndep> - error: {error}')
+        logger.error(f'PUT /product/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
     finally:
         if conn is not None:
             conn.close()
 
-
-
-
-
-    #conn.close()
     return flask.jsonify(response)
 
 
