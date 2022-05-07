@@ -89,7 +89,7 @@ CREATE TABLE orders (
 /* Create table ratings */
 CREATE TABLE ratings (
 	comment		 VARCHAR(512),
-	classification	 SMALLINT NOT NULL,
+	rating	 SMALLINT NOT NULL,
 	orders_id		 INTEGER,
 	products_product_id	 INTEGER,
 	products_version	 TIMESTAMP,
