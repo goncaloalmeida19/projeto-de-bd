@@ -1766,3 +1766,47 @@ INFO:werkzeug: * Debugger PIN: 948-060-270
 INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
 INFO:logger:API online: http://127.0.0.1:8080
 INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:35:28] "[33mGET /product/69420 HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:35:30] "[33mGET /product/69420 HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:35:31] "[33mGET /product/69420 HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:35:32] "[33mGET /product/69420 HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:35:33] "[33mGET /product/69420 HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:35:45] "[33mGET /product/69420 HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:35:46] "[33mGET /product/69420 HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:35:51] "[33mGET /product/69420/ HTTP/1.1[0m" 404 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:35:59] "GET /products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:36:03] "GET /products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:36:04] "GET /products/69424 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[]
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:36:34] "GET /products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[]
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:49:16] "GET /products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[]
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:58:23] "GET /products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[('pocophone f1', 420, 'very good', 4.0, 'very very very very very good', 69.99, datetime.datetime(2022, 4, 29, 10, 8, 57))]
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:58:30] "GET /products/69420 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[('Smart TV Sony 4K', 5, None, 4.0, 'espetaculo', 849.99, datetime.datetime(2022, 4, 24, 19, 40)), ('Smart TV Sony 4K', 5, None, 4.0, 'espetaculo antigo', 849.99, datetime.datetime(2022, 4, 27, 14, 46, 57)), ('Smart TV Sony 4K', 5, None, 4.0, 'espetaculo novo', 849.99, datetime.datetime(2022, 4, 24, 19, 40))]
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 12:00:36] "GET /products/7390626 HTTP/1.1" 200 -

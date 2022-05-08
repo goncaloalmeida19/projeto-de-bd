@@ -84,6 +84,7 @@ def get_product(product_id):
 
         cur.execute(statement, values)
         rows = cur.fetchall()
+        logger.debug(rows)
 
         prices = [f"{i[6]} - {i[5]}" for i in rows]
         comments = [i[4] for i in rows]
