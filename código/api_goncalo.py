@@ -290,12 +290,14 @@ def buy_products():
     if 'coupon' in payload:
         coupon_id = payload['coupon_id']
 
-    product_version_statement = 'select max(version), price from products where product_id = %s group by price'
+    product_version_statement = 'select max(version), price from products where product_id = %s group by price '
+    campaign_statement = 'select campaigns_campaign_id from coupons where coupon_id = %s '
+    order_id_statement = 'select max(id) from orders '
+
     product_quantities_statement = 'insert into product_quantities values (%s, %s, %s, %s)'
-    campaign_statement = 'select campaigns_campaign_id from coupons where coupon_id = %s'
-    order_id_statement = 'select max(id) from orders'
     order_statement = 'insert into orders (id, order_date, buyers_users_user_id) values (%s, %s, %s)'
     order_with_campaign_statement = 'insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id) values (%s, %s, %s, %s, %s)'
+
     order_price_update_statement = 'update orders set price_total = %s where id = %s'
 
     order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -350,6 +352,7 @@ def buy_products():
             conn.close()
 
     return flask.jsonify(response)
+
 
 
 @app.route('/users/', methods=['GET'])
