@@ -1810,3 +1810,170 @@ INFO:werkzeug:127.0.0.1 - - [08/May/2022 11:58:30] "GET /products/69420 HTTP/1.1
 INFO:logger:GET /products/<product_id>
 DEBUG:logger:[('Smart TV Sony 4K', 5, None, 4.0, 'espetaculo', 849.99, datetime.datetime(2022, 4, 24, 19, 40)), ('Smart TV Sony 4K', 5, None, 4.0, 'espetaculo antigo', 849.99, datetime.datetime(2022, 4, 27, 14, 46, 57)), ('Smart TV Sony 4K', 5, None, 4.0, 'espetaculo novo', 849.99, datetime.datetime(2022, 4, 24, 19, 40))]
 INFO:werkzeug:127.0.0.1 - - [08/May/2022 12:00:36] "GET /products/7390626 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[('Smart TV Sony 4K', 5, None, 4.0, 'espetaculo', 849.99, datetime.datetime(2022, 4, 24, 19, 40)), ('Smart TV Sony 4K', 5, None, 4.0, 'espetaculo antigo', 849.99, datetime.datetime(2022, 4, 27, 14, 46, 57)), ('Smart TV Sony 4K', 5, None, 4.0, 'espetaculo novo', 849.99, datetime.datetime(2022, 4, 24, 19, 40))]
+INFO:werkzeug:127.0.0.1 - - [08/May/2022 12:05:58] "GET /products/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[('pocophone f1', 420, 'very good', 4.0, 'very very very very very good', 69.99, datetime.datetime(2022, 4, 29, 10, 8, 57))]
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 14:44:55] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[]
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 14:45:10] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[]
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:13:50] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[]
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:13:50] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[]
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:13:51] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[]
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:13:52] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:çojxsfbjlifsbijlfds
+DEBUG:logger:[]
+ERROR:logger:GET /product/<product_id> - error: list index out of range
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:14:31] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: No product found with 69424
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:14:54] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: 
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:20:06] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: 
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:20:55] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: No product found with id:69424
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:22:01] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: No product found with id:69424
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:22:09] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: No product found with id: 69424
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:22:13] "GET /dbproj/products/69424 HTTP/1.1" 200 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+ERROR:logger:null value in column "orders_id" of relation "ratings" violates not-null constraint
+DETAIL:  Failing row contains (very very very very very good, 5, null, 69424, null, 2).
+CONTEXT:  SQL statement "insert into ratings values ('very very very very very good', 5, order_id, '69424', version, '2')"
+PL/pgSQL function inline_code_block line 1 at SQL statement
+
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:22:54] "POST /dbproj/rating/69424 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+ERROR:logger:unrecognized exception condition "access_into_null"
+CONTEXT:  compilation of PL/pgSQL function "inline_code_block" near line 1
+
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:35:01] "POST /dbproj/rating/6942 HTTP/1.1" 200 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+ERROR:logger:unrecognized exception condition "access_into_null"
+CONTEXT:  compilation of PL/pgSQL function "inline_code_block" near line 1
+
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:36:55] "POST /dbproj/rating/6942 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+ERROR:logger:unrecognized exception condition "access_into_null"
+CONTEXT:  compilation of PL/pgSQL function "inline_code_block" near line 1
+
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:36:59] "POST /dbproj/rating/6942 HTTP/1.1" 200 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+ERROR:logger:unrecognized exception condition "access_into_null"
+CONTEXT:  compilation of PL/pgSQL function "inline_code_block" near line 1
+
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:40:19] "POST /dbproj/rating/6942 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+ERROR:logger:null value in column "orders_id" of relation "ratings" violates not-null constraint
+DETAIL:  Failing row contains (very very very very very good, 5, null, 6942, null, 2).
+CONTEXT:  SQL statement "insert into ratings values ('very very very very very good', 5, order_id, '6942', version, '2')"
+PL/pgSQL function inline_code_block line 1 at SQL statement
+
+INFO:werkzeug:127.0.0.1 - - [09/May/2022 15:40:23] "POST /dbproj/rating/6942 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat

@@ -43,6 +43,14 @@ def db_connection():
 
 
 ##########################################################
+# EXCEPTIONS
+##########################################################
+
+class NoDataFound(Exception):
+    pass
+
+
+##########################################################
 # ENDPOINTS
 ##########################################################
 
@@ -68,7 +76,7 @@ def landing_page():
 # http://localhost:8080/products/7390626
 ##
 
-@app.route('/products/<product_id>', methods=['GET'])
+@app.route('/dbproj/products/<product_id>', methods=['GET'])
 def get_product(product_id):
     logger.info('GET /products/<product_id>')
     conn = db_connection()
@@ -84,19 +92,26 @@ def get_product(product_id):
 
         cur.execute(statement, values)
         rows = cur.fetchall()
-        logger.debug(rows)
+        if len(rows) != 0:
+            logger.debug(rows)
 
-        prices = [f"{i[6]} - {i[5]}" for i in rows]
-        comments = [i[4] for i in rows]
-        content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
-                   'rating': rows[0][3], 'comments': comments}
+            prices = [f"{i[6]} - {i[5]}" for i in rows]
+            comments = [i[4] for i in rows]
+            content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
+                       'rating': rows[0][3], 'comments': comments}
 
-        # Response of the status of obtaining a product and the information obtained
-        response = {'status': StatusCodes['success'], 'results': content}
-
+            # Response of the status of obtaining a product and the information obtained
+            response = {'status': StatusCodes['success'], 'results': content}
+        else:
+            raise NoDataFound
+    except NoDataFound:
+        error = f"No product found with id: {product_id}"
+        logger.error(f'GET /product/<product_id> - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /product/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
 
     finally:
         if conn is not None:
@@ -113,7 +128,7 @@ def get_product(product_id):
 # http://localhost:8080/rating/7390626
 ##
 
-@app.route('/rating/<product_id>', methods=['POST'])
+@app.route('/dbproj/rating/<product_id>', methods=['POST'])
 def give_rating_feedback(product_id):
     logger.info('POST /rating/<product_id>')
     payload = flask.request.get_json()
@@ -147,7 +162,8 @@ def give_rating_feedback(product_id):
                     '   insert into ratings values (%s, %s, order_id, %s, version, %s); ' \
                     'end; ' \
                     '$$; '
-        values = (product_id, buyer_id) + tuple(payload[i] for i in columns_names["ratings"][:2]) + (product_id, buyer_id)
+        values = (product_id, buyer_id) + tuple(payload[i] for i in columns_names["ratings"][:2]) + (
+        product_id, buyer_id)
 
         cur.execute(statement, values)
 
@@ -179,7 +195,7 @@ def give_rating_feedback(product_id):
 # http://localhost:8080/product
 ##
 
-@app.route('/product', methods=['POST'])
+@app.route('/dbproj/product', methods=['POST'])
 def add_product():
     logger.info('POST /product')
     payload = flask.request.get_json()
@@ -273,7 +289,7 @@ def add_product():
 # http://localhost:8080/order
 ##
 
-@app.route('/order', methods=['POST'])
+@app.route('/dbproj/order', methods=['POST'])
 def buy_products():
     logger.info('POST /order')
     payload = flask.request.get_json()
@@ -353,7 +369,6 @@ def buy_products():
             conn.close()
 
     return flask.jsonify(response)
-
 
 
 @app.route('/users/', methods=['GET'])
