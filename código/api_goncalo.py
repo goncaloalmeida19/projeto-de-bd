@@ -1,9 +1,12 @@
 from datetime import datetime
 import flask
 import logging
+import jwt
 import psycopg2
 
 app = flask.Flask(__name__)
+app.config['SECRET_KEY'] = 'my-32-character-ultra-secure-and-ultra-long-secret'
+app.config['SESSION_COOKIE_NAME'] = 'our-db-project'
 
 StatusCodes = {
     'success': 200,
@@ -21,9 +24,57 @@ columns_names = {
 }
 
 
-class AuthenticationException(Exception):
-    def __init__(self, message='User must be administrator'):
-        super(AuthenticationException, self).__init__(message)
+##########################################################
+# EXCEPTIONS
+##########################################################
+
+class TokenError(Exception):
+    def __init__(self, message='Invalid Authentication Token'):
+        super(TokenError, self).__init__(message)
+
+
+class TokenCreationError(Exception):
+    def __init__(self, message='Failed to create user token'):
+        super(TokenCreationError, self).__init__(message)
+
+
+class InvalidAuthenticationException(Exception):
+    def __init__(self, message='User not registered'):
+        super(InvalidAuthenticationException, self).__init__(message)
+
+
+class InsufficientPrivilegesException(Exception):
+    def __init__(self, extra_msg, message='User must be administrator '):
+        super(InsufficientPrivilegesException, self).__init__(message + extra_msg)
+
+
+class NoDataFound(Exception):
+    pass
+
+
+##########################################################
+# AUXILIARY FUNCTIONS
+##########################################################
+
+def admin_check(fail_msg):
+    conn = db_connection()
+    cur = conn.cursor()
+
+    try:
+        user_token = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
+                                audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])
+        print(user_token)
+    except jwt.exceptions.InvalidTokenError as e:
+        raise TokenError()
+
+    admin_validation = 'select users_user_id ' \
+                       'from admins ' \
+                       'where users_user_id = %s'
+
+    cur.execute(admin_validation, [user_token['user']])
+
+    if cur.fetchone() is None:
+        raise InsufficientPrivilegesException(fail_msg)
 
 
 ##########################################################
@@ -40,14 +91,6 @@ def db_connection():
     )
 
     return db
-
-
-##########################################################
-# EXCEPTIONS
-##########################################################
-
-class NoDataFound(Exception):
-    pass
 
 
 ##########################################################
@@ -144,7 +187,8 @@ def give_rating_feedback(product_id):
             response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to rate a product'}
             return flask.jsonify(response)
 
-    buyer_id = flask.request.headers.get('Authorization').split(' ')[1]
+    buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
+                          audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
 
     try:
         # Get info about the product that will be rated (the one already bought) and insert the rating info in the "ratings" table
@@ -163,7 +207,7 @@ def give_rating_feedback(product_id):
                     'end; ' \
                     '$$; '
         values = (product_id, buyer_id) + tuple(payload[i] for i in columns_names["ratings"][:2]) + (
-        product_id, buyer_id)
+            product_id, buyer_id)
 
         cur.execute(statement, values)
 
@@ -217,7 +261,8 @@ def add_product():
             return flask.jsonify(response)
 
     version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    seller_id = flask.request.headers.get('Authorization').split(' ')[1]
+    seller_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
+                           audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
     product_type = payload['type']
 
     try:
@@ -319,7 +364,8 @@ def buy_products():
 
     order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     total_price = 0.0  # Without coupon
-    buyers_id = flask.request.headers.get('Authorization').split(' ')[1]
+    buyers_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
+                           audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
 
     try:
         cur.execute(order_id_statement, )
@@ -374,44 +420,22 @@ def buy_products():
 @app.route('/users/', methods=['GET'])
 def get_all_users():
     logger.info('GET /users')
-    user_token = flask.request.headers.get('Authorization').split(' ')[1]
-    print(user_token)
     conn = db_connection()
     cur = conn.cursor()
 
     try:
-        if not user_token.isnumeric():
-            raise AuthenticationException()
+        admin_check("to get user list")
 
-        admin_validation = "DO $$" \
-                           "DECLARE" \
-                           "    v_admin admin%ROWTYPE" \
-                           "BEGIN" \
-                           "    SELECT * INTO STRICT v_admin FROM admins WHERE users_user_id = %s" \
-                           "EXCEPTION" \
-                           "    WHEN no_data_found THEN" \
-                           "        RAISE EXCEPTION 'User is not administrator''" \
-                           "END;" \
-                           "$$"
-        # admin_validation =  "SELECT * FROM admins WHERE users_user_id = %s"
-
-        cur.execute(admin_validation, [int(user_token)])
-        login_result = cur.fetchone()
-
-        if login_result is None:
-            raise AuthenticationException()
-
-        cur.execute('SELECT user_id, username, password FROM users')  # FIXME: password
+        cur.execute('select * from users')
         rows = cur.fetchall()
 
         logger.debug('GET /users - parse')
-        Results = []
+        results = []
         for row in rows:
             logger.debug(row)
             content = {'user_id': row[0], 'username': row[1], 'password': row[2]}
-            Results.append(content)  # appending to the payload to be returned
-
-        response = {'status': StatusCodes['success'], 'results': Results}
+            results.append(content)  # appending to the payload to be returned
+        response = {'status': StatusCodes['success'], 'results': results}
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /users - error: {error}')
@@ -427,6 +451,7 @@ def get_all_users():
 @app.route('/users/', methods=['POST'])
 def register_user():
     logger.info('POST /users')
+
     payload = flask.request.get_json()
 
     conn = db_connection()
@@ -438,21 +463,34 @@ def register_user():
         response = {'status': StatusCodes['api_error'], 'results': 'user_id not in payload'}
         return flask.jsonify(response)
 
-    # parameterized queries, good for security and performance
-    statement = 'INSERT INTO users (user_id, username, password) VALUES (%s, %s, %s)'
+    if 'username' not in payload:
+        response = {'status': StatusCodes['api_error'], 'results': 'username is required for user registry'}
+        return flask.jsonify(response)
+
+    if 'password' not in payload:
+        response = {'status': StatusCodes['api_error'], 'results': 'password is required for user registry'}
+        return flask.jsonify(response)
+
+    if 'type' not in payload or payload['type'] not in ['buyers', 'sellers', 'admins']:
+        response = {'status': StatusCodes['api_error'], 'results': 'user type is required for user registry: buyers, '
+                                                                   'sellers or admins'}
+        return flask.jsonify(response)
+
+    statement = 'insert into users (user_id, username, password) values (%s, %s, %s)'
     values = (payload['user_id'], payload['username'], payload['password'])
 
     try:
-        cur.execute(statement, values)
+        if payload['type'] != 'buyers' and (payload['type'] == 'sellers' or payload['type'] == 'admins'):
+            admin_check(f"to register {payload['type']}")
 
+        cur.execute(statement, values)
         # commit the transaction
         conn.commit()
-        response = {'status': StatusCodes['success'], 'results': f'Inserted user {payload["username"]}'}
+        response = {'status': StatusCodes['success'], 'results': f'Registered user {payload["username"]}'}
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'POST /users - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-
         # an error occurred, rollback
         conn.rollback()
 
@@ -466,6 +504,7 @@ def register_user():
 @app.route('/users/', methods=['PUT'])
 def login_user():
     logger.info('PUT /users')
+
     payload = flask.request.get_json()
 
     conn = db_connection()
@@ -477,22 +516,37 @@ def login_user():
         response = {'status': StatusCodes['api_error'], 'results': 'username and password are required for login'}
         return flask.jsonify(response)
 
-    statement = 'SELECT user_id FROM users WHERE username = %s AND password = %s'
+    statement = 'select user_id, username from users where username = %s and password = %s'
     values = (payload['username'], payload['password'])
 
     try:
         cur.execute(statement, values)
         row = cur.fetchone()
 
-        response = {'status': StatusCodes['success'], 'token': row[0]}  # TODO: JWT authent
+        if row is not None:
+            auth_token = jwt.encode({'user': row[0],
+                                     'aud': app.config['SESSION_COOKIE_NAME'],
+                                     'iat': datetime.datetime.utcnow(),
+                                     'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10)},
+                                    app.config['SECRET_KEY'])
 
+            try:
+                jwt.decode(auth_token, app.config['SECRET_KEY'], audience=app.config['SESSION_COOKIE_NAME'],
+                           algorithms=["HS256"])
+
+            except jwt.exceptions.InvalidTokenError:
+                raise TokenCreationError()
+
+        else:
+            raise InvalidAuthenticationException()
+
+        response = {'status': StatusCodes['success'], 'token': auth_token}  # TODO: JWT authent
         # commit the transaction
         conn.commit()
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(error)
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-
         # an error occurred, rollback
         conn.rollback()
 
