@@ -114,8 +114,8 @@ CREATE TABLE questions (
 CREATE TABLE campaigns (
 	campaign_id		 INTEGER,
 	description		 VARCHAR(512),
-	start_date		 DATE NOT NULL,
-	end_date		 DATE NOT NULL,
+	date_start		 DATE NOT NULL,
+	date_end		 DATE NOT NULL,
 	coupons          INTEGER NOT NULL,
 	discount		 DOUBLE PRECISION NOT NULL,
 	admins_users_user_id INTEGER NOT NULL,
