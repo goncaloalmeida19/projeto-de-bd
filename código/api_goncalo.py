@@ -49,60 +49,32 @@ class InsufficientPrivilegesException(Exception):
 
 
 class ProductNotFound(Exception):
-    def __init__(self, endpoint, p_id):
-        self.endpoint = endpoint
-        self.p_id = p_id
-
-    def getError(self):
-        return f"No product found with id: {self.p_id}"
-
-
-class CouponNotFound(Exception):
-    def __init__(self, endpoint, c_id):
-        self.endpoint = endpoint
-        self.c_id = c_id
-
-    def getError(self):
-        return f"No coupon found with id: {self.c_id}"
-
-
-class CouponExpired(Exception):
-    def __init__(self, endpoint, c_id, e_date, t_date):
-        self.endpoint = endpoint
-        self.c_id = c_id
-        self.e_date = e_date
-        self.t_date = t_date
-
-    def getError(self):
-        return f"The coupon with id {self.c_id} has expired in {self.e_date} and today is {self.t_date}"
-
-
-class AlreadyRated(Exception):
-    def __init__(self, endpoint, p_id, p_version, o_id, rating, comment):
-        self.endpoint = endpoint
-        self.p_id = p_id
-        self.p_version = p_version
-        self.o_id = o_id
-        self.rating = rating
-        self.comment = comment
-
-    def getError(self):
-        return f"Product with id '{self.p_id}' and version '{self.p_version}' from order '{self.o_id}' already been rated: " \
-               f"Rating: '{self.rating}' \\ " \
-               f"Comment:'{self.comment}'"
+    def __init__(self, p_id, message='No product found with id: '):
+        super(ProductNotFound, self).__init__(message + p_id)
 
 
 class ProductWithoutStockAvailable(Exception):
-    def __init__(self, endpoint, p_id, p_quantity, p_stock):
-        self.endpoint = endpoint
-        self.p_id = p_id
-        self.p_quantity = p_quantity
-        self.p_stock = p_stock
+    def __init__(self, p_id, p_quantity, p_stock,
+                 message1="The seller hasn't the required quantity in stock of the product with id '"):
+        super(ProductWithoutStockAvailable, self).__init__(
+            message1 + p_id + "': Quantity: '" + p_quantity + "' \\ Stock: '" + p_stock + "'")
 
-    def getError(self):
-        return f"The seller hasn't the required quantity in stock of the product with id '{self.p_id}': " \
-               f"Quantity: '{self.p_quantity}' \\ " \
-               f"Stock: '{self.p_stock}'"
+
+class CouponNotFound(Exception):
+    def __init__(self, c_id, message='No coupon found with id: '):
+        super(CouponNotFound, self).__init__(message + c_id)
+
+
+class CouponExpired(Exception):
+    def __init__(self, c_id, e_date, t_date, message1="The coupon with id '", message2="' has expired in '"):
+        super(CouponExpired, self).__init__(message1 + c_id + message2 + e_date + "' and today is '" + t_date + "'")
+
+
+class AlreadyRated(Exception):
+    def __init__(self, p_id, p_version, o_id, p_r, p_c, message1="Product with id '", message2="' and version '",
+                 message3="' from order '", message4="' already been rated: "):
+        super(AlreadyRated, self).__init__(
+            message1 + p_id + message2 + p_version + message3 + o_id + message4 + "Rating: '" + p_r + ' \\ Comment: ' + p_c + "'")
 
 
 ##########################################################
@@ -169,7 +141,7 @@ def landing_page():
 ##
 # To use it, access:
 ##
-# http://localhost:8080/products/7390626
+# http://localhost:8080/dbproj/products/7390626
 ##
 
 @app.route('/dbproj/products/<product_id>', methods=['GET'])
@@ -189,9 +161,9 @@ def get_product(product_id):
         cur.execute(statement, values)
         rows = cur.fetchall()
         if len(rows) == 0:
-            raise ProductNotFound('GET /product/<product_id>', product_id)
+            raise ProductNotFound(product_id)
 
-        #logger.debug(rows)
+        # logger.debug(rows)
 
         prices = [f"{i[6]} - {i[5]}" for i in rows]
         comments = [i[4] for i in rows]
@@ -201,9 +173,6 @@ def get_product(product_id):
         # Response of the status of obtaining a product and the information obtained
         response = {'status': StatusCodes['success'], 'results': content}
 
-    except ProductNotFound as pnf:
-        # logger.error(f'{pnf.endpoint} - error: {pnf.getError()}')
-        response = {'status': StatusCodes['api_error'], 'errors': str(pnf.getError())}
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /product/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
@@ -220,7 +189,7 @@ def get_product(product_id):
 ##
 # To use it, you need to use postman:
 ##
-# http://localhost:8080/rating/7390626
+# http://localhost:8080/dbproj/rating/69420
 ##
 
 @app.route('/dbproj/rating/<product_id>', methods=['POST'])
@@ -247,9 +216,8 @@ def give_rating_feedback(product_id):
         response = {'status': StatusCodes['api_error'], 'results': f'A valid rating is required to add a product'}
         return flask.jsonify(response)
 
-    #buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
-    #                      audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
-    buyer_id = "2"
+    buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
+                         audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
 
     try:
         # Get info about the product that will be rated (the one already bought)
@@ -263,7 +231,7 @@ def give_rating_feedback(product_id):
         rows = cur.fetchall()
         # logger.debug(rows)
         if len(rows) == 0:
-            raise ProductNotFound('POST /rating/<product_id>', product_id)
+            raise ProductNotFound(product_id)
 
         order_id = rows[len(rows) - 1][0]
         version = rows[len(rows) - 1][1].strftime("%Y-%m-%d %H:%M:%S")
@@ -275,13 +243,13 @@ def give_rating_feedback(product_id):
                     'from ratings ' \
                     'where orders_id = %s ' \
                     'and products_product_id = %s'
-        values = (order_id, product_id, )
+        values = (order_id, product_id,)
         cur.execute(statement, values)
         rows = cur.fetchall()
         # logger.debug(rows)
 
         if len(rows) != 0:
-            raise AlreadyRated('POST /rating/<product_id>', product_id, version, order_id, rows[0][1], rows[0][2])
+            raise AlreadyRated(product_id, version, order_id, rows[0][1], rows[0][2])
 
         # Insert the rating info in the "ratings" table
         statement = 'insert into ratings values (%s, %s, %s, %s, %s, %s)'
@@ -294,12 +262,6 @@ def give_rating_feedback(product_id):
         # commit the transaction
         conn.commit()
 
-    except AlreadyRated as ar:
-        # logger.error(f'{ar.endpoint} - error: {ar.getError()}')
-        response = {'status': StatusCodes['api_error'], 'errors': str(ar.getError())}
-    except ProductNotFound as pnf:
-        # logger.error(f'{npf.endpoint} - error: {npf.getError()}')
-        response = {'status': StatusCodes['api_error'], 'errors': str(pnf.getError())}
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(error)
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
@@ -319,7 +281,7 @@ def give_rating_feedback(product_id):
 ##
 # To use it, you need to use postman:
 ##
-# http://localhost:8080/product
+# http://localhost:8080/dbproj/product
 ##
 
 @app.route('/dbproj/product', methods=['POST'])
@@ -373,8 +335,10 @@ def add_product():
                                 'results': f'{j} is required to add a {product_type[:-1]}'}
                     return flask.jsonify(response)
 
-            final_statement += f'insert into {product_type} values (' + ('%s, ' * len(columns_names[product_type]))[:-2] + '); end; $$;'
-            final_values += tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple([str(product_id), version])
+            final_statement += f'insert into {product_type} values (' + ('%s, ' * len(columns_names[product_type]))[
+                                                                        :-2] + '); end; $$;'
+            final_values += tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple(
+                [str(product_id), version])
         else:
             response = {'status': StatusCodes['api_error'], 'results': 'valid type is required to add a product'}
             return flask.jsonify(response)
@@ -410,7 +374,7 @@ def add_product():
 ##
 # To use it, you need to use postman:
 ##
-# http://localhost:8080/order
+# http://localhost:8080/dbproj/order
 ##
 
 @app.route('/dbproj/order', methods=['POST'])
@@ -441,9 +405,8 @@ def buy_products():
 
     order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     total_price = 0.0  # Without coupon
-    #buyers_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
-    #                       audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
-    buyers_id = 2
+    buyers_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
+                           audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
 
     try:
         order_id_statement = 'select max(id) from orders '
@@ -460,12 +423,12 @@ def buy_products():
             rows = cur.fetchall()
 
             if len(rows) == 0:
-                raise CouponNotFound('POST /order', payload['coupon'])
+                raise CouponNotFound(coupon_id)
 
             expiration_date = rows[0][2].strftime("%Y-%m-%d")
             today_date = order_date[:-9]
             if expiration_date <= today_date:
-                raise CouponExpired('POST /order', payload['coupon'], expiration_date, today_date)
+                raise CouponExpired(coupon_id, expiration_date, today_date)
 
             campaign_id = rows[0][0]
             discount = rows[0][1]
@@ -487,11 +450,11 @@ def buy_products():
             rows = cur.fetchall()
 
             if len(rows) == 0:
-                raise ProductNotFound('POST /order', i['product_id'])
+                raise ProductNotFound(i['product_id'])
 
             stock = rows[0][2]
             if stock - i['quantity'] < 0:
-                raise ProductWithoutStockAvailable('POST /order', i['product_id'], i['quantity'], rows[0][2])
+                raise ProductWithoutStockAvailable(i['product_id'], i['quantity'], rows[0][2])
 
             version = rows[0][0].strftime("%Y-%m-%d %H:%M:%S")
             total_price += rows[0][1]
@@ -510,22 +473,13 @@ def buy_products():
         cur.execute(order_price_update_statement, order_price_update_values)
 
         coupon_statement = 'update coupons set used = true, discount_applied = %s where coupon_id = %s'
-        coupon_values = (coupon_id, price_discounted, )
+        coupon_values = (coupon_id, price_discounted,)
         cur.execute(coupon_statement, coupon_values)
 
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
         # commit the transaction
         conn.commit()
 
-    except ProductNotFound as pnf:
-        # logger.error(f'{pnf.endpoint} - error: {pnf.getError()}')
-        response = {'status': StatusCodes['api_error'], 'errors': str(pnf.getError())}
-    except CouponNotFound as cnf:
-        # logger.error(f'{cpf.endpoint} - error: {cpf.getError()}')
-        response = {'status': StatusCodes['api_error'], 'errors': str(cnf.getError())}
-    except ProductWithoutStockAvailable as pwsa:
-        # logger.error(f'{pwsa.endpoint} - error: {pwsa.getError()}')
-        response = {'status': StatusCodes['api_error'], 'errors': str(pwsa.getError())}
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(error)
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
