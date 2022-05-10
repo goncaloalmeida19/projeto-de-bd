@@ -337,6 +337,44 @@ def subscribe_campaign(campaign_id):
     return flask.jsonify(response)
 
 
+@app.route('/dbproj/report/campaign', methods=['GET'])
+def get_campaign_stats():
+    logger.info('GET /report/campaign')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    stats_statement = "select campaign_id," \
+                      "(select count(*) from coupons where campaigns_campaign_id = campaign_id)," \
+                      "(select count(*) from coupons where campaigns_campaign_id = campaign_id and used = 'true')," \
+                      "(select coalesce(sum(discount_applied),0) from coupons where campaigns_campaign_id = campaign_id) " \
+                      "from campaigns group by campaign_id"
+
+    try:
+        cur.execute(stats_statement)
+        rows = cur.fetchall()
+
+        logger.debug('GET /report/campaign - parse')
+        results = []
+        for row in rows:
+            logger.debug(row)
+            content = {'campaign_id': int(row[0]), 'generated_coupons': int(row[1]),
+                       'used_coupons': int(row[2]), 'total_discount_value': float(row[3])}
+            results.append(content)  # appending to the payload to be returned
+
+        response = {'status': StatusCodes['success'], 'results': results}
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'GET /report/campaign - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+
 @app.route('/product/<product_id>', methods=['PUT'])
 def update_product(product_id):
     logger.info('PUT /product')
