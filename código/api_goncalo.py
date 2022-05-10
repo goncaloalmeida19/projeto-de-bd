@@ -294,8 +294,7 @@ def add_product():
                 columns_names[product_type]))[:-2] + '); ' \
                                                      'end;' \
                                                      '$$;'
-            final_values += tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple(
-                [str(product_id), version])
+            final_values += tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple([str(product_id), version])
         else:
             response = {'status': StatusCodes['api_error'], 'results': 'valid type is required to add a product'}
             return flask.jsonify(response)

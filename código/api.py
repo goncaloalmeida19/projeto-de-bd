@@ -77,6 +77,14 @@ def db_connection():
     )
     return db
 
+##########################################################
+# TABLE COLUMNS
+##########################################################
+
+users_columns = ['user_id', 'username', 'password']
+admins_columns = ['users_user_id']
+buyers_columns = ['users_user_id', 'nif', 'home_addr']
+sellers_columns = ['users_user_id', 'nif', 'shipping_addr']
 
 ##########################################################
 # ENDPOINTS
@@ -141,12 +149,35 @@ def register_user():
                                                                    'sellers or admins'}
         return flask.jsonify(response)
 
-    statement = 'insert into users (user_id, username, password) values (%s, %s, %s)'
-    values = (payload['user_id'], payload['username'], payload['password'])
+    if payload['type'] == 'buyers' or payload['type'] == 'sellers':
+        if 'nif' not in payload:
+            response = {'status': StatusCodes['api_error'], 'results': 'nif is required to register buyers and sellers'}
+            return flask.jsonify(response)
+
+        if 'home_addr' not in payload and 'shipping_addr' not in payload:
+            response = {'status': StatusCodes['api_error'],
+                        'results': 'address (home_addr or shipping_addr) is required to register buyers or sellers'}
+            return flask.jsonify(response)
 
     try:
         if payload['type'] != 'buyers' and (payload['type'] == 'sellers' or payload['type'] == 'admins'):
             admin_check(f"to register {payload['type']}")
+
+        values = [payload['user_id'], payload['username'], payload['password']]
+        extra_values = [payload['user_id']]
+
+        # TODO: test
+        if payload['type'] == 'buyers':
+            extra_values.append(payload['nif'])
+            extra_values.append(payload['home_addr'])
+        elif payload['type'] == 'sellers':
+            extra_values.append(payload['nif'])
+            extra_values.append(payload['shipping_addr'])
+
+        statement = 'insert into users (user_id, username, password) values (%s, %s, %s);' \
+                    f' insert into {payload["type"]} values (' + '%s, ' * (len(extra_values)-1) + ' %s);'
+        print(statement)
+        values.extend(extra_values)
 
         cur.execute(statement, values)
         # commit the transaction
