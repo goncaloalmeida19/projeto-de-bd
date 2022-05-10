@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import flask
 import logging
 import jwt
@@ -238,7 +238,6 @@ def add_campaign():
 
     admin_id = 0
 
-
     verify_dates_statement = 'select exists(select 1 from campaigns where %s between date_start and date_end or %s between date_start and date_end)'
     verify_dates_values = (payload['date_start'], payload['date_end'])
 
@@ -248,8 +247,6 @@ def add_campaign():
     campaign_statement = f'insert into campaigns ({",".join(list(payload))}, admins_users_user_id, campaign_id) ' \
                          f'values ({("%s," * len(payload))[:-1]},%s, %s)'
     print(campaign_statement)
-
-
 
     try:
         cur.execute(verify_dates_statement, verify_dates_values)
@@ -272,6 +269,62 @@ def add_campaign():
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'POST /campaign - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+        # an error occurred, rollback
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+@app.route('/dbproj/subscribe/<campaign_id>', methods=['PUT'])
+def subscribe_campaign(campaign_id):
+    logger.info('PUT /subscribe/<campaign_id>')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    time_now = datetime.now()
+    expiration_date = time_now + timedelta(days=30)
+
+    user_id = 2
+
+    time_now = time_now.strftime("%Y-%m-%d %H:%M:%S")
+    expiration_date = expiration_date.strftime("%Y-%m-%d %H:%M:%S")
+
+    #campaign_expired_statement = 'select exists(select 1 from campaigns )'
+
+    # parameterized queries, good for security and performance
+    subscribe_statement = 'update campaigns set coupons = coupons - 1 ' \
+                          'where campaign_id = %s and %s between date_start and date_end and coupons > 0;'
+    subscribe_values = (campaign_id, time_now)
+
+    gen_coupon_statement = 'select coalesce(max(coupon_id) + 1, 1) from coupons'
+
+    insert_coupon_statement = f'insert into coupons (coupon_id, used, discount_applied, expiration_date, campaigns_campaign_id, buyers_users_user_id) values (%s,%s,%s,%s,%s,%s);'
+
+
+    try:
+        cur.execute(subscribe_statement, subscribe_values)
+        if cur.rowcount == 0:
+            response = {'status': StatusCodes['bad_request'], 'results': 'That campaign is not available anymore'}
+            return flask.jsonify(response)
+
+        cur.execute(gen_coupon_statement)
+        coupon_id = cur.fetchall()[0][0]
+
+        insert_coupon_values = (coupon_id, 'false', 0, expiration_date, campaign_id, user_id)
+        cur.execute(insert_coupon_statement, insert_coupon_values)
+
+        response = {'status': StatusCodes['success'], 'results': {'coupon_id': coupon_id, 'expiration_date': expiration_date}}
+        # commit the transaction
+        conn.commit()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(error)
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
         # an error occurred, rollback
