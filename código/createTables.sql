@@ -116,6 +116,7 @@ CREATE TABLE campaigns (
 	description		 VARCHAR(512),
 	start_date		 DATE NOT NULL,
 	end_date		 DATE NOT NULL,
+	coupons          INTEGER NOT NULL,
 	discount		 DOUBLE PRECISION NOT NULL,
 	admins_users_user_id INTEGER NOT NULL,
 	PRIMARY KEY(campaign_id)
@@ -126,6 +127,7 @@ CREATE TABLE coupons (
 	coupon_id		 INTEGER,
 	used			 BOOL NOT NULL,
 	discount_applied	 DOUBLE PRECISION,
+	expiration_date DATE NOT NULL,
 	campaigns_campaign_id INTEGER,
 	buyers_users_user_id	 INTEGER NOT NULL,
 	orders_id		 INTEGER,

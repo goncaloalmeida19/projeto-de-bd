@@ -10,7 +10,7 @@ app.config['SESSION_COOKIE_NAME'] = 'our-db-project'
 
 StatusCodes = {
     'success': 200,
-    'api_error': 400,
+    'bad_request': 400,
     'internal_error': 500
 }
 
@@ -20,6 +20,7 @@ columns_names = {
     'televisions': ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
                     'products_version'],
     'computers': ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id', 'products_version'],
+    'campaigns': ['campaign_id', 'description', 'start_date', 'end_date', 'discount', 'admins_users_user_id']
 }
 
 
@@ -202,6 +203,59 @@ def give_rating_feedback(product_id):
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(error)
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+        # an error occurred, rollback
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+@app.route('/campaign/', methods=['POST'])
+def add_campaign():
+    logger.info('POST /campaign')
+    payload = flask.request.get_json()
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    logger.debug(f'POST /campaign - payload: {payload}')
+
+    # validate arguments
+    for i in payload:
+        if i not in columns_names['campaigns'][1:5] and i != 'coupons':
+            response = {'status': StatusCodes['bad_request'],
+                        'results': f'{i} is not a valid attribute'}
+            return flask.jsonify(response)
+    for i in range(1,5):
+        if columns_names['campaigns'][i] not in payload:
+            response = {'status': StatusCodes['bad_request'], 'results': f'{columns_names["campaigns"][i]} value not in payload'}
+            return flask.jsonify(response)
+
+    admin_id = 0
+
+
+
+    # parameterized queries, good for security and performance
+    campaign_statement = f'insert into campaigns ({",".join(list(set(payload)-{"coupons"}))}, campaign_id, admins_users_user_id) ' \
+                f'values ({("%s," * len(columns_names["campaigns"]))[:-1]})'
+    print(campaign_statement)
+    #campaign_values = tuple([list(payload.values())
+
+    coupons_statement = 'insert into coupons'
+
+    try:
+        cur.execute(campaign_statement, campaign_values)
+
+        # commit the transaction
+        conn.commit()
+        response = {'status': StatusCodes['success'], 'results': f'Inserted campaign {payload["ndep"]}'}
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'POST /departments - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
         # an error occurred, rollback
