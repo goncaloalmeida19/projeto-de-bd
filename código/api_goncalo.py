@@ -331,7 +331,7 @@ def add_product():
         product_id_values = (seller_id,)
         cur.execute(product_id_statement, product_id_values)
         rows = cur.fetchall()
-        product_id = rows[0][0] + 1
+        product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
         final_statement = 'do $$ ' \
                           'begin ' \
@@ -429,7 +429,6 @@ def buy_products():
         if coupon_id != -1:
             campaign_statement = 'select campaigns_campaign_id from coupons where coupon_id = %s '
             campaign_values = (coupon_id,)
-
             cur.execute(campaign_statement, campaign_values)
             campaign_id = cur.fetchall()[0][0]
 
