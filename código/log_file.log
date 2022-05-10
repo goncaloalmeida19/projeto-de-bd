@@ -2671,3 +2671,189 @@ INFO:werkzeug:127.0.0.1 - - [10/May/2022 17:24:41] "POST /dbproj/order HTTP/1.1"
 INFO:werkzeug:127.0.0.1 - - [10/May/2022 17:24:41] "POST /dbproj/order HTTP/1.1" 200 -
 INFO:logger:POST /order
 INFO:werkzeug:127.0.0.1 - - [10/May/2022 17:24:44] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_bernardo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 20:59:56] "[31m[1mGET /dbproj/order HTTP/1.1[0m" 405 -
+INFO:logger:POST /order
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:00:09] "[35m[1mPOST /dbproj/order HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /order
+DEBUG:logger:[]
+ERROR:logger:list index out of range
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:01:01] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /order
+DEBUG:logger:0.0
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:36:45] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:logger:POST /order
+DEBUG:logger:0.0
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:36:53] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /order
+DEBUG:logger:10.0
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:39:51] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:logger:POST /order
+DEBUG:logger:10.0
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:40:26] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug: * Running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:51:05] "[33mPUT /dbproj/user/ HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:51:12] "[32mPUT /users HTTP/1.1[0m" 308 -
+INFO:logger:PUT /users
+DEBUG:logger:PUT /users - payload: {'username': 'gui', 'password': 'tcsw'}
+ERROR:logger:type object 'datetime.datetime' has no attribute 'datetime'
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:51:12] "PUT /users/ HTTP/1.1" 200 -
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:52:52] "[33mPUT /dbproj/user/ HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:52:57] "[32mPUT /users HTTP/1.1[0m" 308 -
+INFO:logger:PUT /users
+DEBUG:logger:PUT /users - payload: {'username': 'gui', 'password': 'tcsw'}
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:52:57] "PUT /users/ HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:53:10] "[32mPUT /users HTTP/1.1[0m" 308 -
+INFO:logger:PUT /users
+DEBUG:logger:PUT /users - payload: {'username': 'gui', 'password': 'tcsasdgasdfsadfsadfsdafw'}
+ERROR:logger:User not registered
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:53:10] "PUT /users/ HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /order
+ERROR:logger:'Logger' object is not callable
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:58:10] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:logger:POST /order
+ERROR:logger:'Logger' object is not callable
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:58:23] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:logger:POST /order
+ERROR:logger:'Logger' object is not callable
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:58:26] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /order
+DEBUG:logger:2022-05
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:58:39] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /order
+DEBUG:logger:2022-05-10 21:59:09
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:59:09] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /order
+DEBUG:logger:2022-05-10
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:59:29] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:logger:POST /order
+DEBUG:logger:2022-05-10
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 21:59:55] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /order
+DEBUG:logger:2022-06-09
+DEBUG:logger:2022-05-10
+ERROR:logger:'<' not supported between instances of 'datetime.date' and 'str'
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 22:00:57] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /order
+DEBUG:logger:2022-06-09
+DEBUG:logger:2022-05-10
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 22:02:03] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /order
+DEBUG:logger:2022-06-09
+DEBUG:logger:2022-05-10
+DEBUG:logger:amior
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 22:02:18] "POST /dbproj/order HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug: * Running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good', 'seila': 'sadknfdnkosda'}
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 22:13:06] "POST /dbproj/rating/69420 HTTP/1.1" 200 -
+INFO:logger:POST /rating/<product_id>
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 22:13:09] "[31m[1mPOST /dbproj/rating/69420 HTTP/1.1[0m" 400 -
+INFO:logger:POST /rating/<product_id>
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 22:13:11] "[31m[1mPOST /dbproj/rating/69420 HTTP/1.1[0m" 400 -
+INFO:logger:POST /rating/<product_id>
+DEBUG:logger:POST /rating/<product_id> - payload: {'rating': 5, 'comment': 'very very very very very good'}
+INFO:werkzeug:127.0.0.1 - - [10/May/2022 22:13:13] "POST /dbproj/rating/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270

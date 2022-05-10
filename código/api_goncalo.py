@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import flask
 import logging
 import jwt
@@ -55,6 +55,26 @@ class ProductNotFound(Exception):
 
     def getError(self):
         return f"No product found with id: {self.p_id}"
+
+
+class CouponNotFound(Exception):
+    def __init__(self, endpoint, c_id):
+        self.endpoint = endpoint
+        self.c_id = c_id
+
+    def getError(self):
+        return f"No coupon found with id: {self.c_id}"
+
+
+class CouponExpired(Exception):
+    def __init__(self, endpoint, c_id, e_date, t_date):
+        self.endpoint = endpoint
+        self.c_id = c_id
+        self.e_date = e_date
+        self.t_date = t_date
+
+    def getError(self):
+        return f"The coupon with id {self.c_id} has expired in {self.e_date} and today is {self.t_date}"
 
 
 class AlreadyRated(Exception):
@@ -212,6 +232,9 @@ def give_rating_feedback(product_id):
     cur = conn.cursor()
 
     logger.debug(f'POST /rating/<product_id> - payload: {payload}')
+    if len(payload) > 2:
+        response = {'status': StatusCodes['api_error'], 'results': 'Invalid number of arguments in the payload'}
+        return flask.jsonify(response)
 
     # Verification of the required parameters to do a rating to a product
     for i in columns_names["ratings"][:2]:
@@ -399,14 +422,18 @@ def buy_products():
     cur = conn.cursor()
 
     # logger.debug(f'POST /order - payload: {payload}')
+    if len(payload) > 2:
+        response = {'status': StatusCodes['api_error'], 'results': 'Invalid number of arguments in the payload'}
+        return flask.jsonify(response)
 
     coupon_id = -1
+    discount = 0
 
     if 'cart' not in payload:
         response = {'status': StatusCodes['api_error'], 'results': 'cart is required to buy products'}
         return flask.jsonify(response)
     if 'coupon' in payload:
-        coupon_id = payload['coupon_id']
+        coupon_id = payload['coupon']
 
     product_version_statement = 'select version, price, stock from products where product_id = %s and version = (select max(version) from products where product_id = %s)'
     product_quantities_statement = 'insert into product_quantities values (%s, %s, %s, %s)'
@@ -427,14 +454,26 @@ def buy_products():
         # logger.debug(f'{order_id}')
 
         if coupon_id != -1:
-            campaign_statement = 'select campaigns_campaign_id from coupons where coupon_id = %s '
+            campaign_statement = 'select campaigns_campaign_id, discount, expiration_date  from coupons, campaigns  where coupon_id = %s and campaigns_campaign_id = campaign_id'
             campaign_values = (coupon_id,)
             cur.execute(campaign_statement, campaign_values)
-            campaign_id = cur.fetchall()[0][0]
+            rows = cur.fetchall()
+
+            if len(rows) == 0:
+                raise CouponNotFound('POST /order', payload['coupon'])
+
+            expiration_date = rows[0][2].strftime("%Y-%m-%d")
+            today_date = order_date[:-9]
+            if expiration_date <= today_date:
+                raise CouponExpired('POST /order', payload['coupon'], expiration_date, today_date)
+
+            campaign_id = rows[0][0]
+            discount = rows[0][1]
 
             order_with_campaign_statement = 'insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id) values (%s, %s, %s, %s, %s)'
             order_with_campaign_values = (order_id, order_date, buyers_id, coupon_id, campaign_id)
             cur.execute(order_with_campaign_statement, order_with_campaign_values)
+
         else:
             order_statement = 'insert into orders (id, order_date, buyers_users_user_id) values (%s, %s, %s)'
             order_values = (order_id, order_date, buyers_id)
@@ -464,9 +503,15 @@ def buy_products():
             product_stock_values = (stock - i['quantity'], i['product_id'], version)
             cur.execute(product_stock_statement, product_stock_values)
 
+        price_discounted = total_price * (discount / 100)
+        total_price -= price_discounted
         order_price_update_statement = 'update orders set price_total = %s where id = %s'
         order_price_update_values = (total_price, order_id,)
         cur.execute(order_price_update_statement, order_price_update_values)
+
+        coupon_statement = 'update coupons set used = true, discount_applied = %s where coupon_id = %s'
+        coupon_values = (coupon_id, price_discounted, )
+        cur.execute(coupon_statement, coupon_values)
 
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
         # commit the transaction
@@ -475,6 +520,9 @@ def buy_products():
     except ProductNotFound as pnf:
         # logger.error(f'{pnf.endpoint} - error: {pnf.getError()}')
         response = {'status': StatusCodes['api_error'], 'errors': str(pnf.getError())}
+    except CouponNotFound as cnf:
+        # logger.error(f'{cpf.endpoint} - error: {cpf.getError()}')
+        response = {'status': StatusCodes['api_error'], 'errors': str(cnf.getError())}
     except ProductWithoutStockAvailable as pwsa:
         # logger.error(f'{pwsa.endpoint} - error: {pwsa.getError()}')
         response = {'status': StatusCodes['api_error'], 'errors': str(pwsa.getError())}
@@ -601,8 +649,8 @@ def login_user():
         if row is not None:
             auth_token = jwt.encode({'user': row[0],
                                      'aud': app.config['SESSION_COOKIE_NAME'],
-                                     'iat': datetime.datetime.utcnow(),
-                                     'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10)},
+                                     'iat': datetime.utcnow(),
+                                     'exp': datetime.utcnow() + timedelta(minutes=10)},
                                     app.config['SECRET_KEY'])
 
             try:
