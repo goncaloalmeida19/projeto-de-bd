@@ -20,7 +20,7 @@ columns_names = {
     'televisions': ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
                     'products_version'],
     'computers': ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id', 'products_version'],
-    'campaigns': ['campaign_id', 'description', 'start_date', 'end_date', 'discount', 'admins_users_user_id']
+    'campaigns': ['campaign_id', 'description', 'date_start', 'date_end', 'coupons', 'discount', 'admins_users_user_id']
 }
 
 
@@ -214,7 +214,8 @@ def give_rating_feedback(product_id):
 
     return flask.jsonify(response)
 
-@app.route('/campaign/', methods=['POST'])
+
+@app.route('/dbproj/campaign/', methods=['POST'])
 def add_campaign():
     logger.info('POST /campaign')
     payload = flask.request.get_json()
@@ -226,11 +227,11 @@ def add_campaign():
 
     # validate arguments
     for i in payload:
-        if i not in columns_names['campaigns'][1:5] and i != 'coupons':
+        if i not in columns_names['campaigns'][1:6]:
             response = {'status': StatusCodes['bad_request'],
                         'results': f'{i} is not a valid attribute'}
             return flask.jsonify(response)
-    for i in range(1,5):
+    for i in range(1,6):
         if columns_names['campaigns'][i] not in payload:
             response = {'status': StatusCodes['bad_request'], 'results': f'{columns_names["campaigns"][i]} value not in payload'}
             return flask.jsonify(response)
@@ -238,24 +239,39 @@ def add_campaign():
     admin_id = 0
 
 
+    verify_dates_statement = 'select exists(select 1 from campaigns where %s between date_start and date_end or %s between date_start and date_end)'
+    verify_dates_values = (payload['date_start'], payload['date_end'])
+
+    campaign_id_statement = 'select max(campaign_id)+1 from campaigns'
 
     # parameterized queries, good for security and performance
-    campaign_statement = f'insert into campaigns ({",".join(list(set(payload)-{"coupons"}))}, campaign_id, admins_users_user_id) ' \
-                f'values ({("%s," * len(columns_names["campaigns"]))[:-1]})'
+    campaign_statement = f'insert into campaigns ({",".join(list(payload))}, admins_users_user_id, campaign_id) ' \
+                         f'values ({("%s," * len(payload))[:-1]},%s, %s)'
     print(campaign_statement)
-    #campaign_values = tuple([list(payload.values())
 
-    coupons_statement = 'insert into coupons'
+
 
     try:
+        cur.execute(verify_dates_statement, verify_dates_values)
+        if cur.fetchall()[0][0]:
+            logger.error(f'POST /campaign - error: Another campaign is already running at that time')
+            response = {'status': StatusCodes['bad_request'], 'errors': 'Another campaign is already running at that time'}
+            return flask.jsonify(response)
+
+        cur.execute(campaign_id_statement)
+        campaign_id = cur.fetchone()[0]
+
+        campaign_values = tuple(list(payload.values()) + [admin_id, campaign_id])
+        print(campaign_values)
+
         cur.execute(campaign_statement, campaign_values)
 
         # commit the transaction
         conn.commit()
-        response = {'status': StatusCodes['success'], 'results': f'Inserted campaign {payload["ndep"]}'}
+        response = {'status': StatusCodes['success'], 'results': f'Inserted campaign {campaign_id}'}
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'POST /departments - error: {error}')
+        logger.error(f'POST /campaign - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
         # an error occurred, rollback
