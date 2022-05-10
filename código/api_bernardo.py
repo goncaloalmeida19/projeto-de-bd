@@ -238,6 +238,7 @@ def add_campaign():
 
     admin_id = 0
 
+
     verify_dates_statement = 'select exists(select 1 from campaigns where %s between date_start and date_end or %s between date_start and date_end)'
     verify_dates_values = (payload['date_start'], payload['date_end'])
 
