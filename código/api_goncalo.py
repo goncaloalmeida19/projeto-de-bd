@@ -48,7 +48,7 @@ class InsufficientPrivilegesException(Exception):
         super(InsufficientPrivilegesException, self).__init__(message + extra_msg)
 
 
-class NoDataFound(Exception):
+class NoProductFound(Exception):
     pass
 
 
@@ -146,8 +146,8 @@ def get_product(product_id):
             # Response of the status of obtaining a product and the information obtained
             response = {'status': StatusCodes['success'], 'results': content}
         else:
-            raise NoDataFound
-    except NoDataFound:
+            raise NoProductFound
+    except NoProductFound:
         error = f"No product found with id: {product_id}"
         logger.error(f'GET /product/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
