@@ -36,3 +36,4 @@ insert into orders values (3, '2022-12-10', 55, null, null, 2);
 insert into product_quantities values (1, 3, 7390626, '2022-04-24 19:40:00');
 insert into ratings values ('espetaculo novo', 1, 3, 7390626, '2022-04-24 19:40:00', 2);
 
+insert into campaigns values (1, 'campanha espetaculo', '2022-1-1', '2022-6-30', 5, 50, 0);
