@@ -10,7 +10,7 @@ app.config['SESSION_COOKIE_NAME'] = 'our-db-project'
 
 StatusCodes = {
     'success': 200,
-    'api_error': 400,
+    'bad_request': 400,
     'internal_error': 500
 }
 
@@ -92,9 +92,7 @@ def admin_check(fail_msg):
     except jwt.exceptions.InvalidTokenError as e:
         raise TokenError()
 
-    admin_validation = 'select users_user_id ' \
-                       'from admins ' \
-                       'where users_user_id = %s'
+    admin_validation = 'select users_user_id from admins where users_user_id = %s'
 
     cur.execute(admin_validation, [user_token['user']])
 
@@ -123,15 +121,15 @@ def db_connection():
 ##########################################################
 
 
-@app.route('/')
+@app.route('/dbproj/')
 def landing_page():
     return """
 
-    Hello World (Python Native)!  <br/>
+    Welcome to EANOS!!!  <br/>
     <br/>
     Check the sources for instructions on how to use the endpoints!<br/>
     <br/>
-    BD 2022 Team<br/>
+    Best BD students of 2022<br/>
     <br/>
     """
 
@@ -152,20 +150,17 @@ def get_product(product_id):
 
     try:
         # Get info about the product that have the product_id correspondent to the one given
-        statement = 'select name, stock, description, (select avg(rating) :: float from ratings), comment, price, version ' \
-                    'from products, ratings ' \
-                    'group by products_product_id, name, stock, description, comment, price, version, product_id, ratings.products_version ' \
-                    'having products_product_id = %s and product_id = %s and products.version = ratings.products_version'
+        statement = 'select * from products, ratings where product_id = 69420'
         values = (product_id, product_id)
-
         cur.execute(statement, values)
         rows = cur.fetchall()
+        logger.debug(rows)
+
         if len(rows) == 0:
             raise ProductNotFound(product_id)
 
-        # logger.debug(rows)
-
-        prices = [f"{i[6]} - {i[5]}" for i in rows]
+        prices = [f"{i[6]} - {i[5]}" for i in
+                  rows]  # Format: product_price_version - product_price_associated_to_the_version
         comments = [i[4] for i in rows]
         content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
                    'rating': rows[0][3], 'comments': comments}
@@ -200,24 +195,28 @@ def give_rating_feedback(product_id):
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'POST /rating/<product_id> - payload: {payload}')
+    # logger.debug(f'POST /rating/<product_id> - payload: {payload}')
+
+    # If there are more fields than the necessary ones in the request, consider it a bad one
     if len(payload) > 2:
-        response = {'status': StatusCodes['api_error'], 'results': 'Invalid number of arguments in the payload'}
+        response = {'status': StatusCodes['bad_request'], 'results': 'Invalid number of fields in the payload'}
         return flask.jsonify(response)
 
-    # Verification of the required parameters to do a rating to a product
+    # Verification of the required fields to do a rating to a product
     for i in columns_names["ratings"][:2]:
         if i not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to rate a product'}
+            response = {'status': StatusCodes['bad_request'],
+                        'results': f'{i.capitalize()} is required to rate a product'}
             return flask.jsonify(response)
 
-    # A rating needs to be between 1 and 5
+    # A rating needs to be between 1 and 5 if not consider the request a bad one
     if not 1 <= payload['rating'] <= 5:
-        response = {'status': StatusCodes['api_error'], 'results': f'A valid rating is required to add a product'}
+        response = {'status': StatusCodes['bad_request'], 'results': f'A valid rating is required to add a product'}
         return flask.jsonify(response)
 
+    # Get the buyer id
     buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
-                         audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
+                          audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
 
     try:
         # Get info about the product that will be rated (the one already bought)
@@ -229,14 +228,13 @@ def give_rating_feedback(product_id):
         values = (product_id, buyer_id,)
         cur.execute(statement, values)
         rows = cur.fetchall()
-        # logger.debug(rows)
+
         if len(rows) == 0:
             raise ProductNotFound(product_id)
 
+        # Get the most recent order id related to the most recent version of the product with id <product_id>
         order_id = rows[len(rows) - 1][0]
         version = rows[len(rows) - 1][1].strftime("%Y-%m-%d %H:%M:%S")
-        # logger.debug(order_id)
-        # logger.debug(version)
 
         # Verify if the product have already been rated
         statement = 'select orders_id, rating, comment ' \
@@ -246,7 +244,6 @@ def give_rating_feedback(product_id):
         values = (order_id, product_id,)
         cur.execute(statement, values)
         rows = cur.fetchall()
-        # logger.debug(rows)
 
         if len(rows) != 0:
             raise AlreadyRated(product_id, version, order_id, rows[0][1], rows[0][2])
@@ -299,16 +296,19 @@ def add_product():
 
     # logger.debug(f'POST /product - required_product_input_info: {required_product_input_info}')
 
-    # Verification of the required parameters to add a product
+    # Verification of the required fields to add a product
     for i in required_input_info["products"]:
         if i not in payload:
-            response = {'status': StatusCodes['api_error'], 'results': f'{i} is required to add a product'}
+            response = {'status': StatusCodes['bad_request'],
+                        'results': f'{i.capitalize()} is required to add a product'}
             return flask.jsonify(response)
 
     version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    product_type = payload['type']
+
+    # Get the seller id
     seller_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
                            audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
-    product_type = payload['type']
 
     try:
         # Get new product_id
@@ -331,7 +331,7 @@ def add_product():
         if product_type in list(columns_names)[2:]:
             for j in required_input_info[product_type]:
                 if j not in payload:
-                    response = {'status': StatusCodes['api_error'],
+                    response = {'status': StatusCodes['bad_request'],
                                 'results': f'{j} is required to add a {product_type[:-1]}'}
                     return flask.jsonify(response)
 
@@ -340,13 +340,10 @@ def add_product():
             final_values += tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple(
                 [str(product_id), version])
         else:
-            response = {'status': StatusCodes['api_error'], 'results': 'valid type is required to add a product'}
+            response = {'status': StatusCodes['bad_request'], 'results': 'Valid type is required to add a product'}
             return flask.jsonify(response)
 
-        # logger.debug(final_statement)
-        # logger.debug(final_values)
-
-        # Insert new product info in table that corresponds to the same type of product
+        # Insert new product info in table products and to the one that corresponds to the same type of product
         cur.execute(final_statement, final_values)
 
         # Response of the adding the product status
@@ -386,15 +383,17 @@ def buy_products():
     cur = conn.cursor()
 
     # logger.debug(f'POST /order - payload: {payload}')
+
+    # If there are more fields than the necessary ones in the request, consider it a bad one
     if len(payload) > 2:
-        response = {'status': StatusCodes['api_error'], 'results': 'Invalid number of arguments in the payload'}
+        response = {'status': StatusCodes['bad_request'], 'results': 'Invalid number of fields in the payload'}
         return flask.jsonify(response)
 
     coupon_id = -1
     discount = 0
 
     if 'cart' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'cart is required to buy products'}
+        response = {'status': StatusCodes['bad_request'], 'results': 'cart is required to buy products'}
         return flask.jsonify(response)
     if 'coupon' in payload:
         coupon_id = payload['coupon']
@@ -404,19 +403,22 @@ def buy_products():
     product_stock_statement = 'update products set stock = %s where product_id = %s and version = %s'
 
     order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    total_price = 0.0  # Without coupon
-    buyers_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
-                           audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
+    total_price = 0.0
+
+    # Get the buyer id
+    buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
+                          audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
 
     try:
+        # Get the order id
         order_id_statement = 'select max(id) from orders '
         cur.execute(order_id_statement, )
         rows = cur.fetchall()
 
         order_id = rows[0][0] + 1 if rows[0][0] is not None else 1
-        # logger.debug(f'{order_id}')
 
         if coupon_id != -1:
+            # Get the coupon discount and expiration date and the campaign id that is connected to the coupon with the coupon_id as <coupon_id>
             campaign_statement = 'select campaigns_campaign_id, discount, expiration_date  from coupons, campaigns  where coupon_id = %s and campaigns_campaign_id = campaign_id'
             campaign_values = (coupon_id,)
             cur.execute(campaign_statement, campaign_values)
@@ -433,17 +435,18 @@ def buy_products():
             campaign_id = rows[0][0]
             discount = rows[0][1]
 
+            # Create order with campaign info
             order_with_campaign_statement = 'insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id) values (%s, %s, %s, %s, %s)'
-            order_with_campaign_values = (order_id, order_date, buyers_id, coupon_id, campaign_id)
+            order_with_campaign_values = (order_id, order_date, buyer_id, coupon_id, campaign_id)
             cur.execute(order_with_campaign_statement, order_with_campaign_values)
 
         else:
+            # Create order without campaign info
             order_statement = 'insert into orders (id, order_date, buyers_users_user_id) values (%s, %s, %s)'
-            order_values = (order_id, order_date, buyers_id)
+            order_values = (order_id, order_date, buyer_id)
             cur.execute(order_statement, order_values)
 
         for i in payload['cart']:
-            # logger.debug(f'{i}')
 
             product_version_values = (i['product_id'], i['product_id'],)
             cur.execute(product_version_statement, product_version_values)
@@ -466,17 +469,22 @@ def buy_products():
             product_stock_values = (stock - i['quantity'], i['product_id'], version)
             cur.execute(product_stock_statement, product_stock_values)
 
+        # Calculate total_price with the discount (it is 0 if no coupon is applied to the order
         price_discounted = total_price * (discount / 100)
         total_price -= price_discounted
+
+        # Update order info
         order_price_update_statement = 'update orders set price_total = %s where id = %s'
         order_price_update_values = (total_price, order_id,)
         cur.execute(order_price_update_statement, order_price_update_values)
 
+        # Update coupon info
         coupon_statement = 'update coupons set used = true, discount_applied = %s where coupon_id = %s'
         coupon_values = (coupon_id, price_discounted,)
         cur.execute(coupon_statement, coupon_values)
 
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
+
         # commit the transaction
         conn.commit()
 
@@ -537,20 +545,20 @@ def register_user():
     logger.debug(f'POST /users - payload: {payload}')
 
     if 'user_id' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'user_id not in payload'}
+        response = {'status': StatusCodes['bad_request'], 'results': 'user_id not in payload'}
         return flask.jsonify(response)
 
     if 'username' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'username is required for user registry'}
+        response = {'status': StatusCodes['bad_request'], 'results': 'username is required for user registry'}
         return flask.jsonify(response)
 
     if 'password' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'password is required for user registry'}
+        response = {'status': StatusCodes['bad_request'], 'results': 'password is required for user registry'}
         return flask.jsonify(response)
 
     if 'type' not in payload or payload['type'] not in ['buyers', 'sellers', 'admins']:
-        response = {'status': StatusCodes['api_error'], 'results': 'user type is required for user registry: buyers, '
-                                                                   'sellers or admins'}
+        response = {'status': StatusCodes['bad_request'], 'results': 'user type is required for user registry: buyers, '
+                                                                     'sellers or admins'}
         return flask.jsonify(response)
 
     statement = 'insert into users (user_id, username, password) values (%s, %s, %s)'
@@ -590,7 +598,7 @@ def login_user():
     logger.debug(f'PUT /users - payload: {payload}')
 
     if 'username' not in payload or 'password' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'username and password are required for login'}
+        response = {'status': StatusCodes['bad_request'], 'results': 'username and password are required for login'}
         return flask.jsonify(response)
 
     statement = 'select user_id, username from users where username = %s and password = %s'

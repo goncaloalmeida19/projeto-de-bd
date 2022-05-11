@@ -2867,3 +2867,133 @@ WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 948-060-270
 INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
 INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 10:56:12] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 10:56:13] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 10:56:24] "GET /dbproj/ HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 10:56:27] "[33mGET / HTTP/1.1[0m" 404 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: No product found with id: 7559297
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 11:18:48] "GET /dbproj/products/7559297 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: No product found with id: 69422
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 11:19:14] "GET /dbproj/products/69422 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: No product found with id: 7390626
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 11:19:23] "GET /dbproj/products/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: syntax error at or near "products_product_id"
+LINE 1: ...rsion, product_id, ratings.products_versionhaving products_p...
+                                                             ^
+
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 11:32:52] "GET /dbproj/products/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: invalid input syntax for type double precision: "The product hasn't been rated"
+LINE 1: ...lesce((select avg(rating) :: float from ratings), 'The produ...
+                                                             ^
+
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 11:34:03] "GET /dbproj/products/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: No product found with id: 7390626
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 11:34:32] "GET /dbproj/products/7390626 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: No product found with id: 7390626
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 11:34:35] "GET /dbproj/products/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[]
+ERROR:logger:GET /product/<product_id> - error: No product found with id: 7390626
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 11:34:56] "GET /dbproj/products/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: syntax error at or near "products"
+LINE 1: ...= '7390626' and product_id = '7390626' and exists(products.v...
+                                                             ^
+
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 11:35:58] "GET /dbproj/products/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+DEBUG:logger:[('pocophone f1', 414, 'very good', 4.0, 'very good', 69.99, datetime.datetime(2022, 4, 29, 10, 8, 57)), ('pocophone f1', 414, 'very good', 4.0, 'very very very very very good', 69.99, datetime.datetime(2022, 4, 29, 10, 8, 57)), ('pocophone f1', 414, 'very good', 4.0, 'very very very very very very very good', 69.99, datetime.datetime(2022, 4, 29, 10, 8, 57))]
+INFO:werkzeug:127.0.0.1 - - [11/May/2022 11:42:18] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
