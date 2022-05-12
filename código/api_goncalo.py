@@ -151,11 +151,14 @@ def get_product(product_id):
 
     try:
         # Get info about the product that have the product_id correspondent to the one given
-        statement = 'select * from products, ratings where product_id = 69420'
+        statement = 'select name, stock, description, avg_rating, comment, price, version ' \
+                    'from products ' \
+                    'group by version ' \
+                    'having product_id = %s '
         values = (product_id, product_id)
         cur.execute(statement, values)
         rows = cur.fetchall()
-        logger.debug(rows)
+        # logger.debug(rows)
 
         if len(rows) == 0:
             raise ProductNotFound(product_id)

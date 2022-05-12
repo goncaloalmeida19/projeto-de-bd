@@ -6,6 +6,7 @@ CREATE TABLE products (
 	price		 DOUBLE PRECISION NOT NULL,
 	stock		 INTEGER NOT NULL,
 	description		 VARCHAR(512),
+	avg_rating FLOAT,
 	sellers_users_user_id INTEGER NOT NULL,
 	PRIMARY KEY(product_id,version)
 );
