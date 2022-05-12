@@ -21,6 +21,7 @@ columns_names = {
     "televisions": ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
                     'products_version'],
     "computers": ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id', 'products_version'],
+    "campaigns": ['campaign_id', 'description', 'date_start', 'date_end', 'coupons', 'discount', 'admins_users_user_id'],
 }
 
 
@@ -290,7 +291,7 @@ def add_product():
 
     # The type of the product is essential
     required_input_info = dict(
-        (item, value[:-2] + ['type']) if item != "products" and item != "ratings" else (item, value[2: -1]) for
+        (item, value[:-2] + ['type']) if item not in ["products", "ratings", "campaigns"] else (item, value[2: -1]) for
         item, value in columns_names.items())
 
     # logger.debug(f'POST /product - required_product_input_info: {required_product_input_info}')
@@ -327,7 +328,7 @@ def add_product():
             str(seller_id))
 
         # Statement and values about the info that will be insert to the table that corresponds to the same type of product
-        if product_type in list(columns_names)[2:]:
+        if product_type in list(columns_names)[2:-1]:
             for j in required_input_info[product_type]:
                 if j not in payload:
                     response = {'status': StatusCodes['bad_request'],

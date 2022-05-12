@@ -3047,3 +3047,17 @@ INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade d
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_bernardo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_bernardo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:logger:API online: http://127.0.0.1:8080
