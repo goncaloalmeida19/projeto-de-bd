@@ -159,8 +159,7 @@ def get_product(product_id):
         if len(rows) == 0:
             raise ProductNotFound(product_id)
 
-        prices = [f"{i[6]} - {i[5]}" for i in
-                  rows]  # Format: product_price_version - product_price_associated_to_the_version
+        prices = [f"{i[6]} - {i[5]}" for i in rows]  # Format: product_price_version - product_price_associated_to_the_version
         comments = [i[4] for i in rows]
         content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
                    'rating': rows[0][3], 'comments': comments}
