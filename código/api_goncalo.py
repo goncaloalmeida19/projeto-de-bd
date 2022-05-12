@@ -21,7 +21,8 @@ columns_names = {
     "televisions": ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
                     'products_version'],
     "computers": ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id', 'products_version'],
-    "campaigns": ['campaign_id', 'description', 'date_start', 'date_end', 'coupons', 'discount', 'admins_users_user_id'],
+    "campaigns": ['campaign_id', 'description', 'date_start', 'date_end', 'coupons', 'discount',
+                  'admins_users_user_id'],
 }
 
 
@@ -71,6 +72,7 @@ class CouponExpired(Exception):
         super(CouponExpired, self).__init__(message1 + c_id + message2 + e_date + "' and today is '" + t_date + "'")
 
 
+# Product from order x already been rated
 class AlreadyRated(Exception):
     def __init__(self, p_id, p_version, o_id, p_r, p_c, message1="Product with id '", message2="' and version '",
                  message3="' from order '", message4="' already been rated: "):
@@ -151,22 +153,28 @@ def get_product(product_id):
 
     try:
         # Get info about the product that have the product_id correspondent to the one given
-        statement = 'select name, stock, description, avg_rating, price, version,(exists(select comment from ratings where products_product_id = 69420 and products_version = version))::varchar ' \
+        statement = 'select name, stock, description, avg_rating, price, version,(exists(select comment from ratings where products_product_id = %s and products_version = version))::varchar ' \
                     'from products ' \
-                    'where product_id = 69420 ' \
+                    'where product_id = %s ' \
                     'union ' \
                     'select name, stock, description, avg_rating, price, version, comment ' \
                     'from products, ratings ' \
-                    'where product_id = 69420 and products_product_id = 69420 and products_version = version'
-        values = (product_id, ) * 4
+                    'where product_id = %s and products_product_id = %s and products_version = version'
+        values = (product_id,) * 4
         cur.execute(statement, values)
         rows = cur.fetchall()
 
         if len(rows) == 0:
             raise ProductNotFound(product_id)
 
-        prices = [f"{i[5]} - {i[4]}" for i in rows if i[6] in ['true', 'false']]  # Format: product_price_version - product_price_associated_to_the_version
+        rating = rows[0][3] if rows[0][3] is not None else 'Product not rated yet'
+
         comments = [i[6] for i in rows if i[6] not in ['true', 'false']]
+        if len(comments) == 0:
+            comments = "Product without comments because it wasn't rated yet"
+
+        prices = [f"{i[5]} - {i[4]}" for i in rows if
+                  i[6] in ['true', 'false']]  # Format: product_price_version - product_price_associated_to_the_version
         content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
                    'rating': rows[0][3], 'comments': comments}
 
@@ -220,8 +228,9 @@ def give_rating_feedback(product_id):
         return flask.jsonify(response)
 
     # Get the buyer id
-    buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
-                          audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
+    #buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
+    #                      audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
+    buyer_id = 2
 
     try:
         # Get info about the product that will be rated (the one already bought)
@@ -242,10 +251,11 @@ def give_rating_feedback(product_id):
         version = rows[len(rows) - 1][1].strftime("%Y-%m-%d %H:%M:%S")
 
         # Verify if the product have already been rated
-        statement = 'select orders_id, rating, comment ' \
+        statement = 'select orders_id, rating, comment, count(*) ' \
                     'from ratings ' \
                     'where orders_id = %s ' \
-                    'and products_product_id = %s'
+                    'and products_product_id = %s ' \
+                    'group by orders_id, rating, comment'
         values = (order_id, product_id,)
         cur.execute(statement, values)
         rows = cur.fetchall()
@@ -253,9 +263,15 @@ def give_rating_feedback(product_id):
         if len(rows) != 0:
             raise AlreadyRated(product_id, version, order_id, rows[0][1], rows[0][2])
 
-        # Insert the rating info in the "ratings" table
-        statement = 'insert into ratings values (%s, %s, %s, %s, %s, %s)'
-        values = (payload['comment'], payload['rating'], order_id, product_id, version, buyer_id)
+        # Get the number of times that the product had already been rated
+        n_ratings = rows[0][3]
+
+        # Insert the rating info in the "ratings" table and update the average rating of a product
+        statement = 'do $$ ' \
+                    'begin ' \
+                    'insert into ratings values (%s, %s, %s, %s, %s, %s) ' \
+                    'update products set avg_rating = (%s * avg_rating + %s) / (%s + 1) '
+        values = (payload['comment'], payload['rating'], order_id, product_id, version, buyer_id, n_ratings, payload['rating'], n_ratings, )
         cur.execute(statement, values)
 
         # Response of the rating status
@@ -451,7 +467,7 @@ def buy_products():
             product_quantity = i['quantity']
             product_id = i['product_id']
 
-            product_version_values = (product_id , product_id,)
+            product_version_values = (product_id, product_id,)
             cur.execute(product_version_statement, product_version_values)
             rows = cur.fetchall()
 
