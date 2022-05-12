@@ -38,3 +38,7 @@ insert into ratings values ('espetaculo novo', 1, 3, 7390626, '2022-04-24 19:40:
 
 insert into campaigns values(1, 'campanha', '2022-05-10', '2022-5-17', 10, 0)
 insert into coupons values(1, false, 0, '2022-06-09', 1, 2, null)
+
+insert into coupons values(2, false, 0, '2022-06-09', 1, 2, null);
+insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id)
+values (69, '2022-05-12', 2, 2, 1)

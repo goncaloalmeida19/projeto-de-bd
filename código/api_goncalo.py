@@ -400,6 +400,7 @@ def buy_products():
     product_version_statement = 'select version, price, stock from products where product_id = %s and version = (select max(version) from products where product_id = %s)'
     product_quantities_statement = 'insert into product_quantities values (%s, %s, %s, %s)'
     product_stock_statement = 'update products set stock = %s where product_id = %s and version = %s'
+    order_statement = 'insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id) values (%s, %s, %s, %s, %s)'
 
     order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     total_price = 0.0
@@ -415,6 +416,7 @@ def buy_products():
         rows = cur.fetchall()
 
         order_id = rows[0][0] + 1 if rows[0][0] is not None else 1
+        order_values = (order_id, order_date, buyer_id, None, None)
 
         if coupon_id != -1:
             # Get the coupon discount and expiration date and the campaign id that is connected to the coupon with the coupon_id as <coupon_id>
@@ -434,38 +436,35 @@ def buy_products():
             campaign_id = rows[0][0]
             discount = rows[0][1]
 
-            # Create order with campaign info
-            order_with_campaign_statement = 'insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id) values (%s, %s, %s, %s, %s)'
-            order_with_campaign_values = (order_id, order_date, buyer_id, coupon_id, campaign_id)
-            cur.execute(order_with_campaign_statement, order_with_campaign_values)
+            # Create order_values with campaign info
+            order_values = tuple(list(order_values)[:-2]) + (coupon_id, campaign_id)
 
-        else:
-            # Create order without campaign info
-            order_statement = 'insert into orders (id, order_date, buyers_users_user_id) values (%s, %s, %s)'
-            order_values = (order_id, order_date, buyer_id)
-            cur.execute(order_statement, order_values)
+        cur.execute(order_statement, order_values)
 
         for i in payload['cart']:
+            product_quantity = i['quantity']
+            product_id = i['product_id']
 
-            product_version_values = (i['product_id'], i['product_id'],)
+            product_version_values = (product_id , product_id,)
             cur.execute(product_version_statement, product_version_values)
             rows = cur.fetchall()
 
             if len(rows) == 0:
-                raise ProductNotFound(i['product_id'])
+                raise ProductNotFound(product_id)
 
             stock = rows[0][2]
-            if stock - i['quantity'] < 0:
-                raise ProductWithoutStockAvailable(i['product_id'], i['quantity'], rows[0][2])
+            if stock - product_quantity < 0:
+                raise ProductWithoutStockAvailable(product_id, product_quantity, rows[0][2])
 
             version = rows[0][0].strftime("%Y-%m-%d %H:%M:%S")
             total_price += rows[0][1]
 
-            product_quantities_values = (i['quantity'], order_id, i['product_id'], version)
+            # Insert in 'product_quantities' table the info about the product that the buyer wanst to buy
+            product_quantities_values = (product_quantity, order_id, product_id, version)
             cur.execute(product_quantities_statement, product_quantities_values)
 
             # Update stock of the product
-            product_stock_values = (stock - i['quantity'], i['product_id'], version)
+            product_stock_values = (stock - product_quantity, product_id, version)
             cur.execute(product_stock_statement, product_stock_values)
 
         # Calculate total_price with the discount (it is 0 if no coupon is applied to the order
