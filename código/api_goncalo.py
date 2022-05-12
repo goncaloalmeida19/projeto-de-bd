@@ -151,20 +151,22 @@ def get_product(product_id):
 
     try:
         # Get info about the product that have the product_id correspondent to the one given
-        statement = 'select name, stock, description, avg_rating, comment, price, version ' \
+        statement = 'select name, stock, description, avg_rating, price, version,(exists(select comment from ratings where products_product_id = 69420 and products_version = version))::varchar ' \
                     'from products ' \
-                    'group by version ' \
-                    'having product_id = %s '
-        values = (product_id, product_id)
+                    'where product_id = 69420 ' \
+                    'union ' \
+                    'select name, stock, description, avg_rating, price, version, comment ' \
+                    'from products, ratings ' \
+                    'where product_id = 69420 and products_product_id = 69420 and products_version = version'
+        values = (product_id, ) * 4
         cur.execute(statement, values)
         rows = cur.fetchall()
-        # logger.debug(rows)
 
         if len(rows) == 0:
             raise ProductNotFound(product_id)
 
-        prices = [f"{i[6]} - {i[5]}" for i in rows]  # Format: product_price_version - product_price_associated_to_the_version
-        comments = [i[4] for i in rows]
+        prices = [f"{i[5]} - {i[4]}" for i in rows if i[6] in ['true', 'false']]  # Format: product_price_version - product_price_associated_to_the_version
+        comments = [i[6] for i in rows if i[6] not in ['true', 'false']]
         content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
                    'rating': rows[0][3], 'comments': comments}
 
