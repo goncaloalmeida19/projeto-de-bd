@@ -3102,3 +3102,92 @@ INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade d
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 21:03:43] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 21:09:45] "[35m[1mPOST /dbproj/rating/69420 HTTP/1.1[0m" 500 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: 'tuple' object does not support item assignment
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 21:10:02] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: 'tuple' object does not support item assignment
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 21:10:05] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: 'tuple' object does not support item assignment
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 22:06:44] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: 'tuple' object does not support item assignment
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 22:07:06] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+ERROR:logger:GET /product/<product_id> - error: 'tuple' object does not support item assignment
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 22:07:07] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 22:08:20] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug: * Running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 22:22:32] "[35m[1mPOST /dbproj/rating/69420 HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:column "ratings.orders_id" must appear in the GROUP BY clause or be used in an aggregate function
+LINE 1: select orders_id, rating, comment, count(*) from ratings whe...
+               ^
+
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 22:24:27] "POST /dbproj/rating/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:list index out of range
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 22:27:28] "POST /dbproj/rating/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:list index out of range
+INFO:werkzeug:127.0.0.1 - - [12/May/2022 22:27:56] "POST /dbproj/rating/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
