@@ -310,40 +310,35 @@ def post_question(product_id=None, parents_question_id=None):
         return flask.jsonify(response)
 
     try:
-        statement = 'select max(question_id), max(notification_id), max(products_version) from questions, notifications, products'
+        # statement = 'select max(question_id), max(notification_id), max(products_version) from questions, notifications, products'
+        statement = 'select max(question_id), (select max(version) from products where product_id = %s) from questions'
 
-        cur.execute(statement)
+        cur.execute(statement, [product_id])
         rows = cur.fetchone()
 
-        products_version = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        if len(rows) == 0:
+        if rows[1] is None:
             raise ProductNotFound(product_id)
 
-        if rows[0] is None:
-            question_id = 0
-            notification_id = 0
+        products_version = rows[1].strftime("%Y-%m-%d %H:%M:%S")
 
-        elif rows[0][0] is None and rows[0][1] is not None:
+        if rows[0] is None:
             # first question
             question_id = 0
-            notification_id = rows[0][1] + 1
-            products_version = rows[0][2].strftime("%Y-%m-%d %H:%M:%S")
+            # notification_id = 0
 
-
-        elif rows[0][1] is None:
-            # first notification
-            question_id = rows[0][0] + 1
-            notification_id = 0
-            products_version = rows[0][2].strftime("%Y-%m-%d %H:%M:%S")
+            '''
+            elif rows[0][1] is None:
+                # first notification
+                question_id = rows[0][0] + 1
+                notification_id = 0
+            '''
 
         else:
-            question_id = rows[0][0] + 1
-            notification_id = rows[0][1] + 1
-            products_version = rows[0][2].strftime("%Y-%m-%d %H:%M:%S")
+            question_id = rows[0] + 1
+            # notification_id = rows[0][1] + 1
 
-        insert_question_values = [question_id, payload['question'], get_user_id(), notification_id, product_id,
-                                  products_version]
+        # insert_question_values = [question_id, payload['question'], get_user_id(), notification_id, product_id, products_version]
+        insert_question_values = [question_id, payload['question'], get_user_id(), product_id, products_version]
 
         if parents_question_id is not None:
             # TODO: if parents_question_id is not None...
@@ -358,13 +353,16 @@ def post_question(product_id=None, parents_question_id=None):
 
             insert_question_values.extend([parents_question_id, rows[1]])
 
-        insert_question_statement = f'insert into questions values (%s, %s, %s, %s, %s, %s{", %s, %s" if parents_question_id is not None else ""});'
+        # insert_question_statement = f'insert into questions values (%s, %s, %s, %s, %s, %s{", %s, %s" if parents_question_id is not None else ""});'
+        insert_question_statement = f'insert into questions values (%s, %s, %s, %s, %s{", %s, %s" if parents_question_id is not None else ""});'
 
+        print(insert_question_values)
         print(insert_question_statement)
 
         cur.execute(insert_question_statement, insert_question_values)
 
         response = {'status': StatusCodes['success'], 'token': question_id}  # TODO: JWT authent
+        conn.commit()
 
     except (TokenError, ProductNotFound,) as error:
         logger.error(f'GET /users - error: {error}')

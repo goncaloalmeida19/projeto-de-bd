@@ -103,7 +103,6 @@ CREATE TABLE questions (
 	question_id			 INTEGER,
 	question_text		 VARCHAR(512) NOT NULL,
 	users_user_id		 INTEGER,
-	notifications_notification_id INTEGER NOT NULL,
 	products_product_id		 INTEGER NOT NULL,
 	products_version		 TIMESTAMP NOT NULL,
 	questions_question_id	 INTEGER,
@@ -139,7 +138,6 @@ CREATE TABLE coupons (
 CREATE TABLE notifications (
 	notification_id INTEGER,
 	content	 VARCHAR(512) NOT NULL,
-	orders_id	 INTEGER,
 	users_user_id	 INTEGER NOT NULL,
 	PRIMARY KEY(notification_id)
 );
@@ -173,14 +171,12 @@ ALTER TABLE ratings ADD CONSTRAINT ratings_fk1 FOREIGN KEY (orders_id) REFERENCE
 ALTER TABLE ratings ADD CONSTRAINT ratings_fk2 FOREIGN KEY (products_product_id, products_version) REFERENCES products(product_id, version);
 ALTER TABLE ratings ADD CONSTRAINT ratings_fk4 FOREIGN KEY (buyers_users_user_id) REFERENCES buyers(users_user_id);
 ALTER TABLE questions ADD CONSTRAINT questions_fk1 FOREIGN KEY (users_user_id) REFERENCES users(user_id);
-ALTER TABLE questions ADD CONSTRAINT questions_fk2 FOREIGN KEY (notifications_notification_id) REFERENCES notifications(notification_id);
 ALTER TABLE questions ADD CONSTRAINT questions_fk3 FOREIGN KEY (products_product_id, products_version) REFERENCES products(product_id, version);
 ALTER TABLE questions ADD CONSTRAINT questions_fk5 FOREIGN KEY (questions_question_id, questions_users_user_id) REFERENCES questions(question_id, users_user_id);
 ALTER TABLE campaigns ADD CONSTRAINT campaigns_fk1 FOREIGN KEY (admins_users_user_id) REFERENCES admins(users_user_id);
 ALTER TABLE coupons ADD CONSTRAINT coupons_fk1 FOREIGN KEY (campaigns_campaign_id) REFERENCES campaigns(campaign_id);
 ALTER TABLE coupons ADD CONSTRAINT coupons_fk2 FOREIGN KEY (buyers_users_user_id) REFERENCES buyers(users_user_id);
 ALTER TABLE coupons ADD CONSTRAINT coupons_fk3 FOREIGN KEY (orders_id) REFERENCES orders(id);
-ALTER TABLE notifications ADD CONSTRAINT notifications_fk1 FOREIGN KEY (orders_id) REFERENCES orders(id);
 ALTER TABLE notifications ADD CONSTRAINT notifications_fk2 FOREIGN KEY (users_user_id) REFERENCES users(user_id);
 ALTER TABLE product_quantities ADD CONSTRAINT product_quantities_fk1 FOREIGN KEY (orders_id) REFERENCES orders(id);
 ALTER TABLE product_quantities ADD CONSTRAINT product_quantities_fk2 FOREIGN KEY (products_product_id, products_version) REFERENCES products(product_id, version);
