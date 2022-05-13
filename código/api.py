@@ -310,8 +310,7 @@ def post_question(product_id=None, parents_question_id=None):
         return flask.jsonify(response)
 
     try:
-        # statement = 'select max(question_id), max(notification_id), max(products_version) from questions, notifications, products'
-        statement = 'select max(question_id), (select max(version) from products where product_id = %s) from questions'
+        statement = 'select max(question_id), max(version) from questions, products where product_id = %s and products_product_id = product_id'
 
         cur.execute(statement, [product_id])
         rows = cur.fetchone()
@@ -322,42 +321,34 @@ def post_question(product_id=None, parents_question_id=None):
         products_version = rows[1].strftime("%Y-%m-%d %H:%M:%S")
 
         if rows[0] is None:
-            # first question
+            # first question made about this product
             question_id = 0
-            # notification_id = 0
-
-            '''
-            elif rows[0][1] is None:
-                # first notification
-                question_id = rows[0][0] + 1
-                notification_id = 0
-            '''
-
         else:
             question_id = rows[0] + 1
-            # notification_id = rows[0][1] + 1
 
         # insert_question_values = [question_id, payload['question'], get_user_id(), notification_id, product_id, products_version]
         insert_question_values = [question_id, payload['question'], get_user_id(), product_id, products_version]
 
         if parents_question_id is not None:
-            # TODO: if parents_question_id is not None...
-            parent_question_statement = 'select question_id, users_user_id from questions where question_id = %s;'
-            parent_question_value = [parents_question_id]
 
-            cur.execute(parent_question_statement, parent_question_value)
+            # TODO: if parents_question_id is not None...
+
+            parent_question_statement = 'select products_product_id from questions where products_product_id = %s and question_id = %s;'
+            parent_question_values = [product_id, parents_question_id]
+
+            cur.execute(parent_question_statement, parent_question_values)
             parent_question_rows = cur.fetchone()
 
-            if len(parent_question_rows) == 0:
+            if parent_question_rows[0] is None:
                 raise ParentQuestionNotFound(parents_question_id)
 
-            insert_question_values.extend([parents_question_id, rows[1]])
+            insert_question_values.extend([parents_question_id, parent_question_rows[0]])
 
         # insert_question_statement = f'insert into questions values (%s, %s, %s, %s, %s, %s{", %s, %s" if parents_question_id is not None else ""});'
-        insert_question_statement = f'insert into questions values (%s, %s, %s, %s, %s{", %s, %s" if parents_question_id is not None else ""});'
-
-        print(insert_question_values)
-        print(insert_question_statement)
+        insert_question_statement = f'insert into questions ' \
+                                    f'(question_id, question_text, users_user_id, products_product_id, products_version ' \
+                                    f'{", questions_question_id, questions_users_user_id" if parents_question_id is not None else ""}) ' \
+                                    f'values (%s, %s, %s, %s, %s{", %s, %s" if parents_question_id is not None else ""});'
 
         cur.execute(insert_question_statement, insert_question_values)
 

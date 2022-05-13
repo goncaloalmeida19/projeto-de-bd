@@ -29,7 +29,11 @@ begin
     select sellers_users_user_id into seller_id from products where product_id = new.products_product_id;
     select max(notification_id) into notif_id from notifications where users_user_id = seller_id;
 
-    if notif_id is NULL then notif_id := 0; end if;
+    if notif_id is NULL then
+        notif_id := 0;
+    else
+        notif_id := notif_id + 1;
+    end if;
 
     insert into notifications
     values (notif_id, seller_id, CONCAT('New question about your product nº ', new.products_product_id));
