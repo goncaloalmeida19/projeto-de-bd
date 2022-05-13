@@ -3191,3 +3191,161 @@ INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade d
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:API online: http://127.0.0.1:8080
+INFO:werkzeug: * Running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:list index out of range
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:15:54] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:list index out of range
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:18:27] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:list index out of range
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:18:52] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:list index out of range
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:19:40] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:unterminated dollar-quoted string at or near "$$ begin insert into ratings values ('very very very very very good', 5, 9, '7390626', '2022-04-27 14:46:57', 2) update products set avg_rating = (0 * avg_rating + 5) / (0 + 1) "
+LINE 1: do $$ begin insert into ratings values ('very very very very...
+           ^
+
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:26:44] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:27:40] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:tuple index out of range
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:36:24] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:syntax error at or near ")"
+LINE 1: ...avg_rating = 5 else (0 * avg_rating + 5) / (0 + 1)) where pr...
+                                                             ^
+
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:36:44] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:syntax error at or near "where"
+LINE 1: ...lse avg_rating = ((0 * avg_rating + 5) / (0 + 1)) where prod...
+                                                             ^
+
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:37:50] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:syntax error at or near "where"
+LINE 1: ..._rating = 5 else ((0 * avg_rating + 5) / (0 + 1)) where prod...
+                                                             ^
+
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:38:00] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:syntax error at or near "end"
+LINE 1: ... + 5) / (0 + 1)) end where product_id = '7390626' end end;$$...
+                                                             ^
+
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:38:19] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:syntax error at or near "end"
+LINE 1: ...ing + 5) / (0 + 1)) end where product_id = '7390626' end;$$;
+                                                                ^
+
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:38:49] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:CASE types double precision and boolean cannot be matched
+LINE 1: ...et avg_rating = case when avg_rating is null then avg_rating...
+                                                             ^
+QUERY:  update products set avg_rating = case when avg_rating is null then avg_rating = 5 else ((0 * avg_rating + 5) / (0 + 1)) end where product_id = '7390626'
+CONTEXT:  PL/pgSQL function inline_code_block line 1 at SQL statement
+
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:39:06] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:39:31] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:can only concatenate str (not "int") to str
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:40:01] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:POST /rating/<product_id>
+ERROR:logger:Product with id '7390626' and version '2022-04-27 14:46:57' from order '9' already been rated: 
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:40:32] "POST /dbproj/rating/7390626 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:41:57] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\gonca\\OneDrive - Universidade de Coimbra\\Ambiente de Trabalho\\Universidade\\TI\\projeto-de-bd\\código\\api_goncalo.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 948-060-270
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:42:58] "GET /dbproj/products/69420 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:43:14] "GET /dbproj/products/7390626 HTTP/1.1" 200 -
+INFO:logger:GET /products/<product_id>
+INFO:werkzeug:127.0.0.1 - - [13/May/2022 09:44:55] "GET /dbproj/products/7390626 HTTP/1.1" 200 -
