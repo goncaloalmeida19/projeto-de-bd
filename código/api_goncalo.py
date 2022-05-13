@@ -52,32 +52,32 @@ class InsufficientPrivilegesException(Exception):
 
 class ProductNotFound(Exception):
     def __init__(self, p_id, message='No product found with id: '):
-        super(ProductNotFound, self).__init__(message + p_id)
+        super(ProductNotFound, self).__init__(message + str(p_id))
 
 
 class ProductWithoutStockAvailable(Exception):
     def __init__(self, p_id, p_quantity, p_stock,
                  message1="The seller hasn't the required quantity in stock of the product with id '"):
         super(ProductWithoutStockAvailable, self).__init__(
-            message1 + p_id + "': Quantity: '" + p_quantity + "' \\ Stock: '" + p_stock + "'")
+            message1 + str(p_id) + "': Quantity: '" + str(p_quantity) + "' \\ Stock: '" + str(p_stock) + "'")
 
 
 class CouponNotFound(Exception):
     def __init__(self, c_id, message='No coupon found with id: '):
-        super(CouponNotFound, self).__init__(message + c_id)
+        super(CouponNotFound, self).__init__(message + str(c_id))
 
 
 class CouponExpired(Exception):
     def __init__(self, c_id, e_date, t_date, message1="The coupon with id '", message2="' has expired in '"):
-        super(CouponExpired, self).__init__(message1 + c_id + message2 + e_date + "' and today is '" + t_date + "'")
+        super(CouponExpired, self).__init__(message1 + str(c_id) + message2 + e_date + "' and today is '" + t_date + "'")
 
 
 # Product from order x already been rated
 class AlreadyRated(Exception):
-    def __init__(self, p_id, p_version, o_id, p_r, p_c, message1="Product with id '", message2="' and version '",
+    def __init__(self, p_id, p_version, o_id, message1="Product with id '", message2="' and version '",
                  message3="' from order '", message4="' already been rated: "):
         super(AlreadyRated, self).__init__(
-            message1 + p_id + message2 + p_version + message3 + o_id + message4 + "Rating: '" + p_r + ' \\ Comment: ' + p_c + "'")
+            message1 + str(p_id) + message2 + p_version + message3 + str(o_id) + message4)
 
 
 ##########################################################
@@ -153,7 +153,7 @@ def get_product(product_id):
 
     try:
         # Get info about the product that have the product_id correspondent to the one given
-        statement = 'select name, stock, description, avg_rating, price, version,(exists(select comment from ratings where products_product_id = %s and products_version = version))::varchar ' \
+        statement = 'select name, stock, description, coalesce(avg_rating, -1), price, version,(exists(select comment from ratings where products_product_id = %s and products_version = version))::varchar ' \
                     'from products ' \
                     'where product_id = %s ' \
                     'union ' \
@@ -167,7 +167,7 @@ def get_product(product_id):
         if len(rows) == 0:
             raise ProductNotFound(product_id)
 
-        rating = rows[0][3] if rows[0][3] is not None else 'Product not rated yet'
+        rating = rows[0][3] if rows[0][3] != -1 else 'Product not rated yet'
 
         comments = [i[6] for i in rows if i[6] not in ['true', 'false']]
         if len(comments) == 0:
@@ -176,7 +176,7 @@ def get_product(product_id):
         prices = [f"{i[5]} - {i[4]}" for i in rows if
                   i[6] in ['true', 'false']]  # Format: product_price_version - product_price_associated_to_the_version
         content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
-                   'rating': rows[0][3], 'comments': comments}
+                   'rating': rating, 'comments': comments}
 
         # Response of the status of obtaining a product and the information obtained
         response = {'status': StatusCodes['success'], 'results': content}
@@ -228,7 +228,7 @@ def give_rating_feedback(product_id):
         return flask.jsonify(response)
 
     # Get the buyer id
-    #buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
+    # buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
     #                      audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
     buyer_id = 2
 
@@ -238,7 +238,7 @@ def give_rating_feedback(product_id):
                     'from product_quantities, orders ' \
                     'where product_quantities.products_product_id = %s ' \
                     'and product_quantities.orders_id = orders.id ' \
-                    'and orders.buyers_users_user_id = %s'
+                    'and orders.buyers_users_user_id = %s '
         values = (product_id, buyer_id,)
         cur.execute(statement, values)
         rows = cur.fetchall()
@@ -251,27 +251,29 @@ def give_rating_feedback(product_id):
         version = rows[len(rows) - 1][1].strftime("%Y-%m-%d %H:%M:%S")
 
         # Verify if the product have already been rated
-        statement = 'select orders_id, rating, comment, count(*) ' \
+        statement = 'select exists (select rating, comment from ratings where orders_id = 9 and products_product_id = 7390626) , count (*) ' \
                     'from ratings ' \
-                    'where orders_id = %s ' \
-                    'and products_product_id = %s ' \
-                    'group by orders_id, rating, comment'
+                    'where orders_id = 9 ' \
+                    'and products_product_id = 7390626'
         values = (order_id, product_id,)
         cur.execute(statement, values)
         rows = cur.fetchall()
 
-        if len(rows) != 0:
-            raise AlreadyRated(product_id, version, order_id, rows[0][1], rows[0][2])
+        if rows[0][0]:
+            raise AlreadyRated(product_id, version, order_id)
 
         # Get the number of times that the product had already been rated
-        n_ratings = rows[0][3]
+        n_ratings = rows[0][1]
 
         # Insert the rating info in the "ratings" table and update the average rating of a product
         statement = 'do $$ ' \
                     'begin ' \
-                    'insert into ratings values (%s, %s, %s, %s, %s, %s) ' \
-                    'update products set avg_rating = (%s * avg_rating + %s) / (%s + 1) '
-        values = (payload['comment'], payload['rating'], order_id, product_id, version, buyer_id, n_ratings, payload['rating'], n_ratings, )
+                    'insert into ratings values (%s, %s, %s, %s, %s, %s); ' \
+                    'update products set avg_rating = case when avg_rating is null then %s else ((%s * avg_rating + %s) / (%s + 1)) end where product_id = %s; ' \
+                    'end;' \
+                    '$$;'
+        values = (
+            payload['comment'], payload['rating'], order_id, product_id, version, buyer_id, payload['rating'], n_ratings, payload['rating'], n_ratings, product_id)
         cur.execute(statement, values)
 
         # Response of the rating status
@@ -534,7 +536,7 @@ def get_all_users():
         cur.execute('select * from users')
         rows = cur.fetchall()
 
-        logger.debug('GET /users - parse')
+        # logger.debug('GET /users - parse')
         results = []
         for row in rows:
             logger.debug(row)
