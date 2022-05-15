@@ -226,12 +226,12 @@ def register_user():
         response = {'status': StatusCodes['success'], 'results': f'Registered user {payload["username"]}'}
 
     except (TokenError, InsufficientPrivilegesException) as error:
-        logger.error(f'GET /users - error: {error}')
+        logger.error(f'POST /dbproj/user/ - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'POST /users - error: {error}')
+        logger.error(f'POST /dbproj/user/ - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
         conn.rollback()
 
@@ -292,8 +292,13 @@ def login_user():
 
         conn.commit()
 
+    except InvalidAuthenticationException as error:
+        logger.error(f'PUT /dbproj/user/ {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+        conn.rollback()
+
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(error)
+        logger.error(f'PUT /dbproj/user/ {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
         conn.rollback()
 
@@ -391,15 +396,13 @@ def add_product():
         conn.commit()
 
     except (TokenError, InsufficientPrivilegesException) as error:
-        logger.error(f'GET /users - error: {error}')
+        logger.error(f'POST /product - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(error)
+        logger.error(f'POST /product - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-
-        # an error occurred, rollback
         conn.rollback()
 
     finally:
@@ -474,12 +477,13 @@ def post_question(product_id=None, parents_question_id=None):
             cur.execute(parent_question_statement, parent_question_values)
             parent_question_rows = cur.fetchone()
 
-            if parent_question_rows[0] is None:
+            print(parent_question_rows)
+
+            if parent_question_rows is None:
                 raise ParentQuestionNotFound(parents_question_id)
 
             insert_question_values.extend([parents_question_id, parent_question_rows[0]])
 
-        # insert_question_statement = f'insert into questions values (%s, %s, %s, %s, %s, %s{", %s, %s" if parents_question_id is not None else ""});'
         insert_question_statement = f'insert into questions ' \
                                     f'(question_id, question_text, users_user_id, products_product_id, products_version ' \
                                     f'{", questions_question_id, questions_users_user_id" if parents_question_id is not None else ""}) ' \
@@ -491,12 +495,12 @@ def post_question(product_id=None, parents_question_id=None):
         conn.commit()
 
     except (TokenError, ProductNotFound,) as error:
-        logger.error(f'GET /users - error: {error}')
+        logger.error(f'PUT /dbproj/questions/ - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(error)
+        logger.error(f'PUT /dbproj/questions/ - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
         conn.rollback()
 
@@ -506,6 +510,47 @@ def post_question(product_id=None, parents_question_id=None):
 
     return flask.jsonify(response)
 
+##
+# Get notifications
+##
+# To use it, access through postman:
+##
+# GET http://localhost:8080/dbproj/inbox
+##
+@app.route('/dbproj/inbox', methods=['GET'])
+def get_notifications():
+    logger.info('GET /dbproj/inbox')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    try:
+        user_id = get_user_id()
+
+        statement = 'select time, notification_id, content from notifications where users_user_id = %s'
+        values = [user_id]
+
+        cur.execute(statement, values)
+        notifications = cur.fetchall()
+
+        response = {'status': StatusCodes['success'], 'results': notifications}
+        conn.commit()
+
+    except TokenError as error:
+        logger.error(f'GET /dbproj/inbox - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+        conn.rollback()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'GET /dbproj/inbox - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
 
 
 ##
@@ -517,7 +562,7 @@ def post_question(product_id=None, parents_question_id=None):
 ##
 @app.route('/dbproj/products/<product_id>', methods=['GET'])
 def get_product_info(product_id):
-    logger.info('GET /products/<product_id>')
+    logger.info('GET /dbproj/products/<product_id>')
     conn = db_connection()
     cur = conn.cursor()
 
@@ -552,7 +597,7 @@ def get_product_info(product_id):
         response = {'status': StatusCodes['success'], 'results': content}
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'GET /product/<product_id> - error: {error}')
+        logger.error(f'GET /dbproj/products/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
     finally:
@@ -594,7 +639,7 @@ def get_stats():
         response = {'status': StatusCodes['success'], 'results': sale_stats}
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(error)
+        logger.error(f'/dbproj/report/year - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
         conn.rollback()
 

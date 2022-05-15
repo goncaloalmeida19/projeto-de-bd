@@ -141,7 +141,7 @@ CREATE TABLE notifications (
 	users_user_id	 INTEGER NOT NULL,
 	content	 VARCHAR(512) NOT NULL,
 	time		 TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	PRIMARY KEY(notification_id)
+	PRIMARY KEY(notification_id, users_user_id)
 );
 
 /* Create table product_quantities */

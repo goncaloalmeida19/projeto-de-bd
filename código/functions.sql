@@ -39,8 +39,8 @@ begin
 
     insert into notifications
     values (notif_id, user_id,
-            CONCAT('New comment nº', new.question_id, 'regarding your product nº ', new.products_product_id, ': ',
-                   new.question_text));
+            CONCAT('New comment nº', new.question_id, ' regarding your product nº ', new.products_product_id, ': ''',
+                   new.question_text, ''''));
 
     if parent_user_id is not NULL then
         select max(notification_id) into notif_id from notifications where users_user_id = user_id;
@@ -50,9 +50,9 @@ begin
             notif_id := notif_id + 1;
         end if;
         insert into notifications
-        values (notif_id, user_id,
+        values (notif_id, parent_user_id,
                 CONCAT('New reply nº', new.question_id, ' to your comment nº', new.questions_question_id,
-                       ' on product nº ', new.products_product_id, ': "', new.question_text, '"'));
+                       ' on product nº ', new.products_product_id, ': ''', new.question_text, ''''));
     end if;
 
     return new;
