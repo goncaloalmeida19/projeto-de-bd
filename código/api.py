@@ -3,7 +3,7 @@ import logging
 import psycopg2
 from psycopg2 import sql
 import jwt
-import datetime
+from datetime import datetime, timedelta
 
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = 'my-32-character-ultra-secure-and-ultra-long-secret'
@@ -135,10 +135,16 @@ def db_connection():
 # TABLE COLUMNS
 ##########################################################
 
-users_columns = ['user_id', 'username', 'password']
-admins_columns = ['users_user_id']
-buyers_columns = ['users_user_id', 'nif', 'home_addr']
-sellers_columns = ['users_user_id', 'nif', 'shipping_addr']
+columns_names = {
+    "ratings": ["comment", "rating", "orders_id", "products_product_id", "products_version", "buyers_users_user_id"],
+    "products": ['product_id', 'version', 'name', 'price', 'stock', 'description', 'sellers_users_user_id'],
+    "smartphones": ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version'],
+    "televisions": ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
+                    'products_version'],
+    "computers": ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id', 'products_version'],
+    "campaigns": ['campaign_id', 'description', 'date_start', 'date_end', 'coupons', 'discount',
+                  'admins_users_user_id'],
+}
 
 
 ##########################################################
@@ -268,8 +274,8 @@ def login_user():
         if row is not None:
             auth_token = jwt.encode({'user': row[0],
                                      'aud': app.config['SESSION_COOKIE_NAME'],
-                                     'iat': datetime.datetime.utcnow(),
-                                     'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10)},
+                                     'iat': datetime.utcnow(),
+                                     'exp': datetime.utcnow() + timedelta(minutes=10)},
                                     app.config['SECRET_KEY'])
 
             try:
@@ -327,7 +333,7 @@ def add_product():
                         'results': f'{i.capitalize()} is required to add a product'}
             return flask.jsonify(response)
 
-    version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    version = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     product_type = payload['type']
 
     try:
@@ -350,7 +356,7 @@ def add_product():
             payload['description'],
             str(seller_id))
 
-        # Statement and values about the info that will be insert to the table that corresponds to the same type of product
+        # Statement and values about the info that will be inserted in the table that corresponds to the same type of product
         if product_type in list(columns_names)[2:-1]:
             for j in required_input_info[product_type]:
                 if j not in payload:
@@ -358,8 +364,17 @@ def add_product():
                                 'results': f'{j} is required to add a {product_type[:-1]}'}
                     return flask.jsonify(response)
 
-            final_statement += f'insert into {product_type} values (' + ('%s, ' * len(columns_names[product_type]))[
-                                                                        :-2] + '); end; $$;'
+            '''
+            final_statement += f'insert into {product_type} ' \
+                               f'values ({("%s, " * len(columns_names[product_type]))[:-2]}); end; $$;'
+            '''
+
+            # TODO: testar
+            final_statement = psycopg2.sql.SQL(
+                'insert into {product_type} ' +
+                f'values ({("%s, " * len(columns_names[product_type]))[:-2]}); end; $$;'
+            ).format(product_type=sql.Identifier(product_type))
+
             final_values += tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple(
                 [str(product_id), version])
         else:
