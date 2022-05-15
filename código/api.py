@@ -160,7 +160,7 @@ def get_all_users():  # TODO: remover
 
 @app.route('/dbproj/user/', methods=['POST'])
 def register_user():
-    logger.info('POST /users')
+    logger.info('POST /dbproj/user/')
 
     payload = flask.request.get_json()
 
@@ -241,7 +241,7 @@ def register_user():
 
 @app.route('/dbproj/user/', methods=['PUT'])
 def login_user():
-    logger.info('PUT /users')
+    logger.info('PUT /dbproj/user/')
 
     payload = flask.request.get_json()
 
@@ -297,7 +297,10 @@ def login_user():
 @app.route('/dbproj/questions/<product_id>', methods=['POST'])
 @app.route('/dbproj/questions/<product_id>/<parents_question_id>', methods=['POST'])
 def post_question(product_id=None, parents_question_id=None):
-    logger.info('PUT /questions')
+    if parents_question_id is None:
+        logger.info('PUT /dbproj/questions/<product_id>')
+    else:
+        logger.info('PUT /dbproj/questions/<product_id>/<parents_question_id>')
 
     payload = flask.request.get_json()
 
@@ -359,6 +362,41 @@ def post_question(product_id=None, parents_question_id=None):
         logger.error(f'GET /users - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(error)
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+
+@app.route('/dbproj/report/year', methods=['GET'])
+def get_stats():
+    logger.info('GET /dbproj/report/year')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    statement = 'select  to_char(order_date, \'MM-YYYY\') as month, sum(price_total), count(id) ' \
+                'from orders ' \
+                'where order_date > (CURRENT_DATE - interval \'1 year\') ' \
+                'group by month;'
+
+    try:
+        cur.execute(statement)
+        rows = cur.fetchall()
+
+        sale_stats = [{'month': r[0], 'total_value': r[1], 'orders': r[2]} for r in rows]
+        response = sale_stats
+
+        # print(sale_stats)  # debug
+
+        response = {'status': StatusCodes['success'], 'results': sale_stats}
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(error)
