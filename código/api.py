@@ -445,9 +445,9 @@ def post_question(product_id=None, parents_question_id=None):
         return flask.jsonify(response)
 
     try:
-        statement = 'select max(question_id), max(version) from questions, products where product_id = %s and products_product_id = product_id'
-
-        cur.execute(statement, [product_id])
+        # statement = 'select max(question_id), max(version) from questions, products where product_id = %s and products_product_id = product_id;'
+        statement = 'select * from (select max(question_id) from questions where products_product_id = %s) as q_ids, (select max(version) from products where product_id = %s) as p_vers';
+        cur.execute(statement, [product_id, product_id])
         rows = cur.fetchone()
 
         if rows[1] is None:
@@ -468,7 +468,7 @@ def post_question(product_id=None, parents_question_id=None):
 
             # TODO: if parents_question_id is not None...
 
-            parent_question_statement = 'select products_product_id from questions where products_product_id = %s and question_id = %s;'
+            parent_question_statement = 'select users_user_id from questions where products_product_id = %s and question_id = %s;'
             parent_question_values = [product_id, parents_question_id]
 
             cur.execute(parent_question_statement, parent_question_values)
@@ -487,7 +487,7 @@ def post_question(product_id=None, parents_question_id=None):
 
         cur.execute(insert_question_statement, insert_question_values)
 
-        response = {'status': StatusCodes['success'], 'token': question_id}  # TODO: JWT authent
+        response = {'status': StatusCodes['success'], 'results': question_id}
         conn.commit()
 
     except (TokenError, ProductNotFound,) as error:
@@ -507,7 +507,60 @@ def post_question(product_id=None, parents_question_id=None):
     return flask.jsonify(response)
 
 
-# TODO: see product information
+
+##
+# Obtain information about a product with product_id <product_id>
+##
+# To use it, access through Postman:
+##
+# GET http://localhost:8080/dbproj/products/7390626
+##
+@app.route('/dbproj/products/<product_id>', methods=['GET'])
+def get_product_info(product_id):
+    logger.info('GET /products/<product_id>')
+    conn = db_connection()
+    cur = conn.cursor()
+
+    try:
+        # Get info about the product that have the product_id correspondent to the one given
+        statement = 'select name, stock, description, coalesce(avg_rating, -1), price, version,(exists(select comment from ratings where products_product_id = %s and products_version = version))::varchar ' \
+                    'from products ' \
+                    'where product_id = %s ' \
+                    'union ' \
+                    'select name, stock, description, avg_rating, price, version, comment ' \
+                    'from products, ratings ' \
+                    'where product_id = %s and products_product_id = %s and products_version = version'
+        values = (product_id,) * 4
+        cur.execute(statement, values)
+        rows = cur.fetchall()
+
+        if len(rows) == 0:
+            raise ProductNotFound(product_id)
+
+        rating = rows[0][3] if rows[0][3] != -1 else 'Product not rated yet'
+
+        comments = [i[6] for i in rows if i[6] not in ['true', 'false']]
+        if len(comments) == 0:
+            comments = "Product without comments because it wasn't rated yet"
+
+        prices = [f"{i[5]} - {i[4]}" for i in rows if
+                  i[6] in ['true', 'false']]  # Format: product_price_version - product_price_associated_to_the_version
+        content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
+                   'rating': rating, 'comments': comments}
+
+        # Response of the status of obtaining a product and the information obtained
+        response = {'status': StatusCodes['success'], 'results': content}
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'GET /product/<product_id> - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
 
 
 ##

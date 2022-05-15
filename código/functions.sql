@@ -23,11 +23,13 @@ create or replace function q_notif() returns trigger
 as
 $$
 declare
-    notif_id  notifications.notification_id%type;
-    seller_id sellers.users_user_id%type;
+    parent_user_id questions.questions_users_user_id%type;
+    notif_id       notifications.notification_id%type;
+    user_id        sellers.users_user_id%type;
 begin
-    select sellers_users_user_id into seller_id from products where product_id = new.products_product_id;
-    select max(notification_id) into notif_id from notifications where users_user_id = seller_id;
+    parent_user_id := new.questions_users_user_id;
+    select sellers_users_user_id into user_id from products where product_id = new.products_product_id;
+    select max(notification_id) into notif_id from notifications where users_user_id = user_id;
 
     if notif_id is NULL then
         notif_id := 0;
@@ -36,7 +38,23 @@ begin
     end if;
 
     insert into notifications
-    values (notif_id, seller_id, CONCAT('New question about your product nº ', new.products_product_id));
+    values (notif_id, user_id,
+            CONCAT('New comment nº', new.question_id, 'regarding your product nº ', new.products_product_id, ': ',
+                   new.question_text));
+
+    if parent_user_id is not NULL then
+        select max(notification_id) into notif_id from notifications where users_user_id = user_id;
+        if notif_id is NULL then
+            notif_id := 0;
+        else
+            notif_id := notif_id + 1;
+        end if;
+        insert into notifications
+        values (notif_id, user_id,
+                CONCAT('New reply nº', new.question_id, ' to your comment nº', new.questions_question_id,
+                       ' on product nº ', new.products_product_id, ': "', new.question_text, '"'));
+    end if;
+
     return new;
 end;
 $$;

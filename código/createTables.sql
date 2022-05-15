@@ -103,7 +103,7 @@ CREATE TABLE ratings (
 CREATE TABLE questions (
 	question_id			 INTEGER,
 	question_text		 VARCHAR(512) NOT NULL,
-	users_user_id		 INTEGER,
+	users_user_id		 INTEGER NOT NULL,
 	products_product_id		 INTEGER NOT NULL,
 	products_version		 TIMESTAMP NOT NULL,
 	questions_question_id	 INTEGER,
