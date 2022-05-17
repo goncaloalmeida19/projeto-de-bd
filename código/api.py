@@ -50,6 +50,16 @@ class ParentQuestionNotFound(Exception):
         super(ParentQuestionNotFound, self).__init__(message + question_id)
 
 
+class CampaignExpiredOrNotFound(Exception):
+    def __init__(self, message="That campaign doesn't exist or it is not available anymore"):
+        super(CampaignExpiredOrNotFound, self).__init__(message)
+
+
+class NoCampaignsFound(Exception):
+    def __init__(self, message="No campaigns found"):
+        super(NoCampaignsFound, self).__init__(message)
+
+
 ##########################################################
 # AUXILIARY FUNCTIONS
 ##########################################################
@@ -75,7 +85,7 @@ def admin_check(fail_msg):
     try:
         user_id = get_user_id()
 
-        admin_validation = 'select users_user_id ' \
+        admin_validation = 'select 1 ' \
                            'from admins ' \
                            'where users_user_id = %s'
 
@@ -91,6 +101,8 @@ def admin_check(fail_msg):
         if conn is not None:
             conn.close()
 
+    return user_id
+
 
 def seller_check(fail_msg):
     conn = db_connection()
@@ -98,7 +110,7 @@ def seller_check(fail_msg):
     try:
         user_id = get_user_id()
 
-        seller_validation = 'select users_user_id ' \
+        seller_validation = 'select 1 ' \
                             'from sellers ' \
                             'where users_user_id = %s'
 
@@ -106,6 +118,56 @@ def seller_check(fail_msg):
 
         if cur.fetchone() is None:
             raise InsufficientPrivilegesException("seller", fail_msg)
+
+    except (TokenError, InsufficientPrivilegesException) as e:
+        raise e
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return user_id
+
+
+def buyer_check(fail_msg):
+    conn = db_connection()
+    cur = conn.cursor()
+    try:
+        user_id = get_user_id()
+
+        seller_validation = 'select 1 ' \
+                            'from buyers ' \
+                            'where users_user_id = %s'
+
+        cur.execute(seller_validation, [user_id])
+
+        if cur.fetchone() is None:
+            raise InsufficientPrivilegesException("buyer", fail_msg)
+
+    except (TokenError, InsufficientPrivilegesException) as e:
+        raise e
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return user_id
+
+
+def user_check(fail_msg):
+    conn = db_connection()
+    cur = conn.cursor()
+    try:
+        user_id = get_user_id()
+
+        user_validation = 'select 1 ' \
+                          'from users ' \
+                          'where user_id = %s'
+
+        cur.execute(user_validation, [user_id])
+
+        if cur.fetchone() is None:
+            raise InsufficientPrivilegesException("user", fail_msg)
 
     except (TokenError, InsufficientPrivilegesException) as e:
         raise e
@@ -198,6 +260,8 @@ def register_user():
     try:
         if payload['type'] != 'buyers' and (payload['type'] == 'sellers' or payload['type'] == 'admins'):
             admin_check(f"to register {payload['type']}")
+        else:
+            user_check(f"to register {payload['type']}")
 
         values = [payload['user_id'], payload['username'], payload['password']]
         extra_values = [payload['user_id']]
@@ -319,7 +383,7 @@ def login_user():
 # POST http://localhost:8080/dbproj/product
 ##
 @app.route('/dbproj/product', methods=['POST'])
-def add_product():
+def add_product():  # TODO: atualizar
     logger.info('POST /dbproj/product')
     payload = flask.request.get_json()
 
@@ -378,8 +442,6 @@ def add_product():
             final_statement += f'insert into {product_type} ' \
                                f'values ({("%s, " * len(columns_names[product_type]))[:-2]}); end; $$;'
             '''
-
-            # TODO: testar
             final_statement = psycopg2.sql.SQL(
                 'insert into products values (%s, %s, %s, %s, %s, %s, %s); '
                 'insert into {product_type} ' +
@@ -500,7 +562,7 @@ def post_question(product_id=None, parents_question_id=None):
         response = {'status': StatusCodes['success'], 'results': question_id}
         conn.commit()
 
-    except (TokenError, ProductNotFound,) as error:
+    except (TokenError, ProductNotFound) as error:
         logger.error(f'PUT /dbproj/questions/ - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
@@ -574,6 +636,8 @@ def get_product_info(product_id):
     cur = conn.cursor()
 
     try:
+        user_check("to get product info")
+
         # Get info about the product that have the product_id correspondent to the one given
         statement = 'select name, stock, description, coalesce(avg_rating, -1), price, version,(exists(select comment from ratings where products_product_id = %s and products_version = version))::varchar ' \
                     'from products ' \
@@ -602,6 +666,10 @@ def get_product_info(product_id):
 
         # Response of the status of obtaining a product and the information obtained
         response = {'status': StatusCodes['success'], 'results': content}
+
+    except (TokenError, InsufficientPrivilegesException) as error:
+        logger.error(f'GET /dbproj/products/<product_id> - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /dbproj/products/<product_id> - error: {error}')
@@ -634,20 +702,24 @@ def get_stats():
                 'group by month;'
 
     try:
+        user_check("to obtain sale stats")
+
         cur.execute(statement)
         rows = cur.fetchall()
 
         sale_stats = [{'month': r[0], 'total_value': r[1], 'orders': r[2]} for r in rows]
-        response = sale_stats
 
         # print(sale_stats)  # debug
 
         response = {'status': StatusCodes['success'], 'results': sale_stats}
 
+    except (TokenError, InsufficientPrivilegesException) as error:
+        logger.error(f'/dbproj/report/year - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'/dbproj/report/year - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-        conn.rollback()
 
     finally:
         if conn is not None:
@@ -659,10 +731,123 @@ def get_stats():
 # TODO: create new coupons campaign
 
 
-# TODO: subscribe to coupons campaigns
+##
+# Subscribe to coupon campaign
+##
+# To use it, access through postman:
+##
+# GET http://localhost:8080/dbproj/subscribe/<campaign_id>
+##
+@app.route('/dbproj/subscribe/<campaign_id>', methods=['PUT'])
+def subscribe_campaign(campaign_id):
+    logger.info('PUT /dbproj/subscribe/<campaign_id>')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    time_now = datetime.now()
+    expiration_date = time_now + timedelta(days=30)
+
+    time_now = time_now.strftime("%Y-%m-%d %H:%M:%S")
+    expiration_date = expiration_date.strftime("%Y-%m-%d %H:%M:%S")
+
+    # campaign_expired_statement = 'select exists(select 1 from campaigns )'
+
+    # parameterized queries, good for security and performance
+    subscribe_statement = 'update campaigns set coupons = coupons - 1 ' \
+                          'where campaign_id = %s and %s between date_start and date_end and coupons > 0;'
+    subscribe_values = (campaign_id, time_now)
+
+    gen_coupon_statement = 'select coalesce(max(coupon_id) + 1, 1) from coupons'
+
+    insert_coupon_statement = f'insert into coupons (coupon_id, used, discount_applied, expiration_date, campaigns_campaign_id, buyers_users_user_id) values (%s,%s,%s,%s,%s,%s);'
+
+    try:
+        user_id = buyer_check("to subscribe to coupon campaign")
+
+        cur.execute(subscribe_statement, subscribe_values)
+        if cur.rowcount == 0:
+            raise CampaignExpiredOrNotFound
+
+        cur.execute(gen_coupon_statement)
+        coupon_id = cur.fetchall()[0][0]
+
+        insert_coupon_values = (coupon_id, 'false', 0, expiration_date, campaign_id, user_id)
+        cur.execute(insert_coupon_statement, insert_coupon_values)
+
+        response = {'status': StatusCodes['success'],
+                    'results': {'coupon_id': coupon_id, 'expiration_date': expiration_date}}
+
+        conn.commit()
+
+    except (TokenError, InsufficientPrivilegesException, CampaignExpiredOrNotFound) as error:
+        logger.error(error)
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+        conn.rollback()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(error)
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
 
 
-# TODO: obtain coupons campaign statistics
+##
+# Obtain campaign statistics
+##
+# To use it, access through postman:
+##
+# GET http://localhost:8080/dbproj/report/campaign
+##
+@app.route('/dbproj/report/campaign', methods=['GET'])
+def get_campaign_stats():
+    logger.info('GET /dbproj/report/campaign')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    stats_statement = "select campaign_id," \
+                      "(select count(*) from coupons where campaigns_campaign_id = campaign_id)," \
+                      "(select count(*) from coupons where campaigns_campaign_id = campaign_id and used = 'true')," \
+                      "(select coalesce(sum(discount_applied),0) from coupons where campaigns_campaign_id = campaign_id) " \
+                      "from campaigns group by campaign_id"
+
+    try:
+        user_check("to obtain campaign stats")
+
+        cur.execute(stats_statement)
+        rows = cur.fetchall()
+        if not rows:
+            raise NoCampaignsFound
+        print(rows)
+        logger.debug('GET /report/campaign - parse')
+        results = []
+        for row in rows:
+            logger.debug(row)
+            content = {'campaign_id': int(row[0]), 'generated_coupons': int(row[1]),
+                       'used_coupons': int(row[2]), 'total_discount_value': float(row[3])}
+            results.append(content)  # appending to the payload to be returned
+
+        response = {'status': StatusCodes['success'], 'results': results}
+
+    except (TokenError, InsufficientPrivilegesException) as error:
+        logger.error(f'GET /report/campaign - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'GET /report/campaign - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
 
 
 if __name__ == '__main__':
