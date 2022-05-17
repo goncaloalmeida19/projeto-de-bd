@@ -354,10 +354,12 @@ def add_product():
         rows = cur.fetchall()
         product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
+        '''
         final_statement = 'do $$ ' \
                           'begin ' \
                           'insert into products values (%s, %s, %s, %s, %s, %s, %s); ' \
                           ''
+        '''
         final_values = (
             str(product_id), version, payload['name'], str(payload['price']), str(payload['stock']),
             payload['description'],
@@ -379,8 +381,9 @@ def add_product():
 
             # TODO: testar
             final_statement = psycopg2.sql.SQL(
+                'insert into products values (%s, %s, %s, %s, %s, %s, %s); '
                 'insert into {product_type} ' +
-                f'values ({("%s, " * len(columns_names[product_type]))[:-2]}); end; $$;'
+                f'values ({("%s, " * len(columns_names[product_type]))[:-2]});'
             ).format(product_type=sql.Identifier(product_type))
 
             final_values += tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple(
