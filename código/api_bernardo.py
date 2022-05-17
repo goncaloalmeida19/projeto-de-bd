@@ -591,47 +591,50 @@ def add_campaign():
         if i not in columns_names['campaigns'][1:6]:
             response = {'status': StatusCodes['bad_request'],
                         'results': f'{i} is not a valid attribute'}
+            if conn is not None:
+                conn.close()
             return flask.jsonify(response)
     for i in range(1, 6):
         if columns_names['campaigns'][i] not in payload:
             response = {'status': StatusCodes['bad_request'],
                         'results': f'{columns_names["campaigns"][i]} value not in payload'}
+            if conn is not None:
+                conn.close()
             return flask.jsonify(response)
 
     admin_id = 0
 
-    #verify_dates_statement = 'select exists(select 1 from campaigns where %s between date_start and date_end or %s between date_start and date_end)'
-    #verify_dates_values = (payload['date_start'], payload['date_end'])
+    verify_dates_statement = 'select exists(select 1 from campaigns where %s between date_start and date_end or %s between date_start and date_end)'
+    verify_dates_values = (payload['date_start'], payload['date_end'])
+
+    campaign_id_statement = 'select coalesce(max(campaign_id), 0) + 1 from campaigns)'
 
     campaign_statement = f'insert into campaigns ({",".join(list(payload))}, admins_users_user_id, campaign_id) ' \
-                         f'values ({("%s," * len(payload))[:-1]},%s, ' \
-                         f'(select coalesce(max(campaign_id), 0) + 1 from campaigns))' \
-                         f'where exists(' \
-                         f'select 1 from campaigns where %s between date_start and date_end ' \
-                         f'or %s between date_start and date_end);'
+                         f'values ({("%s," * len(payload))[:-1]},%s,%s);'
     print(campaign_statement)
 
     try:
-        #cur.execute(verify_dates_statement, verify_dates_values)
+        cur.execute(verify_dates_statement, verify_dates_values)
+        if cur.fetchall()[0][0]:
+            raise AlreadyInCampaign
 
-        #cur.execute(campaign_id_statement)
-        #campaign_id = cur.fetchone()[0]
+        cur.execute(campaign_id_statement)
+        campaign_id = cur.fetchone()[0]
 
-        campaign_values = tuple(list(payload.values()) + [admin_id, payload['date_start'], payload['date_end']])
+        campaign_values = tuple(list(payload.values()) + [admin_id, campaign_id])
         print(campaign_values)
 
         cur.execute(campaign_statement, campaign_values)
 
-        if not cur.rowcount == 0:  # TODO: EXCEÇÃO -> AlreadyInCampaign
-            logger.error(f'POST /campaign - error: Another campaign is already running at that time')
-            response = {'status': StatusCodes['bad_request'],
-                        'errors': 'Another campaign is already running at that time'}
-            return flask.jsonify(response)
-
         # commit the transaction
         conn.commit()
         response = {'status': StatusCodes['success'], 'results': f'Inserted campaign {campaign_id}'}
+    except AlreadyInCampaign as error:
+        logger.error(f'POST /campaign - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
 
+        # an error occurred, rollback
+        conn.rollback()
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'POST /campaign - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
