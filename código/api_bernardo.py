@@ -674,9 +674,8 @@ def subscribe_campaign(campaign_id):
 
     try:
         cur.execute(subscribe_statement, subscribe_values)
-        if cur.rowcount == 0:  # TODO: EXCEÇÃO -> CampaignExpiredOrNotFound
-            response = {'status': StatusCodes['bad_request'], 'results': 'That campaign is not available anymore'}
-            return flask.jsonify(response)
+        if cur.rowcount == 0:
+           raise CampaignExpiredOrNotFound
 
         cur.execute(gen_coupon_statement)
         coupon_id = cur.fetchall()[0][0]
@@ -688,7 +687,12 @@ def subscribe_campaign(campaign_id):
                     'results': {'coupon_id': coupon_id, 'expiration_date': expiration_date}}
         # commit the transaction
         conn.commit()
+    except (CampaignExpiredOrNotFound) as error:
+        logger.error(error)
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
 
+        # an error occurred, rollback
+        conn.rollback()
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(error)
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
