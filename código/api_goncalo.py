@@ -3,6 +3,7 @@ import flask
 import logging
 import jwt
 import psycopg2
+from psycopg2 import sql
 
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = 'my-32-character-ultra-secure-and-ultra-long-secret'
@@ -46,8 +47,13 @@ class InvalidAuthenticationException(Exception):
 
 
 class InsufficientPrivilegesException(Exception):
-    def __init__(self, extra_msg, message='User must be administrator '):
-        super(InsufficientPrivilegesException, self).__init__(message + extra_msg)
+    def __init__(self, privilege, extra_msg='', message='User must be '):
+        super(InsufficientPrivilegesException, self).__init__(message + privilege + extra_msg)
+
+
+class ParentQuestionNotFound(Exception):
+    def __init__(self, question_id, message="Question not found: "):
+        super(ParentQuestionNotFound, self).__init__(message + question_id)
 
 
 class ProductNotFound(Exception):
@@ -69,7 +75,8 @@ class CouponNotFound(Exception):
 
 class CouponExpired(Exception):
     def __init__(self, c_id, e_date, t_date, message1="The coupon with id '", message2="' has expired in '"):
-        super(CouponExpired, self).__init__(message1 + str(c_id) + message2 + e_date + "' and today is '" + t_date + "'")
+        super(CouponExpired, self).__init__(
+            message1 + str(c_id) + message2 + e_date + "' and today is '" + t_date + "'")
 
 
 # Product from order x already been rated
@@ -84,23 +91,67 @@ class AlreadyRated(Exception):
 # AUXILIARY FUNCTIONS
 ##########################################################
 
-def admin_check(fail_msg):
-    conn = db_connection()
-    cur = conn.cursor()
-
+def get_user_id():
     try:
-        user_token = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
+        header = flask.request.headers.get('Authorization')
+        if header is None:
+            raise jwt.exceptions.InvalidTokenError
+
+        user_token = jwt.decode(header.split(' ')[1], app.config['SECRET_KEY'],
                                 audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])
-        print(user_token)
+
     except jwt.exceptions.InvalidTokenError as e:
         raise TokenError()
 
-    admin_validation = 'select users_user_id from admins where users_user_id = %s'
+    return user_token['user']
 
-    cur.execute(admin_validation, [user_token['user']])
 
-    if cur.fetchone() is None:
-        raise InsufficientPrivilegesException(fail_msg)
+def admin_check(fail_msg):
+    conn = db_connection()
+    cur = conn.cursor()
+    try:
+        user_id = get_user_id()
+
+        admin_validation = 'select users_user_id ' \
+                           'from admins ' \
+                           'where users_user_id = %s'
+
+        cur.execute(admin_validation, [user_id])
+
+        if cur.fetchone() is None:
+            raise InsufficientPrivilegesException("admin ", fail_msg)
+
+    except (TokenError, InsufficientPrivilegesException) as e:
+        raise e
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+def seller_check(fail_msg):
+    conn = db_connection()
+    cur = conn.cursor()
+    try:
+        user_id = get_user_id()
+
+        seller_validation = 'select users_user_id ' \
+                            'from sellers ' \
+                            'where users_user_id = %s'
+
+        cur.execute(seller_validation, [user_id])
+
+        if cur.fetchone() is None:
+            raise InsufficientPrivilegesException("seller", fail_msg)
+
+    except (TokenError, InsufficientPrivilegesException) as e:
+        raise e
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return user_id
 
 
 ##########################################################
@@ -147,20 +198,24 @@ def landing_page():
 
 @app.route('/dbproj/products/<product_id>', methods=['GET'])
 def get_product(product_id):
-    logger.info('GET /products/<product_id>')
+    logger.info('GET /dbproj/products/<product_id>')
     conn = db_connection()
     cur = conn.cursor()
 
     try:
+        """select name, stock, description, avg_rating, price, version, string_agg(comment, ', ')
+from products left join ratings
+on products_product_id = 7390626 and products_version = version
+where product_id = 7390626
+group by product_id, version
+"""
+
         # Get info about the product that have the product_id correspondent to the one given
-        statement = 'select name, stock, description, coalesce(avg_rating, -1), price, version,(exists(select comment from ratings where products_product_id = %s and products_version = version))::varchar ' \
-                    'from products ' \
-                    'where product_id = %s ' \
-                    'union ' \
-                    'select name, stock, description, avg_rating, price, version, comment ' \
-                    'from products, ratings ' \
-                    'where product_id = %s and products_product_id = %s and products_version = version'
-        values = (product_id,) * 4
+        statement = 'select name, stock, description, avg_rating, price, version, comment ' \
+                    'from products left join ratings ' \
+                    'on products_product_id = %s and products_version = version ' \
+                    'where product_id = %s '
+        values = (product_id, product_id,)
         cur.execute(statement, values)
         rows = cur.fetchall()
 
@@ -168,21 +223,38 @@ def get_product(product_id):
             raise ProductNotFound(product_id)
 
         rating = rows[0][3] if rows[0][3] != -1 else 'Product not rated yet'
+        # logger.debug(rows)
+        comments = []
+        commented = []
+        prices = []  # Format: product_price_version - product_price_associated_to_the_version
 
-        comments = [i[6] for i in rows if i[6] not in ['true', 'false']]
+        for i in rows:
+            if i[6] is not None:
+                comments.append(i[6])
+            if i[5] not in commented:
+                commented.append(i[5])
+
+        for i in rows:
+            if i[6] in None:
+                prices.append(f"{i[5]} - {i[4]}")
+            if i[5] in commented:
+                prices.append(f"{i[5]} - {i[4]}")
+                commented.remove(i[5])
+
         if len(comments) == 0:
             comments = "Product without comments because it wasn't rated yet"
 
-        prices = [f"{i[5]} - {i[4]}" for i in rows if
-                  i[6] in ['true', 'false']]  # Format: product_price_version - product_price_associated_to_the_version
         content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
                    'rating': rating, 'comments': comments}
 
         # Response of the status of obtaining a product and the information obtained
         response = {'status': StatusCodes['success'], 'results': content}
 
+    except ProductNotFound as error:
+        logger.error(f'GET /dbproj/product/<product_id> - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'GET /product/<product_id> - error: {error}')
+        logger.error(f'GET /dbproj/product/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
     finally:
@@ -202,7 +274,7 @@ def get_product(product_id):
 
 @app.route('/dbproj/rating/<product_id>', methods=['POST'])
 def give_rating_feedback(product_id):
-    logger.info('POST /rating/<product_id>')
+    logger.info('POST /dbproj/rating/<product_id>')
     payload = flask.request.get_json()
 
     conn = db_connection()
@@ -227,12 +299,10 @@ def give_rating_feedback(product_id):
         response = {'status': StatusCodes['bad_request'], 'results': f'A valid rating is required to add a product'}
         return flask.jsonify(response)
 
-    # Get the buyer id
-    # buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
-    #                      audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
-    buyer_id = 2
-
     try:
+        # Get the buyer id
+        buyer_id = get_user_id()
+
         # Get info about the product that will be rated (the one already bought)
         statement = 'select orders.id, product_quantities.products_version ' \
                     'from product_quantities, orders ' \
@@ -251,11 +321,11 @@ def give_rating_feedback(product_id):
         version = rows[len(rows) - 1][1].strftime("%Y-%m-%d %H:%M:%S")
 
         # Verify if the product have already been rated
-        statement = 'select exists (select rating, comment from ratings where orders_id = 9 and products_product_id = 7390626) , count (*) ' \
+        statement = 'select exists (select rating, comment from ratings where orders_id = %s and products_product_id = %s) , count (*) ' \
                     'from ratings ' \
-                    'where orders_id = 9 ' \
-                    'and products_product_id = 7390626'
-        values = (order_id, product_id,)
+                    'where orders_id = %s ' \
+                    'and products_product_id = %s'
+        values = (order_id, product_id, order_id, product_id,)
         cur.execute(statement, values)
         rows = cur.fetchall()
 
@@ -273,7 +343,8 @@ def give_rating_feedback(product_id):
                     'end;' \
                     '$$;'
         values = (
-            payload['comment'], payload['rating'], order_id, product_id, version, buyer_id, payload['rating'], n_ratings, payload['rating'], n_ratings, product_id)
+            payload['comment'], payload['rating'], order_id, product_id, version, buyer_id, payload['rating'],
+            n_ratings, payload['rating'], n_ratings, product_id)
         cur.execute(statement, values)
 
         # Response of the rating status
@@ -282,8 +353,11 @@ def give_rating_feedback(product_id):
         # commit the transaction
         conn.commit()
 
+    except (ProductNotFound, AlreadyRated, CouponExpired, TokenError) as error:
+        logger.error(f'POST /dbproj/rating/<product_id> - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(error)
+        logger.error(f'POST /dbproj/rating/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
         # an error occurred, rollback
@@ -306,7 +380,7 @@ def give_rating_feedback(product_id):
 
 @app.route('/dbproj/product', methods=['POST'])
 def add_product():
-    logger.info('POST /product')
+    logger.info('POST /dbproj/product')
     payload = flask.request.get_json()
 
     conn = db_connection()
@@ -323,17 +397,15 @@ def add_product():
     for i in required_input_info["products"]:
         if i not in payload:
             response = {'status': StatusCodes['bad_request'],
-                        'results': f'{i.capitalize()} is required to add a product'}
+                        'results': f'{i} is required to add a product'}
             return flask.jsonify(response)
 
-    version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     product_type = payload['type']
 
-    # Get the seller id
-    seller_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
-                           audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
-
     try:
+        # Get the seller id
+        seller_id = get_user_id()
+
         # Get new product_id
         product_id_statement = 'select max(product_id) from products where sellers_users_user_id = %s'
         product_id_values = (seller_id,)
@@ -341,14 +413,14 @@ def add_product():
         rows = cur.fetchall()
         product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
-        final_statement = 'do $$ ' \
-                          'begin ' \
-                          'insert into products values (%s, %s, %s, %s, %s, %s, %s); ' \
-                          ''
-        final_values = (
-            str(product_id), version, payload['name'], str(payload['price']), str(payload['stock']),
+        product_statement = 'insert into products values (%s, %s, %s, %s, %s, %s); '
+        product_values = (
+            str(product_id), payload['name'], str(payload['price']), str(payload['stock']),
             payload['description'],
             str(seller_id))
+
+        # Insert new product info in table products
+        cur.execute(product_statement, product_values)
 
         # Statement and values about the info that will be insert to the table that corresponds to the same type of product
         if product_type in list(columns_names)[2:-1]:
@@ -358,16 +430,19 @@ def add_product():
                                 'results': f'{j} is required to add a {product_type[:-1]}'}
                     return flask.jsonify(response)
 
-            final_statement += f'insert into {product_type} values (' + ('%s, ' * len(columns_names[product_type]))[
-                                                                        :-2] + '); end; $$;'
-            final_values += tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple(
-                [str(product_id), version])
+            product_type_statement = psycopg2.sql.SQL(
+                'insert into {product_type} ' +
+                f'values ({("%s, " * len(columns_names[product_type]))[:-2]});'
+            ).format(product_type=sql.Identifier(product_type))
+
+            product_type_values = tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple(
+                [str(product_id)])
         else:
             response = {'status': StatusCodes['bad_request'], 'results': 'Valid type is required to add a product'}
             return flask.jsonify(response)
 
-        # Insert new product info in table products and to the one that corresponds to the same type of product
-        cur.execute(final_statement, final_values)
+        # Insert new product info to the one that corresponds to the same type of product
+        cur.execute(product_type_statement, product_type_values)
 
         # Response of the adding the product status
         response = {'status': StatusCodes['success'], 'results': f'{product_id}'}
@@ -375,8 +450,11 @@ def add_product():
         # commit the transaction
         conn.commit()
 
+    except (CouponExpired, TokenError) as error:
+        logger.error(f'POST /dbproj/product - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(error)
+        logger.error(f'POST /dbproj/product - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
         # an error occurred, rollback
@@ -399,7 +477,7 @@ def add_product():
 
 @app.route('/dbproj/order', methods=['POST'])
 def buy_products():
-    logger.info('POST /order')
+    logger.info('POST /dbproj/order')
     payload = flask.request.get_json()
 
     conn = db_connection()
@@ -429,11 +507,10 @@ def buy_products():
     order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     total_price = 0.0
 
-    # Get the buyer id
-    buyer_id = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
-                          audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])['user']
-
     try:
+        # Get the buyer id
+        buyer_id = get_user_id()
+
         # Get the order id
         order_id_statement = 'select max(id) from orders '
         cur.execute(order_id_statement, )
@@ -491,18 +568,14 @@ def buy_products():
             product_stock_values = (stock - product_quantity, product_id, version)
             cur.execute(product_stock_statement, product_stock_values)
 
-        # Calculate total_price with the discount (it is 0 if no coupon is applied to the order
-        price_discounted = total_price * (discount / 100)
-        total_price -= price_discounted
-
-        # Update order info
-        order_price_update_statement = 'update orders set price_total = %s where id = %s'
-        order_price_update_values = (total_price, order_id,)
+        # Calculate total_price with the discount (it is 0 if no coupon is applied to the order and update order info
+        order_price_update_statement = 'update orders set price_total = %s - (%s * (%s / 100)) where id = %s'
+        order_price_update_values = (total_price, total_price, discount, order_id,)
         cur.execute(order_price_update_statement, order_price_update_values)
 
         # Update coupon info
-        coupon_statement = 'update coupons set used = true, discount_applied = %s where coupon_id = %s'
-        coupon_values = (coupon_id, price_discounted,)
+        coupon_statement = 'update coupons set used = true, discount_applied = %s * (%s / 100) where coupon_id = %s'
+        coupon_values = (total_price, discount, coupon_id,)
         cur.execute(coupon_statement, coupon_values)
 
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
@@ -510,6 +583,9 @@ def buy_products():
         # commit the transaction
         conn.commit()
 
+    except (ProductNotFound, ProductWithoutStockAvailable, CouponNotFound, CouponExpired, TokenError) as error:
+        logger.error(f'POST /dbproj/order - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(error)
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
@@ -555,9 +631,16 @@ def get_all_users():
     return flask.jsonify(response)
 
 
-@app.route('/users/', methods=['POST'])
+##
+# Register a user with a JSON payload
+##
+# To use it, access through Postman:
+##
+# POST http://localhost:8080/dbproj/user
+##
+@app.route('/dbproj/user/', methods=['POST'])
 def register_user():
-    logger.info('POST /users')
+    logger.info('POST /dbproj/user/')
 
     payload = flask.request.get_json()
 
@@ -566,39 +649,69 @@ def register_user():
 
     logger.debug(f'POST /users - payload: {payload}')
 
+    required = []
+
     if 'user_id' not in payload:
-        response = {'status': StatusCodes['bad_request'], 'results': 'user_id not in payload'}
-        return flask.jsonify(response)
+        required.append('user_id is required for user registry')
 
     if 'username' not in payload:
-        response = {'status': StatusCodes['bad_request'], 'results': 'username is required for user registry'}
-        return flask.jsonify(response)
+        required.append('username is required for user registry')
 
     if 'password' not in payload:
-        response = {'status': StatusCodes['bad_request'], 'results': 'password is required for user registry'}
-        return flask.jsonify(response)
+        required.append('password is required for user registry')
 
     if 'type' not in payload or payload['type'] not in ['buyers', 'sellers', 'admins']:
-        response = {'status': StatusCodes['bad_request'], 'results': 'user type is required for user registry: buyers, '
-                                                                     'sellers or admins'}
-        return flask.jsonify(response)
+        required.append('user type is required for user registry: \'buyers\', \'sellers\' or \'admins\'')
 
-    statement = 'insert into users (user_id, username, password) values (%s, %s, %s)'
-    values = (payload['user_id'], payload['username'], payload['password'])
+    elif payload['type'] == 'buyers' or payload['type'] == 'sellers':
+        if 'nif' not in payload:
+            required.append('nif is required to register buyers and sellers')
+
+        if 'home_addr' not in payload and 'shipping_addr' not in payload:
+            required.append('address (home_addr or shipping_addr) is required to register buyers or sellers')
+
+    if len(required) > 0:
+        response = {'status': StatusCodes['bad_request'], 'errors': required}
+        return flask.jsonify(response)
 
     try:
         if payload['type'] != 'buyers' and (payload['type'] == 'sellers' or payload['type'] == 'admins'):
             admin_check(f"to register {payload['type']}")
 
+        values = [payload['user_id'], payload['username'], payload['password']]
+        extra_values = [payload['user_id']]
+
+        if 'email' in payload:
+            values.append(payload['email'])
+
+        if payload['type'] == 'buyers':
+            extra_values.append(payload['nif'])
+            extra_values.append(payload['home_addr'])
+        elif payload['type'] == 'sellers':
+            extra_values.append(payload['nif'])
+            extra_values.append(payload['shipping_addr'])
+
+        statement = psycopg2.sql.SQL(
+            f'insert into users (user_id, username, password) values (%s, %s, %s{", %s;" if "email" in payload else ""});'
+            + ' insert into {type} values (' + '%s, ' * (len(extra_values) - 1) + ' %s);'
+        ).format(type=sql.Identifier(payload['type']))
+
+        print(statement)
+        values.extend(extra_values)
+
         cur.execute(statement, values)
-        # commit the transaction
+
         conn.commit()
         response = {'status': StatusCodes['success'], 'results': f'Registered user {payload["username"]}'}
 
+    except (TokenError, InsufficientPrivilegesException) as error:
+        logger.error(f'POST /dbproj/user/ - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+        conn.rollback()
+
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'POST /users - error: {error}')
+        logger.error(f'POST /dbproj/user/ - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-        # an error occurred, rollback
         conn.rollback()
 
     finally:
@@ -608,9 +721,16 @@ def register_user():
     return flask.jsonify(response)
 
 
-@app.route('/users/', methods=['PUT'])
+##
+# Perform user login with a JSON payload
+##
+# To use it, access through Postman:
+##
+# PUT http://localhost:8080/dbproj/user
+##
+@app.route('/dbproj/user/', methods=['PUT'])
 def login_user():
-    logger.info('PUT /users')
+    logger.info('PUT /dbproj/user/')
 
     payload = flask.request.get_json()
 
@@ -620,10 +740,10 @@ def login_user():
     logger.debug(f'PUT /users - payload: {payload}')
 
     if 'username' not in payload or 'password' not in payload:
-        response = {'status': StatusCodes['bad_request'], 'results': 'username and password are required for login'}
+        response = {'status': StatusCodes['bad_request'], 'errors': 'username and password are required for login'}
         return flask.jsonify(response)
 
-    statement = 'select user_id, username from users where username = %s and password = %s'
+    statement = 'select user_id, username from users where username = %s and password = %s;'
     values = (payload['username'], payload['password'])
 
     try:
@@ -647,15 +767,91 @@ def login_user():
         else:
             raise InvalidAuthenticationException()
 
-        response = {'status': StatusCodes['success'], 'token': auth_token}  # TODO: JWT authent
-        # commit the transaction
+        response = {'status': StatusCodes['success'], 'token': auth_token}
+
         conn.commit()
 
-    except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(error)
-        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-        # an error occurred, rollback
+    except InvalidAuthenticationException as error:
+        logger.error(f'PUT /dbproj/user/ {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'PUT /dbproj/user/ {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+
+@app.route('/dbproj/product/<product_id>', methods=['PUT'])
+def update_product(product_id):
+    logger.info('PUT /product')
+    payload = flask.request.get_json()
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    logger.debug(f'PUT /product/<product_id> - payload: {payload}')
+
+    version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    type_statement = 'select gettype(%s);'
+    type_values = (product_id,)
+
+    try:
+        cur.execute(type_statement, type_values)
+        product_type = cur.fetchall()[0][0]  # TODO EXCEÇÃO -> ProductNotFound
+
+        # get the data of the old version of the product
+        old_items_statement = f'select * from products,{product_type} ' \
+                              'where product_id = %s ' \
+                              'and version =(select max(version) from products where product_id = %s) ' \
+                              'and products_product_id = product_id and version = products_version'
+        old_items_value = (product_id, product_id)
+        cur.execute(old_items_statement, old_items_value)
+        results = cur.fetchall()[0]
+
+        # change the data, creating a new version
+        new_data_products = tuple([payload[i] if i in list(payload.keys())
+                                   else version if i == 'version' else results[columns_names['products'].index(i)]
+                                   for i in columns_names['products']])
+        new_data_product_type = tuple([payload[i] if i in list(payload.keys())
+                                       else version if i == 'products_version' else results[
+            columns_names[product_type].index(i) + len(columns_names['products'])]
+                                       for i in columns_names[product_type]])
+
+        # add the new version to the products table and corresponding product type table
+        insert_products_statement = f'insert into products values({("%s," * len(columns_names["products"]))[:-1]});'
+        insert_product_type_statement = f'insert into {product_type} values({("%s," * len(columns_names[product_type]))[:-1]});'
+        cur.execute(insert_products_statement, new_data_products)
+        cur.execute(insert_product_type_statement, new_data_product_type)
+        conn.commit()
+        response = {'status': StatusCodes['success'], 'results': f'Updated {",".join(list(payload.keys()))}'}
+        """non_changed = list(set(columns_names[product_type] + columns_names['products']) - set(payload.keys()))
+
+        old_items_statement = f"select {('%s,'*len(non_changed))[:-1]} from products, {product_type} where product_id = %s"
+        old_items_value = tuple(non_changed + [product_id])
+
+        print(old_items_statement, old_items_value)
+        cur.execute(old_items_statement, old_items_value)
+        results = cur.fetchall()
+
+        response = {'status': StatusCodes['success'], 'results': results}"""
+
+        # logger.debug('PUT /product/<product_id> - parse')
+        # logger.debug(product_type)
+        # content = {'ndep': int(row[0]), 'nome': row[1], 'localidade': row[2]}
+
+        # response = {'status': StatusCodes['success'], 'results': content}
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'PUT /product/<product_id> - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
     finally:
         if conn is not None:
