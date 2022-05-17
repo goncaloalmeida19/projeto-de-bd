@@ -5,7 +5,7 @@ CREATE TABLE products (
 	name			 VARCHAR(512) NOT NULL,
 	price		 DOUBLE PRECISION NOT NULL,
 	stock		 INTEGER NOT NULL,
-	description		 VARCHAR(512),
+	description		 VARCHAR(512) NOT NULL,
 	avg_rating FLOAT,
 	sellers_users_user_id INTEGER NOT NULL,
 	PRIMARY KEY(product_id,version)
@@ -13,11 +13,11 @@ CREATE TABLE products (
 
 /* Create table computers */
 CREATE TABLE computers (
-	screen_size	 FLOAT(8),
-	cpu		 VARCHAR(512),
-	gpu		 VARCHAR(512),
-	storage		 VARCHAR(512),
-	refresh_rate	 INTEGER,
+	screen_size	 FLOAT(8) NOT NULL,
+	cpu		 VARCHAR(512) NOT NULL,
+	gpu		 VARCHAR(512) NOT NULL,
+	storage		 VARCHAR(512) NOT NULL,
+	refresh_rate	 INTEGER NOT NULL,
 	products_product_id INTEGER,
 	products_version	 TIMESTAMP,
 	PRIMARY KEY(products_product_id,products_version)
@@ -25,11 +25,11 @@ CREATE TABLE computers (
 
 /* Create table televisions */
 CREATE TABLE televisions (
-	screen_size	 FLOAT(8),
-	screen_type	 VARCHAR(512),
-	resolution		 VARCHAR(512),
-	smart		 BOOL,
-	efficiency		 CHAR(255),
+	screen_size	 FLOAT(8) NOT NULL,
+	screen_type	 VARCHAR(512) NOT NULL,
+	resolution		 VARCHAR(512) NOT NULL,
+	smart		 BOOL NOT NULL,
+	efficiency		 CHAR(255) NOT NULL,
 	products_product_id INTEGER,
 	products_version	 TIMESTAMP,
 	PRIMARY KEY(products_product_id,products_version)
@@ -37,10 +37,10 @@ CREATE TABLE televisions (
 
 /* Create table smartphones */
 CREATE TABLE smartphones (
-	screen_size	 FLOAT(8),
-	os			 VARCHAR(512),
-	storage		 VARCHAR(512),
-	color		 VARCHAR(512),
+	screen_size	 FLOAT(8) NOT NULL,
+	os			 VARCHAR(512) NOT NULL,
+	storage		 VARCHAR(512) NOT NULL,
+	color		 VARCHAR(512) NOT NULL,
 	products_product_id INTEGER,
 	products_version	 TIMESTAMP,
 	PRIMARY KEY(products_product_id,products_version)
@@ -114,7 +114,7 @@ CREATE TABLE questions (
 /* Create table campaigns */
 CREATE TABLE campaigns (
 	campaign_id		 INTEGER,
-	description		 VARCHAR(512),
+	description		 VARCHAR(512) NOT NULL,
 	date_start		 DATE NOT NULL,
 	date_end		 DATE NOT NULL,
 	coupons          INTEGER NOT NULL,

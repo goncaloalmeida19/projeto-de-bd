@@ -23,6 +23,67 @@ columns_names = {
     'campaigns': ['campaign_id', 'description', 'date_start', 'date_end', 'coupons', 'discount', 'admins_users_user_id']
 }
 
+def get_user_id():
+    try:
+        header = flask.request.headers.get('Authorization')
+        if header is None:
+            raise jwt.exceptions.InvalidTokenError
+
+        user_token = jwt.decode(header.split(' ')[1], app.config['SECRET_KEY'],
+                                audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])
+
+    except jwt.exceptions.InvalidTokenError as e:
+        raise TokenError()
+
+    return user_token['user']
+
+
+def admin_check(fail_msg):
+    conn = db_connection()
+    cur = conn.cursor()
+    try:
+        user_id = get_user_id()
+
+        admin_validation = 'select users_user_id ' \
+                           'from admins ' \
+                           'where users_user_id = %s'
+
+        cur.execute(admin_validation, [user_id])
+
+        if cur.fetchone() is None:
+            raise InsufficientPrivilegesException("admin ", fail_msg)
+
+    except (TokenError, InsufficientPrivilegesException) as e:
+        raise e
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+def seller_check(fail_msg):
+    conn = db_connection()
+    cur = conn.cursor()
+    try:
+        user_id = get_user_id()
+
+        seller_validation = 'select users_user_id ' \
+                            'from sellers ' \
+                            'where users_user_id = %s'
+
+        cur.execute(seller_validation, [user_id])
+
+        if cur.fetchone() is None:
+            raise InsufficientPrivilegesException("seller", fail_msg)
+
+    except (TokenError, InsufficientPrivilegesException) as e:
+        raise e
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return user_id
 
 ##########################################################
 # EXCEPTIONS
@@ -86,7 +147,9 @@ class CampaignExpiredOrNotFound(Exception):
     def __init__(self, message="That campaign doesn't exist or it is not available anymore"):
         super(CampaignExpiredOrNotFound, self).__init__(message)
 
-
+class NoCampaignsFound(Exception):
+    def __init__(self, message="No campaigns found"):
+        super(NoCampaignsFound, self).__init__(message)
 
 ##########################################################
 # AUXILIARY FUNCTIONS
@@ -537,30 +600,33 @@ def add_campaign():
 
     admin_id = 0
 
-    verify_dates_statement = 'select exists(select 1 from campaigns where %s between date_start and date_end or %s between date_start and date_end)'
-    verify_dates_values = (payload['date_start'], payload['date_end'])
-
-    campaign_id_statement = 'select coalesce(max(campaign_id), 0) + 1 from campaigns'
+    #verify_dates_statement = 'select exists(select 1 from campaigns where %s between date_start and date_end or %s between date_start and date_end)'
+    #verify_dates_values = (payload['date_start'], payload['date_end'])
 
     campaign_statement = f'insert into campaigns ({",".join(list(payload))}, admins_users_user_id, campaign_id) ' \
-                         f'values ({("%s," * len(payload))[:-1]},%s, %s)'
+                         f'values ({("%s," * len(payload))[:-1]},%s, ' \
+                         f'(select coalesce(max(campaign_id), 0) + 1 from campaigns))' \
+                         f'where exists(' \
+                         f'select 1 from campaigns where %s between date_start and date_end ' \
+                         f'or %s between date_start and date_end);'
     print(campaign_statement)
 
     try:
-        cur.execute(verify_dates_statement, verify_dates_values)
-        if cur.fetchall()[0][0]:  # TODO: EXCEÇÃO -> AlreadyInCampaign
+        #cur.execute(verify_dates_statement, verify_dates_values)
+
+        #cur.execute(campaign_id_statement)
+        #campaign_id = cur.fetchone()[0]
+
+        campaign_values = tuple(list(payload.values()) + [admin_id, payload['date_start'], payload['date_end']])
+        print(campaign_values)
+
+        cur.execute(campaign_statement, campaign_values)
+
+        if not cur.rowcount == 0:  # TODO: EXCEÇÃO -> AlreadyInCampaign
             logger.error(f'POST /campaign - error: Another campaign is already running at that time')
             response = {'status': StatusCodes['bad_request'],
                         'errors': 'Another campaign is already running at that time'}
             return flask.jsonify(response)
-
-        cur.execute(campaign_id_statement)
-        campaign_id = cur.fetchone()[0]
-
-        campaign_values = tuple(list(payload.values()) + [admin_id, campaign_id])
-        print(campaign_values)
-
-        cur.execute(campaign_statement, campaign_values)
 
         # commit the transaction
         conn.commit()
@@ -653,9 +719,11 @@ def get_campaign_stats():
     try:
         cur.execute(stats_statement)
         rows = cur.fetchall()
-
+        if not rows:
+            raise NoCampaignsFound
+        print(rows)
         logger.debug('GET /report/campaign - parse')
-        results = []  # TODO Se não existirem campanhas aparecer uma mensagem
+        results = []
         for row in rows:
             logger.debug(row)
             content = {'campaign_id': int(row[0]), 'generated_coupons': int(row[1]),
@@ -663,11 +731,9 @@ def get_campaign_stats():
             results.append(content)  # appending to the payload to be returned
 
         response = {'status': StatusCodes['success'], 'results': results}
-
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /report/campaign - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-
     finally:
         if conn is not None:
             conn.close()
