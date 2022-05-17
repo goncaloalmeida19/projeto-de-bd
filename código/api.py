@@ -63,7 +63,7 @@ def get_user_id():
         user_token = jwt.decode(header.split(' ')[1], app.config['SECRET_KEY'],
                                 audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])
 
-    except jwt.exceptions.InvalidTokenError as e:
+    except jwt.exceptions.InvalidTokenError:
         raise TokenError()
 
     return user_token['user']
@@ -168,7 +168,7 @@ def register_user():
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'POST /users - payload: {payload}')
+    logger.debug(f'POST /dbproj/user/ - payload: {payload}')
 
     required = []
 
@@ -213,8 +213,10 @@ def register_user():
             extra_values.append(payload['shipping_addr'])
 
         statement = psycopg2.sql.SQL(
-            f'insert into users (user_id, username, password) values (%s, %s, %s{", %s;" if "email" in payload else ""});'
-            + ' insert into {type} values (' + '%s, ' * (len(extra_values) - 1) + ' %s);'
+            f'insert into users (user_id, username, password) '
+            f'values(%s, %s, %s{", %s;" if "email" in payload else ""}); '
+            + 'insert into {type} '
+              'values(' + '%s, ' * (len(extra_values) - 1) + ' %s);'
         ).format(type=sql.Identifier(payload['type']))
 
         print(statement)
@@ -258,7 +260,7 @@ def login_user():
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'PUT /users - payload: {payload}')
+    logger.debug(f'PUT /dbproj/user/ - payload: {payload}')
 
     if 'username' not in payload or 'password' not in payload:
         response = {'status': StatusCodes['bad_request'], 'errors': 'username and password are required for login'}
@@ -318,7 +320,7 @@ def login_user():
 ##
 @app.route('/dbproj/product', methods=['POST'])
 def add_product():
-    logger.info('POST /product')
+    logger.info('POST /dbproj/product')
     payload = flask.request.get_json()
 
     conn = db_connection()
@@ -329,13 +331,13 @@ def add_product():
         (item, value[:-2] + ['type']) if item not in ["products", "ratings", "campaigns"]
         else (item, value[2: -1]) for item, value in columns_names.items())
 
-    # logger.debug(f'POST /product - required_product_input_info: {required_product_input_info}')
+    logger.debug(f'POST /dbproj/product - payload: {payload}')
 
     # Verification of the required fields to add a product
     for i in required_input_info["products"]:
         if i not in payload:
             response = {'status': StatusCodes['bad_request'],
-                        'results': f'{i.capitalize()} is required to add a product'}
+                        'results': f'{i.capitalize()} is required to add a product'}  # TODO: not capitalize
             return flask.jsonify(response)
 
     version = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
@@ -361,7 +363,8 @@ def add_product():
             payload['description'],
             str(seller_id))
 
-        # Statement and values about the info that will be inserted in the table that corresponds to the same type of product
+        # Statement and values about the info that will be inserted
+        # in the table that corresponds to the same type of product
         if product_type in list(columns_names)[2:-1]:
             for j in required_input_info[product_type]:
                 if j not in payload:
@@ -439,6 +442,11 @@ def post_question(product_id=None, parents_question_id=None):
 
     payload = flask.request.get_json()
 
+    if parents_question_id is None:
+        logger.debug(f'POST /dbproj/questions/<product_id> - payload: {payload}')
+    else:
+        logger.debug(f'POST /dbproj/questions/<product_id>/<parents_question_id> - payload: {payload}')
+
     conn = db_connection()
     cur = conn.cursor()
 
@@ -448,8 +456,9 @@ def post_question(product_id=None, parents_question_id=None):
         return flask.jsonify(response)
 
     try:
-        # statement = 'select max(question_id), max(version) from questions, products where product_id = %s and products_product_id = product_id;'
-        statement = 'select * from (select max(question_id) from questions where products_product_id = %s) as q_ids, (select max(version) from products where product_id = %s) as p_vers';
+        statement = 'select * from ' \
+                    '(select max(question_id) from questions where products_product_id = %s) as q_ids, ' \
+                    '(select max(version) from products where product_id = %s) as p_vers;'
         cur.execute(statement, [product_id, product_id])
         rows = cur.fetchone()
 
@@ -458,20 +467,14 @@ def post_question(product_id=None, parents_question_id=None):
 
         products_version = rows[1].strftime("%Y-%m-%d %H:%M:%S")
 
-        if rows[0] is None:
-            # first question made about this product
-            question_id = 0
-        else:
-            question_id = rows[0] + 1
+        question_id = rows[0] + 1 if rows[0] is not None else 1
 
-        # insert_question_values = [question_id, payload['question'], get_user_id(), notification_id, product_id, products_version]
         insert_question_values = [question_id, payload['question'], get_user_id(), product_id, products_version]
 
         if parents_question_id is not None:
 
-            # TODO: if parents_question_id is not None...
-
-            parent_question_statement = 'select users_user_id from questions where products_product_id = %s and question_id = %s;'
+            parent_question_statement = 'select users_user_id ' \
+                                        'from questions where products_product_id = %s and question_id = %s;'
             parent_question_values = [product_id, parents_question_id]
 
             cur.execute(parent_question_statement, parent_question_values)
@@ -509,6 +512,7 @@ def post_question(product_id=None, parents_question_id=None):
             conn.close()
 
     return flask.jsonify(response)
+
 
 ##
 # Get notifications
@@ -605,7 +609,6 @@ def get_product_info(product_id):
             conn.close()
 
     return flask.jsonify(response)
-
 
 
 ##
