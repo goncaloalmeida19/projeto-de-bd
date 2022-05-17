@@ -60,6 +60,12 @@ class NoCampaignsFound(Exception):
         super(NoCampaignsFound, self).__init__(message)
 
 
+class CouponExpired(Exception):
+    def __init__(self, c_id, e_date, t_date, message1="The coupon with id '", message2="' has expired in '"):
+        super(CouponExpired, self).__init__(
+            message1 + str(c_id) + message2 + e_date + "' and today is '" + t_date + "'")
+
+
 ##########################################################
 # AUXILIARY FUNCTIONS
 ##########################################################
@@ -380,7 +386,7 @@ def login_user():
 # POST http://localhost:8080/dbproj/product
 ##
 @app.route('/dbproj/product', methods=['POST'])
-def add_product():  # TODO: atualizar
+def add_product():
     logger.info('POST /dbproj/product')
     payload = flask.request.get_json()
 
@@ -398,10 +404,12 @@ def add_product():  # TODO: atualizar
     for i in required_input_info["products"]:
         if i not in payload:
             response = {'status': StatusCodes['bad_request'],
-                        'results': f'{i.capitalize()} is required to add a product'}  # TODO: not capitalize
+                        'results': f'{i} is required to add a product'}
+            if conn is not None:
+                conn.close()
             return flask.jsonify(response)
 
-    version = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    # version = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     product_type = payload['type']
 
     try:
@@ -409,22 +417,21 @@ def add_product():  # TODO: atualizar
         seller_id = seller_check("to add a new product")
 
         # Get new product_id
-        product_id_statement = 'select max(product_id) from products where sellers_users_user_id = %s'
+        product_id_statement = 'select max(product_id) from products where sellers_users_user_id = %s;'
         product_id_values = (seller_id,)
         cur.execute(product_id_statement, product_id_values)
         rows = cur.fetchall()
         product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
-        '''
-        final_statement = 'do $$ ' \
-                          'begin ' \
-                          'insert into products values (%s, %s, %s, %s, %s, %s, %s); ' \
-                          ''
-        '''
-        final_values = (
-            str(product_id), version, payload['name'], str(payload['price']), str(payload['stock']),
+        product_statement = 'insert into products (product_id, name, price, stock, description, sellers_users_user_id) ' \
+                            'values (%s, %s, %s, %s, %s, %s); '
+        product_values = (
+            product_id, payload['name'], payload['price'], payload['stock'],
             payload['description'],
-            str(seller_id))
+            seller_id)
+
+        # Insert new product info in table products
+        cur.execute(product_statement, product_values)
 
         # Statement and values about the info that will be inserted
         # in the table that corresponds to the same type of product
@@ -435,24 +442,19 @@ def add_product():  # TODO: atualizar
                                 'results': f'{j} is required to add a {product_type[:-1]}'}
                     return flask.jsonify(response)
 
-            '''
-            final_statement += f'insert into {product_type} ' \
-                               f'values ({("%s, " * len(columns_names[product_type]))[:-2]}); end; $$;'
-            '''
-            final_statement = psycopg2.sql.SQL(
-                'insert into products values (%s, %s, %s, %s, %s, %s, %s); '
+            product_type_statement = psycopg2.sql.SQL(
                 'insert into {product_type} ' +
                 f'values ({("%s, " * len(columns_names[product_type]))[:-2]});'
             ).format(product_type=sql.Identifier(product_type))
 
-            final_values += tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple(
-                [str(product_id), version])
+            product_type_values = tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple(
+                [str(product_id)])
         else:
             response = {'status': StatusCodes['bad_request'], 'results': 'Valid type is required to add a product'}
             return flask.jsonify(response)
 
-        # Insert new product info in table products and to the one that corresponds to the same type of product
-        cur.execute(final_statement, final_values)
+        # Insert new product info to the one that corresponds to the same type of product
+        cur.execute(product_type_statement, product_type_values)
 
         # Response of the adding the product status
         response = {'status': StatusCodes['success'], 'results': f'{product_id}'}
@@ -460,13 +462,13 @@ def add_product():  # TODO: atualizar
         # commit the transaction
         conn.commit()
 
-    except (TokenError, InsufficientPrivilegesException) as error:
-        logger.error(f'POST /product - error: {error}')
+    except (CouponExpired, TokenError, InsufficientPrivilegesException) as error:
+        logger.error(f'POST /dbproj/product - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'POST /product - error: {error}')
+        logger.error(f'POST /dbproj/product - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
         conn.rollback()
 
