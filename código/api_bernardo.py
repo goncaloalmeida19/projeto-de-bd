@@ -23,6 +23,77 @@ columns_names = {
     'campaigns': ['campaign_id', 'description', 'date_start', 'date_end', 'coupons', 'discount', 'admins_users_user_id']
 }
 
+
+##########################################################
+# EXCEPTIONS
+##########################################################
+
+class TokenError(Exception):
+    def __init__(self, message='Invalid Authentication Token'):
+        super(TokenError, self).__init__(message)
+
+
+class TokenCreationError(Exception):
+    def __init__(self, message='Failed to create user token'):
+        super(TokenCreationError, self).__init__(message)
+
+
+class InvalidAuthenticationException(Exception):
+    def __init__(self, message='User not registered'):
+        super(InvalidAuthenticationException, self).__init__(message)
+
+
+class InsufficientPrivilegesException(Exception):
+    def __init__(self, privilege, extra_msg='', message='User must be '):
+        super(InsufficientPrivilegesException, self).__init__(message + privilege + extra_msg)
+
+
+class ProductNotFound(Exception):
+    def __init__(self, p_id, message='No product found with id: '):
+        super(ProductNotFound, self).__init__(message + p_id)
+
+
+class ProductWithoutStockAvailable(Exception):
+    def __init__(self, p_id, p_quantity, p_stock,
+                 message1="The seller hasn't the required quantity in stock of the product with id '"):
+        super(ProductWithoutStockAvailable, self).__init__(
+            message1 + p_id + "': Quantity: '" + p_quantity + "' \\ Stock: '" + p_stock + "'")
+
+
+class CouponNotFound(Exception):
+    def __init__(self, c_id, message='No coupon found with id: '):
+        super(CouponNotFound, self).__init__(message + c_id)
+
+
+class CouponExpired(Exception):
+    def __init__(self, c_id, e_date, t_date, message1="The coupon with id '", message2="' has expired in '"):
+        super(CouponExpired, self).__init__(message1 + c_id + message2 + e_date + "' and today is '" + t_date + "'")
+
+
+class AlreadyRated(Exception):
+    def __init__(self, p_id, p_version, o_id, p_r, p_c, message1="Product with id '", message2="' and version '",
+                 message3="' from order '", message4="' already been rated: "):
+        super(AlreadyRated, self).__init__(
+            message1 + p_id + message2 + p_version + message3 + o_id + message4 + "Rating: '" + p_r + ' \\ Comment: ' + p_c + "'")
+
+
+class AlreadyInCampaign(Exception):
+    def __init__(self, message='Another campaign is already running at that time'):
+        super(AlreadyInCampaign, self).__init__(message)
+
+
+class CampaignExpiredOrNotFound(Exception):
+    def __init__(self, message="That campaign doesn't exist or it is not available anymore"):
+        super(CampaignExpiredOrNotFound, self).__init__(message)
+
+class NoCampaignsFound(Exception):
+    def __init__(self, message="No campaigns found"):
+        super(NoCampaignsFound, self).__init__(message)
+
+##########################################################
+# AUXILIARY FUNCTIONS
+##########################################################
+
 def get_user_id():
     try:
         header = flask.request.headers.get('Authorization')
@@ -84,97 +155,6 @@ def seller_check(fail_msg):
             conn.close()
 
     return user_id
-
-##########################################################
-# EXCEPTIONS
-##########################################################
-
-class TokenError(Exception):
-    def __init__(self, message='Invalid Authentication Token'):
-        super(TokenError, self).__init__(message)
-
-
-class TokenCreationError(Exception):
-    def __init__(self, message='Failed to create user token'):
-        super(TokenCreationError, self).__init__(message)
-
-
-class InvalidAuthenticationException(Exception):
-    def __init__(self, message='User not registered'):
-        super(InvalidAuthenticationException, self).__init__(message)
-
-
-class InsufficientPrivilegesException(Exception):
-    def __init__(self, extra_msg, message='User must be administrator '):
-        super(InsufficientPrivilegesException, self).__init__(message + extra_msg)
-
-
-class ProductNotFound(Exception):
-    def __init__(self, p_id, message='No product found with id: '):
-        super(ProductNotFound, self).__init__(message + p_id)
-
-
-class ProductWithoutStockAvailable(Exception):
-    def __init__(self, p_id, p_quantity, p_stock,
-                 message1="The seller hasn't the required quantity in stock of the product with id '"):
-        super(ProductWithoutStockAvailable, self).__init__(
-            message1 + p_id + "': Quantity: '" + p_quantity + "' \\ Stock: '" + p_stock + "'")
-
-
-class CouponNotFound(Exception):
-    def __init__(self, c_id, message='No coupon found with id: '):
-        super(CouponNotFound, self).__init__(message + c_id)
-
-
-class CouponExpired(Exception):
-    def __init__(self, c_id, e_date, t_date, message1="The coupon with id '", message2="' has expired in '"):
-        super(CouponExpired, self).__init__(message1 + c_id + message2 + e_date + "' and today is '" + t_date + "'")
-
-
-class AlreadyRated(Exception):
-    def __init__(self, p_id, p_version, o_id, p_r, p_c, message1="Product with id '", message2="' and version '",
-                 message3="' from order '", message4="' already been rated: "):
-        super(AlreadyRated, self).__init__(
-            message1 + p_id + message2 + p_version + message3 + o_id + message4 + "Rating: '" + p_r + ' \\ Comment: ' + p_c + "'")
-
-
-class AlreadyInCampaign(Exception):
-    def __init__(self, message='Another campaign is already running at that time'):
-        super(AlreadyInCampaign, self).__init__(message)
-
-
-class CampaignExpiredOrNotFound(Exception):
-    def __init__(self, message="That campaign doesn't exist or it is not available anymore"):
-        super(CampaignExpiredOrNotFound, self).__init__(message)
-
-class NoCampaignsFound(Exception):
-    def __init__(self, message="No campaigns found"):
-        super(NoCampaignsFound, self).__init__(message)
-
-##########################################################
-# AUXILIARY FUNCTIONS
-##########################################################
-
-def admin_check(fail_msg):
-    conn = db_connection()
-    cur = conn.cursor()
-
-    try:
-        user_token = jwt.decode(flask.request.headers.get('Authorization').split(' ')[1], app.config['SECRET_KEY'],
-                                audience=app.config['SESSION_COOKIE_NAME'], algorithms=["HS256"])
-        print(user_token)
-    except jwt.exceptions.InvalidTokenError:
-        raise TokenError()
-
-    admin_validation = 'select users_user_id ' \
-                       'from admins ' \
-                       'where users_user_id = %s'
-
-    cur.execute(admin_validation, [user_token['user']])
-
-    if cur.fetchone() is None:
-        raise InsufficientPrivilegesException(fail_msg)
-
 
 ##########################################################
 # DATABASE ACCESS
@@ -440,6 +420,72 @@ def add_product():
 
     return flask.jsonify(response)
 
+##
+# Perform user login with a JSON payload
+##
+# To use it, access through Postman:
+##
+# PUT http://localhost:8080/dbproj/user
+##
+@app.route('/dbproj/user/', methods=['PUT'])
+def login_user():
+    logger.info('PUT /dbproj/user/')
+
+    payload = flask.request.get_json()
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    logger.debug(f'PUT /dbproj/user/ - payload: {payload}')
+
+    if 'username' not in payload or 'password' not in payload:
+        response = {'status': StatusCodes['bad_request'], 'errors': 'username and password are required for login'}
+        return flask.jsonify(response)
+
+    statement = 'select user_id, username from users where username = %s and password = %s;'
+    values = (payload['username'], payload['password'])
+
+    try:
+        cur.execute(statement, values)
+        row = cur.fetchone()
+
+        if row is not None:
+            auth_token = jwt.encode({'user': row[0],
+                                     'aud': app.config['SESSION_COOKIE_NAME'],
+                                     'iat': datetime.utcnow(),
+                                     'exp': datetime.utcnow() + timedelta(minutes=10)},
+                                    app.config['SECRET_KEY'])
+
+            try:
+                jwt.decode(auth_token, app.config['SECRET_KEY'], audience=app.config['SESSION_COOKIE_NAME'],
+                           algorithms=["HS256"])
+
+            except jwt.exceptions.InvalidTokenError:
+                raise TokenCreationError()
+
+        else:
+            raise InvalidAuthenticationException()
+
+        response = {'status': StatusCodes['success'], 'token': auth_token}
+
+        conn.commit()
+
+    except InvalidAuthenticationException as error:
+        logger.error(f'PUT /dbproj/user/ {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+        conn.rollback()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'PUT /dbproj/user/ {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
 
 ##
 # Buy products, an order, based on a JSON payload
@@ -586,34 +632,43 @@ def add_campaign():
 
     # logger.debug(f'POST /campaign - payload: {payload}')
 
+
     # Validate fields
     for i in payload:
         if i not in columns_names['campaigns'][1:6]:
             response = {'status': StatusCodes['bad_request'],
-                        'results': f'{i} is not a valid attribute'}
+                        'errors': f'{i} is not a valid attribute'}
             if conn is not None:
                 conn.close()
             return flask.jsonify(response)
     for i in range(1, 6):
         if columns_names['campaigns'][i] not in payload:
             response = {'status': StatusCodes['bad_request'],
-                        'results': f'{columns_names["campaigns"][i]} value not in payload'}
+                        'errors': f'{columns_names["campaigns"][i]} value not in payload'}
             if conn is not None:
                 conn.close()
             return flask.jsonify(response)
 
-    admin_id = 0
+    if datetime.strptime(payload['date_start'], "%Y-%m-%d") > datetime.strptime(payload['date_end'], "%Y-%m-%d"):
+        response = {'status': StatusCodes['bad_request'],
+                    'errors': 'The end date must be after the start date'}
+        if conn is not None:
+            conn.close()
+        return flask.jsonify(response)
 
-    verify_dates_statement = 'select exists(select 1 from campaigns where %s between date_start and date_end or %s between date_start and date_end)'
+    verify_dates_statement = 'select exists(select 1 from campaigns where %s <= date_end and %s >= date_start);'
     verify_dates_values = (payload['date_start'], payload['date_end'])
 
-    campaign_id_statement = 'select coalesce(max(campaign_id), 0) + 1 from campaigns)'
+    campaign_id_statement = 'select coalesce(max(campaign_id), 0) + 1 from campaigns;'
 
     campaign_statement = f'insert into campaigns ({",".join(list(payload))}, admins_users_user_id, campaign_id) ' \
                          f'values ({("%s," * len(payload))[:-1]},%s,%s);'
     print(campaign_statement)
 
     try:
+        admin_id = get_user_id()
+        admin_check("to create a campaign")
+
         cur.execute(verify_dates_statement, verify_dates_values)
         if cur.fetchall()[0][0]:
             raise AlreadyInCampaign
@@ -903,60 +958,6 @@ def register_user():
     return flask.jsonify(response)
 
 
-@app.route('/users/', methods=['PUT'])
-def login_user():
-    logger.info('PUT /users')
-
-    payload = flask.request.get_json()
-
-    conn = db_connection()
-    cur = conn.cursor()
-
-    logger.debug(f'PUT /users - payload: {payload}')
-
-    if 'username' not in payload or 'password' not in payload:
-        response = {'status': StatusCodes['api_error'], 'results': 'username and password are required for login'}
-        return flask.jsonify(response)
-
-    statement = 'select user_id, username from users where username = %s and password = %s'
-    values = (payload['username'], payload['password'])
-
-    try:
-        cur.execute(statement, values)
-        row = cur.fetchone()
-
-        if row is not None:
-            auth_token = jwt.encode({'user': row[0],
-                                     'aud': app.config['SESSION_COOKIE_NAME'],
-                                     'iat': datetime.utcnow(),
-                                     'exp': datetime.utcnow() + timedelta(minutes=10)},
-                                    app.config['SECRET_KEY'])
-
-            try:
-                jwt.decode(auth_token, app.config['SECRET_KEY'], audience=app.config['SESSION_COOKIE_NAME'],
-                           algorithms=["HS256"])
-
-            except jwt.exceptions.InvalidTokenError:
-                raise TokenCreationError()
-
-        else:
-            raise InvalidAuthenticationException()
-
-        response = {'status': StatusCodes['success'], 'token': auth_token}  # TODO: JWT authent
-        # commit the transaction
-        conn.commit()
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(error)
-        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-        # an error occurred, rollback
-        conn.rollback()
-
-    finally:
-        if conn is not None:
-            conn.close()
-
-    return flask.jsonify(response)
 
 
 if __name__ == '__main__':
