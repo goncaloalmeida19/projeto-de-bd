@@ -234,9 +234,6 @@ def register_user():
 
     required = []
 
-    if 'user_id' not in payload:
-        required.append('user_id is required for user registry')
-
     if 'username' not in payload:
         required.append('username is required for user registry')
 
@@ -263,7 +260,7 @@ def register_user():
         else:
             user_check(f"to register {payload['type']}")
 
-        values = [payload['user_id'], payload['username'], payload['password']]
+        values = [payload['username'], payload['password']]
         extra_values = [payload['user_id']]
 
         if 'email' in payload:
