@@ -630,8 +630,7 @@ def add_campaign():
     conn = db_connection()
     cur = conn.cursor()
 
-    # logger.debug(f'POST /campaign - payload: {payload}')
-
+    logger.debug(f'POST /campaign - payload: {payload}')
 
     # Validate fields
     for i in payload:
@@ -663,7 +662,6 @@ def add_campaign():
 
     campaign_statement = f'insert into campaigns ({",".join(list(payload))}, admins_users_user_id, campaign_id) ' \
                          f'values ({("%s," * len(payload))[:-1]},%s,%s);'
-    print(campaign_statement)
 
     try:
         admin_id = get_user_id()
@@ -677,7 +675,6 @@ def add_campaign():
         campaign_id = cur.fetchone()[0]
 
         campaign_values = tuple(list(payload.values()) + [admin_id, campaign_id])
-        print(campaign_values)
 
         cur.execute(campaign_statement, campaign_values)
 
