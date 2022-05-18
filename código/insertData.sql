@@ -1,9 +1,9 @@
 -- TRUNCATE admins, buyers, campaigns, computers, coupons, notifications, orders, product_quantities, products, questions, ratings, sellers, sellers_orders, smartphones, televisions, users;
 
-INSERT INTO users VALUES (0, 'admin', 'dbproj');
+INSERT INTO users VALUES (0, 'admin', 'dbproj', 'admin@admail.com');
 INSERT INTO admins VALUES (0);
 
-INSERT INTO users VALUES (1, 'Worten', 'wortensempre');
+INSERT INTO users VALUES (1, 'Worten', 'wortensempre', 'worten@sempre.pt');
 INSERT INTO sellers VALUES (1, 503630330, 'Avenida D.João 1 Nº 270');
 
 INSERT INTO users VALUES (2, 'gui', 'tcsw', 'mbranco@student.dei.uc.pt');

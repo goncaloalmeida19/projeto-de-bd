@@ -51,7 +51,7 @@ CREATE TABLE users (
 	user_id	 INTEGER,
 	username VARCHAR(512) UNIQUE NOT NULL,
 	password VARCHAR(512) NOT NULL,
-	email VARCHAR(512),
+	email VARCHAR(512) NOT NULL,
 	PRIMARY KEY(user_id)
 );
 

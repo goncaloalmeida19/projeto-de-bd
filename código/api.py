@@ -212,6 +212,7 @@ columns_names = {
     "computers": ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id', 'products_version'],
     "campaigns": ['campaign_id', 'description', 'date_start', 'date_end', 'coupons', 'discount',
                   'admins_users_user_id'],
+    "users": ['username', 'password', 'email']
 }
 
 
@@ -240,11 +241,9 @@ def register_user():
 
     required = []
 
-    if 'username' not in payload:
-        required.append('username is required for user registry')
-
-    if 'password' not in payload:
-        required.append('password is required for user registry')
+    for field in columns_names["users"]:
+        if field not in payload:
+            required.append(f'{field} is required for user registry')
 
     if 'type' not in payload or payload['type'] not in ['buyers', 'sellers', 'admins']:
         required.append('user type is required for user registry: \'buyers\', \'sellers\' or \'admins\'')
@@ -263,33 +262,31 @@ def register_user():
     try:
         if payload['type'] != 'buyers' and (payload['type'] == 'sellers' or payload['type'] == 'admins'):
             admin_check(f"to register {payload['type']}")
-        else:
-            user_check(f"to register {payload['type']}")
 
-        values = [payload['username'], payload['password']]
-        extra_values = [payload['user_id']]
+        # Get new user_id
+        user_id_statement = 'select max(user_id) from users;'
+        cur.execute(user_id_statement)
+        rows = cur.fetchone()
+        user_id = rows[0] + 1  # user 0, platform admin, is expected to always exist
 
-        if 'email' in payload:
-            values.append(payload['email'])
+        values = [user_id, payload['username'], payload['password'], payload['email']]
+        type_values = [user_id]
 
         if payload['type'] == 'buyers':
-            extra_values.append(payload['nif'])
-            extra_values.append(payload['home_addr'])
+            type_values.append(payload['nif'])
+            type_values.append(payload['home_addr'])
         elif payload['type'] == 'sellers':
-            extra_values.append(payload['nif'])
-            extra_values.append(payload['shipping_addr'])
+            type_values.append(payload['nif'])
+            type_values.append(payload['shipping_addr'])
 
-        statement = psycopg2.sql.SQL(
-            f'insert into users (user_id, username, password) '
-            f'values(%s, %s, %s{", %s;" if "email" in payload else ""}); '
-            + 'insert into {type} '
-              'values(' + '%s, ' * (len(extra_values) - 1) + ' %s);'
-        ).format(type=sql.Identifier(payload['type']))
+        statement = f'insert into users values(%s, %s, %s, %s);'
 
-        print(statement)
-        values.extend(extra_values)
+        type_statement = psycopg2.sql.SQL('insert into {type} '
+                                          'values(' + '%s, ' * (len(type_values) - 1) + ' %s);'
+                                          ).format(type=sql.Identifier(payload['type']))
 
         cur.execute(statement, values)
+        cur.execute(type_statement, type_values)
 
         conn.commit()
         response = {'status': StatusCodes['success'], 'results': f'Registered user {payload["username"]}'}
@@ -414,7 +411,7 @@ def add_product():
 
     try:
         # Get the seller id
-        seller_id = seller_check("to add a new product")
+        seller_id = seller_check(" to add a new product")
 
         # Get new product_id
         product_id_statement = 'select max(product_id) from products where sellers_users_user_id = %s;'
