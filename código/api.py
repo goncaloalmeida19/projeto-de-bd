@@ -204,15 +204,14 @@ def db_connection():
 ##########################################################
 
 columns_names = {
+    "users": ['username', 'password', 'email'],
     "ratings": ["comment", "rating", "orders_id", "products_product_id", "products_version", "buyers_users_user_id"],
     "products": ['product_id', 'version', 'name', 'price', 'stock', 'description', 'sellers_users_user_id'],
     "smartphones": ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version'],
     "televisions": ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
                     'products_version'],
     "computers": ['screen_size', 'cpu', 'gpu', 'storage', 'refresh_rate', 'products_product_id', 'products_version'],
-    "campaigns": ['campaign_id', 'description', 'date_start', 'date_end', 'coupons', 'discount',
-                  'admins_users_user_id'],
-    "users": ['username', 'password', 'email']
+    "campaigns": ['campaign_id', 'description', 'date_start', 'date_end', 'coupons', 'discount', 'admins_users_user_id']
 }
 
 
@@ -406,7 +405,7 @@ def add_product():
                 conn.close()
             return flask.jsonify(response)
 
-    # version = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    version = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     product_type = payload['type']
 
     try:
@@ -420,12 +419,10 @@ def add_product():
         rows = cur.fetchall()
         product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
-        product_statement = 'insert into products (product_id, name, price, stock, description, sellers_users_user_id) ' \
-                            'values (%s, %s, %s, %s, %s, %s); '
+        product_statement = 'insert into products (product_id, name, price, stock, description, sellers_users_user_id, version) ' \
+                            'values (%s, %s, %s, %s, %s, %s, %s); '
         product_values = (
-            product_id, payload['name'], payload['price'], payload['stock'],
-            payload['description'],
-            seller_id)
+            product_id, payload['name'], payload['price'], payload['stock'], payload['description'], seller_id, version)
 
         # Insert new product info in table products
         cur.execute(product_statement, product_values)
@@ -441,11 +438,12 @@ def add_product():
 
             product_type_statement = psycopg2.sql.SQL(
                 'insert into {product_type} ' +
-                f'values ({("%s, " * len(columns_names[product_type]))[:-2]});'
-            ).format(product_type=sql.Identifier(product_type))
+                f'values({("%s, " * len(columns_names[product_type]))[:-2]});'
+            ).format(product_type=sql.Identifier(payload['type']))
 
-            product_type_values = tuple(str(payload[i]) for i in required_input_info[product_type][:-1]) + tuple(
-                [str(product_id)])
+            product_type_values = [payload[i] for i in required_input_info[product_type][:-1]]
+            product_type_values.extend([product_id, version])
+
         else:
             response = {'status': StatusCodes['bad_request'], 'results': 'Valid type is required to add a product'}
             return flask.jsonify(response)
@@ -653,7 +651,7 @@ def get_product_info(product_id):
 
         comments = [i[6] for i in rows if i[6] not in ['true', 'false']]
         if len(comments) == 0:
-            comments = "Product without comments because it wasn't rated yet"
+            comments = "No comments (product not rated yet)"
 
         prices = [f"{i[5]} - {i[4]}" for i in rows if
                   i[6] in ['true', 'false']]  # Format: product_price_version - product_price_associated_to_the_version
