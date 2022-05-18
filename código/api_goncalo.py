@@ -153,6 +153,30 @@ def seller_check(fail_msg):
 
     return user_id
 
+def user_check(fail_msg):
+    conn = db_connection()
+    cur = conn.cursor()
+    try:
+        user_id = get_user_id()
+
+        user_validation = 'select 1 ' \
+                          'from users ' \
+                          'where user_id = %s'
+
+        cur.execute(user_validation, [user_id])
+
+        if cur.fetchone() is None:
+            raise InsufficientPrivilegesException("logged in", fail_msg)
+
+    except (TokenError, InsufficientPrivilegesException) as e:
+        raise e
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return user_id
+
 
 ##########################################################
 # DATABASE ACCESS
@@ -819,6 +843,51 @@ def update_product(product_id):
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'PUT /product/<product_id> - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+##
+# Obtain monthly statistics about sales of the last year
+##
+# To use it, access through postman:
+##
+# GET http://localhost:8080/dbproj/report/year
+##
+@app.route('/dbproj/report/year', methods=['GET'])
+def get_stats():
+    logger.info('GET /dbproj/report/year')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    statement = 'select  to_char(order_date, \'MM-YYYY\') as month, sum(price_total), count(id) ' \
+                'from orders ' \
+                'where order_date > (CURRENT_DATE - interval \'1 year\') ' \
+                'group by month;'
+
+    try:
+        user_check(" to obtain sale stats")
+
+        cur.execute(statement)
+        rows = cur.fetchall()
+
+        sale_stats = [{'month': r[0], 'total_value': r[1], 'orders': r[2]} for r in rows]
+
+        # print(sale_stats)  # debug
+
+        response = {'status': StatusCodes['success'], 'results': sale_stats}
+
+    except (TokenError, InsufficientPrivilegesException) as error:
+        logger.error(f'/dbproj/report/year - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'/dbproj/report/year - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
     finally:
