@@ -861,6 +861,7 @@ def update_product(product_id):
 
         response = {'status': StatusCodes['success'], 'results': f'Updated {",".join(list(payload.keys()))}'}
         conn.commit()
+
     except ProductNotFound as error:
         logger.error(f'PUT /product/<product_id> - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
