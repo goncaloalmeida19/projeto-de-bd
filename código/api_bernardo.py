@@ -15,7 +15,7 @@ StatusCodes = {
 }
 
 columns_names = {
-    'products': ['product_id', 'version', 'name', 'price', 'stock', 'description', 'sellers_users_user_id'],
+    'products': ['product_id', 'version', 'name', 'price', 'stock', 'description', 'avg_rating', 'sellers_users_user_id'],
     'smartphones': ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version'],
     'televisions': ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
                     'products_version'],
@@ -800,7 +800,7 @@ def get_campaign_stats():
     return flask.jsonify(response)
 
 
-@app.route('/product/<product_id>', methods=['PUT'])
+@app.route('/dbproj/product/<product_id>', methods=['PUT'])
 def update_product(product_id):
     logger.info('PUT /product')
     payload = flask.request.get_json()
@@ -816,50 +816,54 @@ def update_product(product_id):
     type_values = (product_id,)
 
     try:
+        seller_check(" to update a product")
+
         cur.execute(type_statement, type_values)
-        product_type = cur.fetchall()[0][0]  # TODO EXCEÇÃO -> ProductNotFound
+        product_type = cur.fetchall()[0][0]
+        if product_type == 'invalid':
+            raise ProductNotFound(product_id)
+
+        for i in payload:
+            if i not in columns_names['products'] and i not in columns_names[product_type]:
+                response = {'status': StatusCodes['bad_request'], 'results': f'{i} is not a valid attribute'}
+                if conn is not None:
+                    conn.close()
+                return flask.jsonify(response)
+
+        non_changed = list(set(columns_names[product_type] + columns_names['products']) - set(payload.keys()))
 
         # get the data of the old version of the product
-        old_items_statement = f'select * from products,{product_type} ' \
+        non_changed_items_statement = f'select {",".join(non_changed)} from products,{product_type} ' \
                               'where product_id = %s ' \
                               'and version =(select max(version) from products where product_id = %s) ' \
                               'and products_product_id = product_id and version = products_version'
-        old_items_value = (product_id, product_id)
-        cur.execute(old_items_statement, old_items_value)
+
+        non_changed_items_values = (product_id, product_id,)
+
+        cur.execute(non_changed_items_statement, non_changed_items_values)
         results = cur.fetchall()[0]
 
         # change the data, creating a new version
         new_data_products = tuple([payload[i] if i in list(payload.keys())
-                                   else version if i == 'version' else results[columns_names['products'].index(i)]
+                                   else version if i == 'version' else results[non_changed.index(i)]
                                    for i in columns_names['products']])
+
         new_data_product_type = tuple([payload[i] if i in list(payload.keys())
-                                       else version if i == 'products_version' else results[columns_names[product_type].index(i) + len(columns_names['products'])]
+                                       else version if i == 'products_version' else results[non_changed.index(i)]
                                        for i in columns_names[product_type]])
 
         # add the new version to the products table and corresponding product type table
         insert_products_statement = f'insert into products values({("%s," * len(columns_names["products"]))[:-1]});'
         insert_product_type_statement = f'insert into {product_type} values({("%s," * len(columns_names[product_type]))[:-1]});'
+
         cur.execute(insert_products_statement, new_data_products)
         cur.execute(insert_product_type_statement, new_data_product_type)
-        conn.commit()
+
         response = {'status': StatusCodes['success'], 'results': f'Updated {",".join(list(payload.keys()))}'}
-        """non_changed = list(set(columns_names[product_type] + columns_names['products']) - set(payload.keys()))
-
-        old_items_statement = f"select {('%s,'*len(non_changed))[:-1]} from products, {product_type} where product_id = %s"
-        old_items_value = tuple(non_changed + [product_id])
-
-        print(old_items_statement, old_items_value)
-        cur.execute(old_items_statement, old_items_value)
-        results = cur.fetchall()
-
-        response = {'status': StatusCodes['success'], 'results': results}"""
-
-        # logger.debug('PUT /product/<product_id> - parse')
-        # logger.debug(product_type)
-        # content = {'ndep': int(row[0]), 'nome': row[1], 'localidade': row[2]}
-
-        # response = {'status': StatusCodes['success'], 'results': content}
-
+        conn.commit()
+    except ProductNotFound as error:
+        logger.error(f'PUT /product/<product_id> - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'PUT /product/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
