@@ -222,7 +222,7 @@ def get_product(product_id):
             comments_rating = ["Product wasn't rated yet", "Product without comments because it wasn't rated yet"]
 
         content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': rows[0][3].split(','),
-                   'rating': comments_rating[0], 'comments': comments_rating[1]}
+                   'rating': comments_rating[0], 'comments': comments_rating[1].split(',')}
 
         # Response of the status of obtaining a product and the information obtained
         response = {'status': StatusCodes['success'], 'results': content}
@@ -497,9 +497,9 @@ def buy_products():
             if len(rows) == 0:
                 raise CouponNotFound(coupon_id)
 
-            expiration_date = rows[0][2].strftime("%Y-%m-%d")
+            expiration_date = rows[0][2]
             today_date = order_date[:-9]
-            if expiration_date <= today_date:
+            if datetime.strptime(today_date, "%Y-%m-%d") >= expiration_date:
                 raise CouponExpired(coupon_id, expiration_date, today_date)
 
             campaign_id = rows[0][0]
