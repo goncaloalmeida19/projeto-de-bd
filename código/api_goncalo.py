@@ -203,49 +203,26 @@ def get_product(product_id):
     cur = conn.cursor()
 
     try:
-        """select name, stock, description, avg_rating, price, version, string_agg(comment, ', ')
-from products left join ratings
-on products_product_id = 7390626 and products_version = version
-where product_id = 7390626
-group by product_id, version
-"""
-
         # Get info about the product that have the product_id correspondent to the one given
-        statement = 'select name, stock, description, avg_rating, price, version, comment ' \
-                    'from products left join ratings ' \
-                    'on products_product_id = %s and products_version = version ' \
-                    'where product_id = %s '
-        values = (product_id, product_id,)
+        statement = 'select name, stock, description, ' \
+                    "(select string_agg(price || ' - ' || version, ',') from products where product_id = %s), " \
+                    "(select concat(avg(rating)::float,';',string_agg(comment,',')) from ratings where products_product_id = %s) " \
+                    'from products ' \
+                    'where product_id = %s and version = (select max(version) from products where product_id = %s) '
+        values = (product_id,) * 4
         cur.execute(statement, values)
         rows = cur.fetchall()
 
         if len(rows) == 0:
             raise ProductNotFound(product_id)
 
-        rating = rows[0][3] if rows[0][3] != -1 else 'Product not rated yet'
-        # logger.debug(rows)
-        comments = []
-        commented = []
-        prices = []  # Format: product_price_version - product_price_associated_to_the_version
+        comments_rating = rows[0][4].split(';')
 
-        for i in rows:
-            if i[6] is not None:
-                comments.append(i[6])
-            if i[5] not in commented:
-                commented.append(i[5])
+        if len(comments_rating[0]) == 0:
+            comments_rating = ["Product wasn't rated yet", "Product without comments because it wasn't rated yet"]
 
-        for i in rows:
-            if i[6] in None:
-                prices.append(f"{i[5]} - {i[4]}")
-            if i[5] in commented:
-                prices.append(f"{i[5]} - {i[4]}")
-                commented.remove(i[5])
-
-        if len(comments) == 0:
-            comments = "Product without comments because it wasn't rated yet"
-
-        content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
-                   'rating': rating, 'comments': comments}
+        content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': rows[0][3].split(','),
+                   'rating': comments_rating[0], 'comments': comments_rating[1]}
 
         # Response of the status of obtaining a product and the information obtained
         response = {'status': StatusCodes['success'], 'results': content}
@@ -336,15 +313,9 @@ def give_rating_feedback(product_id):
         n_ratings = rows[0][1]
 
         # Insert the rating info in the "ratings" table and update the average rating of a product
-        statement = 'do $$ ' \
-                    'begin ' \
-                    'insert into ratings values (%s, %s, %s, %s, %s, %s); ' \
-                    'update products set avg_rating = case when avg_rating is null then %s else ((%s * avg_rating + %s) / (%s + 1)) end where product_id = %s; ' \
-                    'end;' \
-                    '$$;'
+        statement = 'insert into ratings values (%s, %s, %s, %s, %s, %s); '
         values = (
-            payload['comment'], payload['rating'], order_id, product_id, version, buyer_id, payload['rating'],
-            n_ratings, payload['rating'], n_ratings, product_id)
+            payload['comment'], payload['rating'], order_id, product_id, version, buyer_id)
         cur.execute(statement, values)
 
         # Response of the rating status
