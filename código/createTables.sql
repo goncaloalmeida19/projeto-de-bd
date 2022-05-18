@@ -5,7 +5,6 @@ CREATE TABLE products (
 	price		 DOUBLE PRECISION NOT NULL,
 	stock		 INTEGER NOT NULL,
 	description		 VARCHAR(512) NOT NULL,
-	avg_rating FLOAT,
 	sellers_users_user_id INTEGER NOT NULL,
 	version		 TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	PRIMARY KEY(product_id,version)
