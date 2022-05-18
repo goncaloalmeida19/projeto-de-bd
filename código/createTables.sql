@@ -1,13 +1,13 @@
 /* Create table products */
 CREATE TABLE products (
 	product_id		 INTEGER,
-	version		 TIMESTAMP,
 	name			 VARCHAR(512) NOT NULL,
 	price		 DOUBLE PRECISION NOT NULL,
 	stock		 INTEGER NOT NULL,
 	description		 VARCHAR(512) NOT NULL,
 	avg_rating FLOAT,
 	sellers_users_user_id INTEGER NOT NULL,
+	version		 TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	PRIMARY KEY(product_id,version)
 );
 
@@ -51,7 +51,7 @@ CREATE TABLE users (
 	user_id	 INTEGER,
 	username VARCHAR(512) UNIQUE NOT NULL,
 	password VARCHAR(512) NOT NULL,
-	email VARCHAR(512),
+	email VARCHAR(512) NOT NULL,
 	PRIMARY KEY(user_id)
 );
 
