@@ -298,7 +298,7 @@ def give_rating_feedback(product_id):
         version = rows[len(rows) - 1][1].strftime("%Y-%m-%d %H:%M:%S")
 
         # Verify if the product have already been rated
-        statement = 'select exists (select rating, comment from ratings where orders_id = %s and products_product_id = %s) , count (*) ' \
+        statement = 'select exists (select rating, comment from ratings where orders_id = %s and products_product_id = %s) ' \
                     'from ratings ' \
                     'where orders_id = %s ' \
                     'and products_product_id = %s'
@@ -308,9 +308,6 @@ def give_rating_feedback(product_id):
 
         if rows[0][0]:
             raise AlreadyRated(product_id, version, order_id)
-
-        # Get the number of times that the product had already been rated
-        n_ratings = rows[0][1]
 
         # Insert the rating info in the "ratings" table and update the average rating of a product
         statement = 'insert into ratings values (%s, %s, %s, %s, %s, %s); '
