@@ -453,7 +453,9 @@ def give_rating_feedback(product_id):
         cur.execute(statement, values)
         rows = cur.fetchall()
 
-        if rows[0][0]:
+        logger.debug(rows)
+
+        if len(rows) != 0:
             raise AlreadyRated(product_id, version, order_id)
 
         # Insert the rating info in the "ratings" table and update the average rating of a product
