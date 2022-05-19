@@ -1125,7 +1125,7 @@ def add_campaign():
     campaign_id_statement = 'select coalesce(max(campaign_id), 0) + 1 from campaigns;'
 
     campaign_statement = f'insert into campaigns ' \
-                         f'values (%s,%s,%s,%s,%s,%s);'
+                         f'values (%s,%s,%s,%s,%s,%s,%s);'
 
 
     try:
@@ -1138,7 +1138,7 @@ def add_campaign():
         cur.execute(campaign_id_statement)
         campaign_id = cur.fetchone()[0]
 
-        campaign_values = tuple(list(payload.values()) + [admin_id, campaign_id])
+        campaign_values = tuple([campaign_id] + list(payload.values()) + [admin_id])
 
         cur.execute(campaign_statement, campaign_values)
 
