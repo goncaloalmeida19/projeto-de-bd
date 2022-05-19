@@ -450,7 +450,8 @@ def add_product():
         rows = cur.fetchall()
         product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
-        version = datetime.now()
+        version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(version)
 
         product_statement = 'insert into products values (%s, %s, %s, %s, %s, %s, %s);'
         product_values = (
