@@ -585,7 +585,7 @@ def update_product(product_id):
         cur.execute(insert_products_statement, new_data_products)
         cur.execute(insert_product_type_statement, new_data_product_type)
 
-        response = {'status': StatusCodes['success'], 'results': f'Updated {",".join(list(payload.keys()))}'}
+        response = {'status': StatusCodes['success']}
         conn.commit()
 
     except (TokenError, InsufficientPrivilegesException, ProductNotFound) as error:
@@ -1127,7 +1127,6 @@ def add_campaign():
     campaign_statement = f'insert into campaigns ' \
                          f'values (%s,%s,%s,%s,%s,%s);'
 
-    print(campaign_statement)
 
     try:
         admin_id = admin_check(" to create a campaign")
@@ -1256,7 +1255,7 @@ def get_campaign_stats():
         rows = cur.fetchall()
         if not rows:
             raise NoCampaignsFound
-        print(rows)
+
         # logger.debug('GET /report/campaign - parse')
         results = []
         for row in rows:
