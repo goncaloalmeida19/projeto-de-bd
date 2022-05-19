@@ -1144,7 +1144,7 @@ def add_campaign():
 
         # commit the transaction
         conn.commit()
-        response = {'status': StatusCodes['success'], 'results': f'Inserted campaign {campaign_id}'}
+        response = {'status': StatusCodes['success'], 'results': f'{campaign_id}'}
 
     except (AlreadyInCampaign, TokenError, InsufficientPrivilegesException) as error:
         logger.error(f'POST /campaign - error: {error}')
@@ -1259,7 +1259,7 @@ def get_campaign_stats():
         # logger.debug('GET /report/campaign - parse')
         results = []
         for row in rows:
-            # ogger.debug(row)
+            # logger.debug(row)
             content = {'campaign_id': int(row[0]), 'generated_coupons': int(row[1]),
                        'used_coupons': int(row[2]), 'total_discount_value': float(row[3])}
             results.append(content)  # appending to the payload to be returned
