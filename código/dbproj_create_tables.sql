@@ -156,7 +156,7 @@ CREATE TABLE notifications (
 	notification_id INTEGER,
 	users_user_id	 INTEGER NOT NULL,
 	content	 VARCHAR(512) NOT NULL,
-	time		 TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	notif_time		 TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	PRIMARY KEY(notification_id, users_user_id)
 );
 
