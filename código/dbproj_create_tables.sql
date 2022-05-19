@@ -18,12 +18,12 @@ drop table if exists users cascade;
 /* Create table products */
 CREATE TABLE products (
 	product_id		 INTEGER,
+	version		 TIMESTAMP NOT NULL,
 	name			 VARCHAR(512) NOT NULL,
 	price		 DOUBLE PRECISION NOT NULL,
 	stock		 INTEGER NOT NULL,
 	description		 VARCHAR(512) NOT NULL,
 	sellers_users_user_id INTEGER NOT NULL,
-	version		 TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	PRIMARY KEY(product_id,version)
 );
 
