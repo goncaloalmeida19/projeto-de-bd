@@ -1,1 +1,1 @@
-psql -h localhost -U postgres -f tpcc_create.sql postgres
+psql -h localhost -U postgres -f dbproj_create.sql postgres

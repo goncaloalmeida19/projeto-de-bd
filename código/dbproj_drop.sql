@@ -1,3 +1,5 @@
+\c dbproj
+
 drop table if exists admins cascade;
 drop table if exists buyers cascade;
 drop table if exists campaigns cascade;
@@ -14,3 +16,12 @@ drop table if exists sellers_orders cascade;
 drop table if exists smartphones cascade;
 drop table if exists televisions cascade;
 drop table if exists users cascade;
+
+REVOKE ALL ON ALL TABLES IN SCHEMA public FROM projuser;
+REVOKE CONNECT ON DATABASE dbproj FROM projuser;
+
+drop user projuser;
+
+\c postgres
+
+drop database dbproj;

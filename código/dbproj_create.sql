@@ -1,5 +1,5 @@
-create database dbproj;
-create user projuser password 'projuser';
+CREATE DATABASE dbproj;
+CREATE USER projuser PASSWORD 'projuser';
 
 \c dbproj
 
