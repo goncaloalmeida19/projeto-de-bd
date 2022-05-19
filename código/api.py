@@ -7,7 +7,7 @@ from cryptography.fernet import Fernet
 from datetime import datetime, timedelta
 
 app = flask.Flask(__name__)
-app.config['SECRET_KEY'] = 'my-32-character-ultra-secure-and-ultra-long-secret'
+app.config['SECRET_KEY'] = 'stordenosvintefachavorpleaseplss'
 app.config['SESSION_COOKIE_NAME'] = 'OUR-db-project'
 with open('key.txt', 'rb') as keyfile:
     f = Fernet(keyfile.read())
@@ -218,7 +218,8 @@ def user_check(fail_msg):
 def db_connection():
     db = psycopg2.connect(
         user='projuser',
-        password=f.decrypt(b'gAAAAABihXtn404Yx6-DxaYw99HjI_j9pcvteN0EP0a4ZKBzh_mDlp87vHr2NPwB-2u42JAONxCD-e-Mx0Ge8l6A_pnpeb1wdQ==').decode(),
+        password=f.decrypt(
+            b'gAAAAABihXtn404Yx6-DxaYw99HjI_j9pcvteN0EP0a4ZKBzh_mDlp87vHr2NPwB-2u42JAONxCD-e-Mx0Ge8l6A_pnpeb1wdQ==').decode(),
         host='127.0.0.1',
         port='5432',
         database='dbproj'
@@ -233,7 +234,7 @@ def db_connection():
 columns_names = {
     "users": ['username', 'password', 'email'],
     "ratings": ["comment", "rating", "orders_id", "products_product_id", "products_version", "buyers_users_user_id"],
-    "products": ['product_id', 'version', 'name', 'price', 'stock', 'description', 'sellers_users_user_id'],
+    "products": ['product_id', 'name', 'price', 'stock', 'description', 'sellers_users_user_id', 'version'],
     "smartphones": ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version'],
     "televisions": ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
                     'products_version'],
@@ -263,7 +264,7 @@ def register_user():
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'POST /dbproj/user/ - payload: {payload}')
+    # logger.debug(f'POST /dbproj/user/ - payload: {payload}')
 
     required = []
 
@@ -350,7 +351,7 @@ def login_user():
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'PUT /dbproj/user/ - payload: {payload}')
+    # logger.debug(f'PUT /dbproj/user/ - payload: {payload}')
 
     if 'username' not in payload or 'password' not in payload:
         response = {'status': StatusCodes['bad_request'], 'errors': 'username and password are required for login'}
@@ -421,7 +422,7 @@ def add_product():
         (item, value[:-2] + ['type']) if item not in ["products", "ratings", "campaigns"]
         else (item, value[2: -1]) for item, value in columns_names.items())
 
-    logger.debug(f'POST /dbproj/product - payload: {payload}')
+    # logger.debug(f'POST /product - required_product_input_info: {required_product_input_info}')
 
     # Verification of the required fields to add a product
     for i in required_input_info["products"]:
@@ -432,7 +433,6 @@ def add_product():
                 conn.close()
             return flask.jsonify(response)
 
-    version = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     product_type = payload['type']
 
     try:
@@ -446,10 +446,9 @@ def add_product():
         rows = cur.fetchall()
         product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
-        product_statement = 'insert into products (product_id, name, price, stock, description, sellers_users_user_id, version) ' \
-                            'values (%s, %s, %s, %s, %s, %s, %s); '
+        product_statement = 'insert into products (product_id, name, price, stock, description, sellers_users_user_id) values (%s, %s, %s, %s, %s, %s); '
         product_values = (
-            product_id, payload['name'], payload['price'], payload['stock'], payload['description'], seller_id, version)
+            product_id, payload['name'], payload['price'], payload['stock'], payload['description'], seller_id)
 
         # Insert new product info in table products
         cur.execute(product_statement, product_values)
@@ -465,11 +464,11 @@ def add_product():
 
             product_type_statement = psycopg2.sql.SQL(
                 'insert into {product_type} ' +
-                f'values({("%s, " * len(columns_names[product_type]))[:-2]});'
-            ).format(product_type=sql.Identifier(payload['type']))
+                f'values ({("%s, " * len(columns_names[product_type]))[:-2]});'
+            ).format(product_type=sql.Identifier(product_type))
 
-            product_type_values = [payload[i] for i in required_input_info[product_type][:-1]]
-            product_type_values.extend([product_id, version])
+            product_type_values = tuple(payload[i] for i in required_input_info[product_type][:-1]) \
+                                  + tuple([product_id])
 
         else:
             response = {'status': StatusCodes['bad_request'], 'results': 'Valid type is required to add a product'}
@@ -484,7 +483,7 @@ def add_product():
         # commit the transaction
         conn.commit()
 
-    except (TokenError, InsufficientPrivilegesException, CouponExpired) as error:
+    except (TokenError, InsufficientPrivilegesException) as error:
         logger.error(f'POST /dbproj/product - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
@@ -516,7 +515,7 @@ def update_product(product_id):
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'PUT /dbproj/product/<product_id> - payload: {payload}')
+    # logger.debug(f'PUT /dbproj/product/<product_id> - payload: {payload}')
 
     version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -547,7 +546,6 @@ def update_product(product_id):
                                       'and products_product_id = product_id and version = products_version'
         '''
 
-        # TODO: TESTAR
         # get the data of the old version of the product
         non_changed_items_statement = psycopg2.sql.SQL(
             f'select {",".join(non_changed)} '
@@ -574,7 +572,6 @@ def update_product(product_id):
         # add the new version to the products table and corresponding product type table
         insert_products_statement = f'insert into products values({("%s," * len(columns_names["products"]))[:-1]});'
 
-        # TODO: TESTAR
         insert_product_type_statement = psycopg2.sql.SQL('insert into {prod_type} '
                                                          f'values({("%s," * len(columns_names[product_type]))[:-1]});'
                                                          ).format(prod_type=sql.Identifier(product_type))
@@ -617,7 +614,7 @@ def buy_products():
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'POST /dbproj/order - payload: {payload}')
+    # logger.debug(f'POST /dbproj/order - payload: {payload}')
 
     # If there are more fields than the necessary ones in the request, consider it a bad one
     if len(payload) > 2:
@@ -636,11 +633,9 @@ def buy_products():
             conn.close()
         return flask.jsonify(response)
 
-    product_version_statement = 'select version, price, stock ' \
-                                'from products where product_id = %s and version = (select max(version) from products where product_id = %s);'
+    product_version_statement = 'select version, price, stock from products where product_id = %s and version = (select max(version) from products where product_id = %s);'
     product_quantities_statement = 'insert into product_quantities values (%s, %s, %s, %s);'
-    product_stock_statement = 'update products set stock = %s where ' \
-                              'product_id = %s and version = %s;'
+    product_stock_statement = 'update products set stock = %s where product_id = %s and version = %s;'
     order_statement = 'insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id) values (%s, %s, %s, %s, %s);'
 
     order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -652,7 +647,7 @@ def buy_products():
 
         # Get the order id
         order_id_statement = 'select max(id) from orders '
-        cur.execute(order_id_statement, )
+        cur.execute(order_id_statement)
         rows = cur.fetchall()
 
         order_id = rows[0][0] + 1 if rows[0][0] is not None else 1
@@ -669,9 +664,9 @@ def buy_products():
             if len(rows) == 0:
                 raise CouponNotFound(coupon_id)
 
-            expiration_date = rows[0][2].strftime("%Y-%m-%d")
+            expiration_date = rows[0][2]
             today_date = order_date[:-9]
-            if expiration_date <= today_date:
+            if datetime.strptime(today_date, "%Y-%m-%d").date() >= expiration_date:
                 raise CouponExpired(coupon_id, expiration_date, today_date)
 
             campaign_id = rows[0][0]
@@ -719,7 +714,6 @@ def buy_products():
         cur.execute(coupon_statement, coupon_values)
 
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
-
         conn.commit()
 
     except (TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable, CouponNotFound,
@@ -755,7 +749,7 @@ def give_rating_feedback(product_id):
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'POST /dbproj/rating/<product_id> - payload: {payload}')
+    # logger.debug(f'POST /dbproj/rating/<product_id> - payload: {payload}')
 
     # If there are more fields than the necessary ones in the request, consider it a bad one
     if len(payload) > 2:
@@ -801,7 +795,7 @@ def give_rating_feedback(product_id):
         version = rows[len(rows) - 1][1].strftime("%Y-%m-%d %H:%M:%S")
 
         # Verify if the product has already been rated
-        statement = 'select exists (select rating, comment from ratings where orders_id = %s and products_product_id = %s), count (*) ' \
+        statement = 'select exists (select rating, comment from ratings where orders_id = %s and products_product_id = %s) ' \
                     'from ratings ' \
                     'where orders_id = %s ' \
                     'and products_product_id = %s'
@@ -809,17 +803,12 @@ def give_rating_feedback(product_id):
         cur.execute(statement, values)
         rows = cur.fetchall()
 
-        if rows[0][0]:
+        if len(rows) != 0:
             raise AlreadyRated(product_id, version, order_id)
 
-        # Get the number of times that the product had already been rated
-        n_ratings = rows[0][1]
-
         # Insert the rating info in the "ratings" table and update the average rating of a product
-        statement = 'insert into ratings values (%s, %s, %s, %s, %s, %s); ' \
-                    'update products set avg_rating = case when avg_rating is null then %s else ((%s * avg_rating + %s) / (%s + 1)) end where product_id = %s; '
-        values = (payload['comment'], payload['rating'], order_id, product_id, version, buyer_id, payload['rating'],
-                  n_ratings, payload['rating'], n_ratings, product_id)
+        statement = 'insert into ratings values (%s, %s, %s, %s, %s, %s); '
+        values = (payload['comment'], payload['rating'], order_id, product_id, version, buyer_id)
         cur.execute(statement, values)
 
         # Response of the rating status
@@ -866,10 +855,12 @@ def post_question(product_id=None, parents_question_id=None):
 
     payload = flask.request.get_json()
 
+    '''
     if parents_question_id is None:
         logger.debug(f'POST /dbproj/questions/<product_id> - payload: {payload}')
     else:
         logger.debug(f'POST /dbproj/questions/<product_id>/<parents_question_id> - payload: {payload}')
+    '''
 
     conn = db_connection()
     cur = conn.cursor()
@@ -989,9 +980,9 @@ def get_notifications():
 ##
 # GET http://localhost:8080/dbproj/products/7390626
 ##
-@app.route('/dbproj/products/<product_id>', methods=['GET'])
-def get_product_info(product_id):  # TODO: update this function
-    logger.info('GET /dbproj/products/<product_id>')
+@app.route('/dbproj/product/<product_id>', methods=['GET'])
+def get_product_info(product_id):
+    logger.info('GET /dbproj/product/<product_id>')
     conn = db_connection()
     cur = conn.cursor()
 
@@ -999,13 +990,11 @@ def get_product_info(product_id):  # TODO: update this function
         user_check(" to get product info")
 
         # Get info about the product that have the product_id correspondent to the one given
-        statement = 'select name, stock, description, coalesce(avg_rating, -1), price, version,(exists(select comment from ratings where products_product_id = %s and products_version = version))::varchar ' \
+        statement = 'select name, stock, description, ' \
+                    "(select string_agg(price || ' - ' || version, ',') from products where product_id = %s), " \
+                    "(select concat(avg(rating)::float,';',string_agg(comment,',')) from ratings where products_product_id = %s) " \
                     'from products ' \
-                    'where product_id = %s ' \
-                    'union ' \
-                    'select name, stock, description, avg_rating, price, version, comment ' \
-                    'from products, ratings ' \
-                    'where product_id = %s and products_product_id = %s and products_version = version'
+                    'where product_id = %s and version = (select max(version) from products where product_id = %s) '
         values = (product_id,) * 4
         cur.execute(statement, values)
         rows = cur.fetchall()
@@ -1013,26 +1002,22 @@ def get_product_info(product_id):  # TODO: update this function
         if len(rows) == 0:
             raise ProductNotFound(product_id)
 
-        rating = rows[0][3] if rows[0][3] != -1 else 'Product not rated yet'
+        comments_rating = rows[0][4].split(';')
 
-        comments = [i[6] for i in rows if i[6] not in ['true', 'false']]
-        if len(comments) == 0:
-            comments = "No comments (product not rated yet)"
+        if len(comments_rating[0]) == 0:
+            comments_rating = ["Product wasn't rated yet", "Product without comments because it wasn't rated yet"]
 
-        prices = [f"{i[5]} - {i[4]}" for i in rows if
-                  i[6] in ['true', 'false']]  # Format: product_price_version - product_price_associated_to_the_version
-        content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': prices,
-                   'rating': rating, 'comments': comments}
+        content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': rows[0][3].split(','),
+                   'rating': comments_rating[0], 'comments': comments_rating[1].split(',')}
 
         # Response of the status of obtaining a product and the information obtained
         response = {'status': StatusCodes['success'], 'results': content}
 
-    except (TokenError, InsufficientPrivilegesException) as error:
-        logger.error(f'GET /dbproj/products/<product_id> - error: {error}')
+    except (TokenError, InsufficientPrivilegesException, ProductNotFound) as error:
+        logger.error(f'GET /dbproj/product/<product_id> - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
-
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'GET /dbproj/products/<product_id> - error: {error}')
+        logger.error(f'GET /dbproj/product/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
 
     finally:
@@ -1103,7 +1088,7 @@ def add_campaign():
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'POST /dbproj/campaign/ - payload: {payload}')
+    # logger.debug(f'POST /dbproj/campaign/ - payload: {payload}')
 
     # Validate fields
     for i in payload:
@@ -1266,10 +1251,10 @@ def get_campaign_stats():
         if not rows:
             raise NoCampaignsFound
         print(rows)
-        logger.debug('GET /report/campaign - parse')
+        # logger.debug('GET /report/campaign - parse')
         results = []
         for row in rows:
-            logger.debug(row)
+            # ogger.debug(row)
             content = {'campaign_id': int(row[0]), 'generated_coupons': int(row[1]),
                        'used_coupons': int(row[2]), 'total_discount_value': float(row[3])}
             results.append(content)  # appending to the payload to be returned
