@@ -16,6 +16,7 @@ StatusCodes = {
 }
 
 columns_names = {
+"users": ['username', 'password', 'email'],
     "ratings": ["comment", "rating", "orders_id", "products_product_id", "products_version", "buyers_users_user_id"],
     "products": ['product_id', 'version', 'name', 'price', 'stock', 'description', 'sellers_users_user_id'],
     "smartphones": ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version'],
@@ -35,11 +36,17 @@ class TokenError(Exception):
     def __init__(self, message='Invalid Authentication Token'):
         super(TokenError, self).__init__(message)
 
+class NoCampaignsFound(Exception):
+    def __init__(self, message="No campaigns found"):
+        super(NoCampaignsFound, self).__init__(message)
 
 class TokenCreationError(Exception):
     def __init__(self, message='Failed to create user token'):
         super(TokenCreationError, self).__init__(message)
 
+class AlreadyInCampaign(Exception):
+    def __init__(self, message='Another campaign is already running at that time'):
+        super(AlreadyInCampaign, self).__init__(message)
 
 class InvalidAuthenticationException(Exception):
     def __init__(self, message='User not registered'):
@@ -210,6 +217,122 @@ def landing_page():
     Best BD students of 2022<br/>
     <br/>
     """
+
+@app.route('/dbproj/campaign/', methods=['POST'])
+def add_campaign():
+    logger.info('POST /campaign')
+    payload = flask.request.get_json()
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    logger.debug(f'POST /campaign - payload: {payload}')
+
+    # Validate fields
+    for i in payload:
+        if i not in columns_names['campaigns'][1:6]:
+            response = {'status': StatusCodes['bad_request'],
+                        'errors': f'{i} is not a valid attribute'}
+            if conn is not None:
+                conn.close()
+            return flask.jsonify(response)
+    for i in range(1, 6):
+        if columns_names['campaigns'][i] not in payload:
+            response = {'status': StatusCodes['bad_request'],
+                        'errors': f'{columns_names["campaigns"][i]} value not in payload'}
+            if conn is not None:
+                conn.close()
+            return flask.jsonify(response)
+
+    if datetime.strptime(payload['date_start'], "%Y-%m-%d") > datetime.strptime(payload['date_end'], "%Y-%m-%d"):
+        response = {'status': StatusCodes['bad_request'],
+                    'errors': 'The end date must be after the start date'}
+        if conn is not None:
+            conn.close()
+        return flask.jsonify(response)
+
+    verify_dates_statement = 'select exists(select 1 from campaigns where %s <= date_end and %s >= date_start);'
+    verify_dates_values = (payload['date_start'], payload['date_end'])
+
+    campaign_id_statement = 'select coalesce(max(campaign_id), 0) + 1 from campaigns;'
+
+    campaign_statement = f'insert into campaigns ({",".join(list(payload))}, admins_users_user_id, campaign_id) ' \
+                         f'values ({("%s," * len(payload))[:-1]},%s,%s);'
+
+    try:
+        admin_id = get_user_id()
+        admin_check("to create a campaign")
+
+        cur.execute(verify_dates_statement, verify_dates_values)
+        if cur.fetchall()[0][0]:
+            raise AlreadyInCampaign
+
+        cur.execute(campaign_id_statement)
+        campaign_id = cur.fetchone()[0]
+
+        campaign_values = tuple(list(payload.values()) + [admin_id, campaign_id])
+
+        cur.execute(campaign_statement, campaign_values)
+
+        # commit the transaction
+        conn.commit()
+        response = {'status': StatusCodes['success'], 'results': f'Inserted campaign {campaign_id}'}
+    except AlreadyInCampaign as error:
+        logger.error(f'POST /campaign - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+
+        # an error occurred, rollback
+        conn.rollback()
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'POST /campaign - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+        # an error occurred, rollback
+        conn.rollback()
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+@app.route('/dbproj/report/campaign', methods=['GET'])
+def get_campaign_stats():
+    logger.info('GET /report/campaign')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    stats_statement = "select campaign_id," \
+                      "(select count(*) from coupons where campaigns_campaign_id = campaign_id)," \
+                      "(select count(*) from coupons where campaigns_campaign_id = campaign_id and used = 'true')," \
+                      "(select coalesce(sum(discount_applied),0) from coupons where campaigns_campaign_id = campaign_id) " \
+                      "from campaigns group by campaign_id"
+
+    try:
+        cur.execute(stats_statement)
+        rows = cur.fetchall()
+        if not rows:
+            raise NoCampaignsFound
+        print(rows)
+        logger.debug('GET /report/campaign - parse')
+        results = []
+        for row in rows:
+            logger.debug(row)
+            content = {'campaign_id': int(row[0]), 'generated_coupons': int(row[1]),
+                       'used_coupons': int(row[2]), 'total_discount_value': float(row[3])}
+            results.append(content)  # appending to the payload to be returned
+
+        response = {'status': StatusCodes['success'], 'results': results}
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'GET /report/campaign - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
 
 
 ##
@@ -405,7 +528,7 @@ def add_product():
         rows = cur.fetchall()
         product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
-        product_statement = 'insert into products values (%s, %s, %s, %s, %s, %s); '
+        product_statement = 'insert into products (product_id, name, price, stock, description, sellers_users_user_id) values (%s, %s, %s, %s, %s, %s); '
         product_values = (
             str(product_id), payload['name'], str(payload['price']), str(payload['stock']),
             payload['description'],
@@ -523,7 +646,7 @@ def buy_products():
 
             expiration_date = rows[0][2]
             today_date = order_date[:-9]
-            if datetime.strptime(today_date, "%Y-%m-%d") >= expiration_date:
+            if datetime.strptime(today_date, "%Y-%m-%d").date() >= expiration_date:
                 raise CouponExpired(coupon_id, expiration_date, today_date)
 
             campaign_id = rows[0][0]
@@ -639,18 +762,13 @@ def register_user():
     conn = db_connection()
     cur = conn.cursor()
 
-    logger.debug(f'POST /users - payload: {payload}')
+    logger.debug(f'POST /dbproj/user/ - payload: {payload}')
 
     required = []
 
-    if 'user_id' not in payload:
-        required.append('user_id is required for user registry')
-
-    if 'username' not in payload:
-        required.append('username is required for user registry')
-
-    if 'password' not in payload:
-        required.append('password is required for user registry')
+    for field in columns_names["users"]:
+        if field not in payload:
+            required.append(f'{field} is required for user registry')
 
     if 'type' not in payload or payload['type'] not in ['buyers', 'sellers', 'admins']:
         required.append('user type is required for user registry: \'buyers\', \'sellers\' or \'admins\'')
@@ -668,33 +786,36 @@ def register_user():
 
     try:
         if payload['type'] != 'buyers' and (payload['type'] == 'sellers' or payload['type'] == 'admins'):
-            admin_check(f"to register {payload['type']}")
+            admin_check(f" to register {payload['type']}")
 
-        values = [payload['user_id'], payload['username'], payload['password']]
-        extra_values = [payload['user_id']]
+        # Get new user_id
+        user_id_statement = 'select coalesce(max(user_id),0) from users;'
+        cur.execute(user_id_statement)
+        rows = cur.fetchone()
+        user_id = rows[0] + 1  # user 0, platform admin, is expected to always exist
 
-        if 'email' in payload:
-            values.append(payload['email'])
+        values = [user_id, payload['username'], payload['password'], payload['email']]
+        type_values = []
 
         if payload['type'] == 'buyers':
-            extra_values.append(payload['nif'])
-            extra_values.append(payload['home_addr'])
+            type_values.append(payload['nif'])
+            type_values.append(payload['home_addr'])
         elif payload['type'] == 'sellers':
-            extra_values.append(payload['nif'])
-            extra_values.append(payload['shipping_addr'])
+            type_values.append(payload['nif'])
+            type_values.append(payload['shipping_addr'])
 
-        statement = psycopg2.sql.SQL(
-            f'insert into users (user_id, username, password) values (%s, %s, %s{", %s;" if "email" in payload else ""});'
-            + ' insert into {type} values (' + '%s, ' * (len(extra_values) - 1) + ' %s);'
-        ).format(type=sql.Identifier(payload['type']))
+        type_values.append(user_id)
 
-        print(statement)
-        values.extend(extra_values)
+        statement = f'insert into users values(%s, %s, %s, %s);'
+        type_statement = psycopg2.sql.SQL('insert into {user_type} '
+                                          'values(' + '%s, ' * (len(type_values) - 1) + ' %s);'
+                                          ).format(user_type=sql.Identifier(payload['type']))
 
         cur.execute(statement, values)
+        cur.execute(type_statement, type_values)
 
         conn.commit()
-        response = {'status': StatusCodes['success'], 'results': f'Registered user {payload["username"]}'}
+        response = {'status': StatusCodes['success'], 'results': f'Registered user with id: {1}'}
 
     except (TokenError, InsufficientPrivilegesException) as error:
         logger.error(f'POST /dbproj/user/ - error: {error}')
