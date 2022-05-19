@@ -3,11 +3,12 @@ import logging
 import psycopg2
 from psycopg2 import sql
 import jwt
+from cryptography.fernet import Fernet
 from datetime import datetime, timedelta
 
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = 'my-32-character-ultra-secure-and-ultra-long-secret'
-app.config['SESSION_COOKIE_NAME'] = 'our-db-project'
+app.config['SESSION_COOKIE_NAME'] = 'OUR-db-project'
 
 StatusCodes = {
     'success': 200,
@@ -197,7 +198,7 @@ def user_check(fail_msg):
         cur.execute(user_validation, [user_id])
 
         if cur.fetchone() is None:
-            raise InsufficientPrivilegesException("logged in", fail_msg)
+            raise InsufficientPrivilegesException("registered", fail_msg)
 
     except (TokenError, InsufficientPrivilegesException) as e:
         raise e
@@ -213,13 +214,16 @@ def user_check(fail_msg):
 # DATABASE ACCESS
 ##########################################################
 def db_connection():
-    db = psycopg2.connect(
-        user='projuser',
-        password='projuser',
-        host='127.0.0.1',
-        port='5432',
-        database='dbproj'
-    )
+    with open('key.txt', 'rb') as keyfile:
+        f = Fernet(keyfile.read())
+        keyfile.close()
+        db = psycopg2.connect(
+            user='projuser',
+            password=f.decrypt(b'gAAAAABihXtn404Yx6-DxaYw99HjI_j9pcvteN0EP0a4ZKBzh_mDlp87vHr2NPwB-2u42JAONxCD-e-Mx0Ge8l6A_pnpeb1wdQ==').decode(),
+            host='127.0.0.1',
+            port='5432',
+            database='dbproj'
+        )
     return db
 
 
