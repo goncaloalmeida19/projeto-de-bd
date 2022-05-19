@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = 'my-32-character-ultra-secure-and-ultra-long-secret'
 app.config['SESSION_COOKIE_NAME'] = 'OUR-db-project'
+with open('key.txt', 'rb') as keyfile:
+    f = Fernet(keyfile.read())
 
 StatusCodes = {
     'success': 200,
@@ -214,16 +216,13 @@ def user_check(fail_msg):
 # DATABASE ACCESS
 ##########################################################
 def db_connection():
-    with open('key.txt', 'rb') as keyfile:
-        f = Fernet(keyfile.read())
-        keyfile.close()
-        db = psycopg2.connect(
-            user='projuser',
-            password=f.decrypt(b'gAAAAABihXtn404Yx6-DxaYw99HjI_j9pcvteN0EP0a4ZKBzh_mDlp87vHr2NPwB-2u42JAONxCD-e-Mx0Ge8l6A_pnpeb1wdQ==').decode(),
-            host='127.0.0.1',
-            port='5432',
-            database='dbproj'
-        )
+    db = psycopg2.connect(
+        user='projuser',
+        password=f.decrypt(b'gAAAAABihXtn404Yx6-DxaYw99HjI_j9pcvteN0EP0a4ZKBzh_mDlp87vHr2NPwB-2u42JAONxCD-e-Mx0Ge8l6A_pnpeb1wdQ==').decode(),
+        host='127.0.0.1',
+        port='5432',
+        database='dbproj'
+    )
     return db
 
 
@@ -316,7 +315,7 @@ def register_user():
         cur.execute(type_statement, type_values)
 
         conn.commit()
-        response = {'status': StatusCodes['success'], 'results': f'Registered user {payload["username"]}'}
+        response = {'status': StatusCodes['success'], 'results': user_id}
 
     except (TokenError, InsufficientPrivilegesException) as error:
         logger.error(f'POST /dbproj/user/ - error: {error}')
@@ -1057,7 +1056,7 @@ def get_stats():
     conn = db_connection()
     cur = conn.cursor()
 
-    statement = 'select  to_char(order_date, \'MM-YYYY\') as month, sum(price_total), count(id) ' \
+    statement = 'select  to_char(order_date, \'MM-YYYY\') as month, round(cast(sum(price_total) as numeric), 2), count(id) ' \
                 'from orders ' \
                 'where order_date > (CURRENT_DATE - interval \'1 year\') ' \
                 'group by month;'
