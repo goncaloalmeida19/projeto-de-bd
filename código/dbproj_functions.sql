@@ -18,6 +18,7 @@ begin
 end;
 $$;
 
+
 create or replace function q_notif() returns trigger
     language plpgsql
 as
@@ -59,9 +60,66 @@ begin
 end;
 $$;
 
+
+create or replace function sale_notif() returns trigger
+    language plpgsql
+as
+$$
+declare
+    notif_id       notifications.notification_id%type;
+    total       orders.price_total%type;
+    buyer_id    orders.buyers_users_user_id%type;
+    campaign_id orders.coupons_campaigns_campaign_id%type;
+    sellers cursor for
+        select distinct sellers_users_user_id
+		from product_quantities as pq, products as p
+		where pq.orders_id = new.id and pq.products_product_id = p.product_id;
+begin
+    total := new.price_total;
+    buyer_id := new.buyers_users_user_id;
+    campaign_id := new.coupons_campaigns_campaign_id;
+
+    for line in sellers
+	loop
+        select max(notification_id) into notif_id from notifications where users_user_id = line.sellers_users_user_id;
+        if notif_id is NULL then
+            notif_id := 0;
+        else
+            notif_id := notif_id + 1;
+        end if;
+
+		insert into notifications
+        values (notif_id, line.sellers_users_user_id,
+            CONCAT('New order nº', new.id, ' including your products'));
+	end loop;
+
+
+    select max(notification_id) into notif_id from notifications where users_user_id = buyer_id;
+    if notif_id is NULL then
+        notif_id := 0;
+    else
+        notif_id := notif_id + 1;
+    end if;
+    insert into notifications
+    values (notif_id, buyer_id,
+            CONCAT('Your order nº', new.id, ' for a total of ', new.price_total, ' has been confirmed'));
+
+    return new;
+end;
+$$;
+
+
 drop trigger if exists q_notif_trig on questions;
 create trigger q_notif_trig
     before insert
     on questions
     for each row
 execute function q_notif();
+
+
+drop trigger if exists sale_notif_trig on orders;
+create trigger sale_notif_trig
+    before update
+    on orders
+    for each row
+execute function sale_notif();
