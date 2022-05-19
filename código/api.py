@@ -368,7 +368,7 @@ def login_user():
             auth_token = jwt.encode({'user': row[0],
                                      'aud': app.config['SESSION_COOKIE_NAME'],
                                      'iat': datetime.utcnow(),
-                                     'exp': datetime.utcnow() + timedelta(minutes=10)},
+                                     'exp': datetime.utcnow() + timedelta(minutes=20)},
                                     app.config['SECRET_KEY'])
 
             try:
