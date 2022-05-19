@@ -7,7 +7,7 @@ from cryptography.fernet import Fernet
 from datetime import datetime, timedelta
 
 app = flask.Flask(__name__)
-app.config['SECRET_KEY'] = 'stordenosvintefachavorpleaseplss'
+app.config['SECRET_KEY'] = 'stordenosvintefachavorpleaseplss'  # 32-character secure key
 app.config['SESSION_COOKIE_NAME'] = 'OUR-db-project'
 with open('key.txt', 'rb') as keyfile:
     f = Fernet(keyfile.read())
