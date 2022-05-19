@@ -418,11 +418,15 @@ def add_product():
     cur = conn.cursor()
 
     # The type of the product is essential
-    required_input_info = dict(
-        (item, value[:-2] + ['type']) if item not in ["users", "products", "ratings", "campaigns"]
-        else (item, value[2: -1]) for item, value in columns_names.items())
+    required_input_info = {}
+    for item, value in columns_names.items():
+        if item not in ["users", "ratings", "campaigns"]:
+            if item == "products":
+                required_input_info[item] = value[2:-1] + ["type"]
+            else:
+                required_input_info[item] = value[:-2]
 
-    logger.debug(f'POST /product - required_product_input_info: {required_input_info}')
+    # logger.debug(f'POST /product - required_product_input_info: {required_input_info}')
 
     # Verification of the required fields to add a product
     for i in required_input_info["products"]:
@@ -450,7 +454,7 @@ def add_product():
 
         product_statement = 'insert into products values (%s, %s, %s, %s, %s, %s, %s);'
         product_values = (
-            product_id, payload['name'], payload['price'], payload['stock'], payload['description'], seller_id, version)
+            product_id, version, payload['name'], payload['price'], payload['stock'], payload['description'], seller_id)
 
         # Insert new product info in table products
         cur.execute(product_statement, product_values)
@@ -463,14 +467,13 @@ def add_product():
                     response = {'status': StatusCodes['bad_request'],
                                 'results': f'{j} is required to add a {product_type[:-1]}'}
                     return flask.jsonify(response)
-
             product_type_statement = psycopg2.sql.SQL(
                 'insert into {product_type} ' +
                 f'values ({("%s, " * len(columns_names[product_type]))[:-2]});'
             ).format(product_type=sql.Identifier(product_type))
 
-            product_type_values = tuple(payload[i] for i in required_input_info[product_type][:-1]) \
-                                  + tuple([product_id])
+            product_type_values = tuple(payload[i] for i in required_input_info[product_type]) \
+                                  + tuple([product_id, version])
 
         else:
             response = {'status': StatusCodes['bad_request'], 'results': 'Valid type is required to add a product'}
