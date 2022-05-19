@@ -34,7 +34,7 @@ class TokenCreationError(Exception):
 
 
 class InvalidAuthenticationException(Exception):
-    def __init__(self, message='User not registered'):
+    def __init__(self, message='Incorrect login information'):
         super(InvalidAuthenticationException, self).__init__(message)
 
 
