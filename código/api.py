@@ -234,7 +234,7 @@ def db_connection():
 columns_names = {
     "users": ['username', 'password', 'email'],
     "ratings": ["comment", "rating", "orders_id", "products_product_id", "products_version", "buyers_users_user_id"],
-    "products": ['product_id', 'name', 'price', 'stock', 'description', 'sellers_users_user_id', 'version'],
+    "products": ['product_id', 'version', 'name', 'price', 'stock', 'description', 'sellers_users_user_id'],
     "smartphones": ['screen_size', 'os', 'storage', 'color', 'products_product_id', 'products_version'],
     "televisions": ['screen_size', 'screen_type', 'resolution', 'smart', 'efficiency', 'products_product_id',
                     'products_version'],
@@ -419,10 +419,10 @@ def add_product():
 
     # The type of the product is essential
     required_input_info = dict(
-        (item, value[:-2] + ['type']) if item not in ["products", "ratings", "campaigns"]
+        (item, value[:-2] + ['type']) if item not in ["users", "products", "ratings", "campaigns"]
         else (item, value[2: -1]) for item, value in columns_names.items())
 
-    # logger.debug(f'POST /product - required_product_input_info: {required_product_input_info}')
+    logger.debug(f'POST /product - required_product_input_info: {required_input_info}')
 
     # Verification of the required fields to add a product
     for i in required_input_info["products"]:
@@ -446,9 +446,11 @@ def add_product():
         rows = cur.fetchall()
         product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
-        product_statement = 'insert into products (product_id, name, price, stock, description, sellers_users_user_id) values (%s, %s, %s, %s, %s, %s); '
+        version = datetime.utcnow()
+
+        product_statement = 'insert into products values (%s, %s, %s, %s, %s, %s, %s);'
         product_values = (
-            product_id, payload['name'], payload['price'], payload['stock'], payload['description'], seller_id)
+            product_id, payload['name'], payload['price'], payload['stock'], payload['description'], seller_id, version)
 
         # Insert new product info in table products
         cur.execute(product_statement, product_values)
@@ -517,7 +519,7 @@ def update_product(product_id):
 
     # logger.debug(f'PUT /dbproj/product/<product_id> - payload: {payload}')
 
-    version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    version = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 
     type_statement = 'select gettype(%s);'
     type_values = (product_id,)
@@ -638,7 +640,7 @@ def buy_products():
     product_stock_statement = 'update products set stock = %s where product_id = %s and version = %s;'
     order_statement = 'insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id) values (%s, %s, %s, %s, %s);'
 
-    order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    order_date = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     total_price = 0.0
 
     try:
@@ -1172,7 +1174,7 @@ def subscribe_campaign(campaign_id):
     conn = db_connection()
     cur = conn.cursor()
 
-    time_now = datetime.now()
+    time_now = datetime.utcnow()
     expiration_date = time_now + timedelta(days=30)
 
     time_now = time_now.strftime("%Y-%m-%d %H:%M:%S")
