@@ -444,13 +444,13 @@ def add_product():
         seller_id = seller_check(" to add a new product")
 
         # Get new product_id
-        product_id_statement = 'select max(product_id) from products where sellers_users_user_id = %s;'
+        product_id_statement = 'select max(product_id) from products;'
         product_id_values = (seller_id,)
         cur.execute(product_id_statement, product_id_values)
         rows = cur.fetchall()
         product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
-        version = datetime.utcnow()
+        version = datetime.now()
 
         product_statement = 'insert into products values (%s, %s, %s, %s, %s, %s, %s);'
         product_values = (
@@ -522,7 +522,7 @@ def update_product(product_id):
 
     # logger.debug(f'PUT /dbproj/product/<product_id> - payload: {payload}')
 
-    version = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     type_statement = 'select gettype(%s);'
     type_values = (product_id,)
@@ -643,7 +643,7 @@ def buy_products():
     product_stock_statement = 'update products set stock = %s where product_id = %s and version = %s;'
     order_statement = 'insert into orders (id, order_date, buyers_users_user_id, coupons_coupon_id, coupons_campaigns_campaign_id) values (%s, %s, %s, %s, %s);'
 
-    order_date = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     total_price = 0.0
 
     try:
@@ -1010,7 +1010,7 @@ def get_product_info(product_id):
         comments_rating = rows[0][4].split(';')
 
         if len(comments_rating[0]) == 0:
-            comments_rating = ["Product wasn't rated yet", "Product without comments because it wasn't rated yet"]
+            comments_rating = ["Product hasn't been rated yet", "Product without comments because it hasn't been rated yet"]
 
         content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': rows[0][3].split(','),
                    'rating': comments_rating[0], 'comments': comments_rating[1].split(',')}
@@ -1177,7 +1177,7 @@ def subscribe_campaign(campaign_id):
     conn = db_connection()
     cur = conn.cursor()
 
-    time_now = datetime.utcnow()
+    time_now = datetime.now()
     expiration_date = time_now + timedelta(days=30)
 
     time_now = time_now.strftime("%Y-%m-%d %H:%M:%S")
