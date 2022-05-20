@@ -45,7 +45,7 @@ class InsufficientPrivilegesException(Exception):
 
 class ProductNotFound(Exception):
     def __init__(self, p_id, message='No product found with id: '):
-        super(ProductNotFound, self).__init__(message + p_id)
+        super(ProductNotFound, self).__init__(message + str(p_id))
 
 
 class ProductWithoutStockAvailable(Exception):
@@ -83,8 +83,13 @@ class NoCampaignsFound(Exception):
 
 
 class CouponNotFound(Exception):
-    def __init__(self, c_id, message='No coupon found with id: '):
+    def __init__(self, c_id, message='No Coupon found or user has not subscribed to the coupon with id: '):
         super(CouponNotFound, self).__init__(message + str(c_id))
+
+
+class CouponAlreadyUsed(Exception):
+    def __init__(self, c_id, message='Coupon with id '):
+        super(CouponAlreadyUsed, self).__init__(message + str(c_id) + ' already used')
 
 
 class CouponExpired(Exception):
@@ -661,14 +666,18 @@ def buy_products():
 
         if coupon_id != -1:
             # Get the coupon discount and expiration date and the campaign id that is connected to the coupon with the coupon_id as <coupon_id>
-            campaign_statement = 'select campaigns_campaign_id, discount, expiration_date ' \
-                                 'from coupons, campaigns  where coupon_id = %s and campaigns_campaign_id = campaign_id;'
-            campaign_values = (coupon_id,)
+            campaign_statement = 'select campaigns_campaign_id, discount, expiration_date, used ' \
+                                 'from coupons, campaigns  ' \
+                                 'where coupon_id = %s and campaigns_campaign_id = campaign_id and buyers_users_user_id = %s;'
+            campaign_values = (coupon_id, buyer_id)
             cur.execute(campaign_statement, campaign_values)
             rows = cur.fetchall()
 
             if len(rows) == 0:
                 raise CouponNotFound(coupon_id)
+
+            if rows[0][3]:
+                raise CouponAlreadyUsed(coupon_id)
 
             expiration_date = rows[0][2]
             today_date = order_date[:-9]
@@ -690,6 +699,8 @@ def buy_products():
             product_version_values = (product_id, product_id,)
             cur.execute(product_version_statement, product_version_values)
             rows = cur.fetchall()
+
+            print(rows)
 
             if len(rows) == 0:
                 raise ProductNotFound(product_id)
@@ -1011,7 +1022,8 @@ def get_product_info(product_id):
         comments_rating = rows[0][4].split(';')
 
         if len(comments_rating[0]) == 0:
-            comments_rating = ["Product hasn't been rated yet", "Product without comments because it hasn't been rated yet"]
+            comments_rating = ["Product hasn't been rated yet",
+                               "Product without comments because it hasn't been rated yet"]
 
         content = {'name': rows[0][0], 'stock': rows[0][1], 'description': rows[0][2], 'prices': rows[0][3].split(','),
                    'rating': comments_rating[0], 'comments': comments_rating[1].split(',')}
@@ -1126,7 +1138,6 @@ def add_campaign():
 
     campaign_statement = f'insert into campaigns ' \
                          f'values (%s,%s,%s,%s,%s,%s,%s);'
-
 
     try:
         admin_id = admin_check(" to create a campaign")
