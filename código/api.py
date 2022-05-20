@@ -1212,6 +1212,7 @@ def subscribe_campaign(campaign_id):
         # check if the user is a buyer
         user_id = buyer_check(" to subscribe to coupon campaign")
 
+
         # check if the campaign is valid and if it is, decrement by one the coupon count
         cur.execute(subscribe_statement, subscribe_values)
         if cur.rowcount == 0:
