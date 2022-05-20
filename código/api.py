@@ -943,49 +943,6 @@ def post_question(product_id=None, parents_question_id=None):
 
 
 ##
-# Get notifications
-##
-# To use it, access through postman:
-##
-# GET http://localhost:8080/dbproj/inbox
-##
-@app.route('/dbproj/inbox', methods=['GET'])
-def get_notifications():
-    logger.info('GET /dbproj/inbox')
-
-    conn = db_connection()
-    cur = conn.cursor()
-
-    try:
-        user_id = user_check(" to see notification inbox")
-
-        statement = 'select notif_time, notification_id, content from notifications where users_user_id = %s'
-        values = [user_id]
-
-        cur.execute(statement, values)
-        notifications = cur.fetchall()
-
-        response = {'status': StatusCodes['success'], 'results': notifications}
-        conn.commit()
-
-    except (TokenError, InsufficientPrivilegesException) as error:
-        logger.error(f'GET /dbproj/inbox - error: {error}')
-        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
-        conn.rollback()
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'GET /dbproj/inbox - error: {error}')
-        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-        conn.rollback()
-
-    finally:
-        if conn is not None:
-            conn.close()
-
-    return flask.jsonify(response)
-
-
-##
 # Obtain information about a product with product_id <product_id>
 ##
 # To use it, access through Postman:
@@ -1287,6 +1244,49 @@ def get_campaign_stats():
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /report/campaign - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+
+##
+# Get notifications
+##
+# To use it, access through postman:
+##
+# GET http://localhost:8080/dbproj/inbox
+##
+@app.route('/dbproj/inbox', methods=['GET'])
+def get_notifications():
+    logger.info('GET /dbproj/inbox')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    try:
+        user_id = user_check(" to see notification inbox")
+
+        statement = 'select notif_time, notification_id, content from notifications where users_user_id = %s'
+        values = [user_id]
+
+        cur.execute(statement, values)
+        notifications = cur.fetchall()
+
+        response = {'status': StatusCodes['success'], 'results': notifications}
+        conn.commit()
+
+    except (TokenError, InsufficientPrivilegesException) as error:
+        logger.error(f'GET /dbproj/inbox - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+        conn.rollback()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'GET /dbproj/inbox - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+        conn.rollback()
 
     finally:
         if conn is not None:
