@@ -82,9 +82,9 @@ class NoCampaignsFound(Exception):
         super(NoCampaignsFound, self).__init__(message)
 
 
-class CouponNotFound(Exception):
-    def __init__(self, c_id, message='No Coupon found or user has not subscribed to the coupon with id: '):
-        super(CouponNotFound, self).__init__(message + str(c_id))
+class CouponNotSubscribed(Exception):
+    def __init__(self, c_id, message='User has not subscribed to the coupon with id: '):
+        super(CouponNotSubscribed, self).__init__(message + str(c_id))
 
 
 class CouponAlreadyUsed(Exception):
@@ -670,7 +670,7 @@ def buy_products():
             rows = cur.fetchall()
 
             if len(rows) == 0:
-                raise CouponNotFound(coupon_id)
+                raise CouponNotSubscribed(coupon_id)
 
             if rows[0][3]:
                 raise CouponAlreadyUsed(coupon_id)
@@ -727,7 +727,7 @@ def buy_products():
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
         conn.commit()
 
-    except (TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable, CouponNotFound,
+    except (TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable, CouponNotSubscribed,
             CouponExpired) as error:
         logger.error(f'POST /dbproj/order - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
