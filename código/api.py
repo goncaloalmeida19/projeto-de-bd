@@ -959,7 +959,7 @@ def get_notifications():
     try:
         user_id = user_check(" to see notification inbox")
 
-        statement = 'select time, notification_id, content from notifications where users_user_id = %s'
+        statement = 'select notif_time, notification_id, content from notifications where users_user_id = %s'
         values = [user_id]
 
         cur.execute(statement, values)
