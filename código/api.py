@@ -558,7 +558,6 @@ def update_product(product_id):
             'and version =(select max(version) from products where product_id = %s) '
             'and products_product_id = product_id and version = products_version;'
         ).format(prod_type=sql.Identifier(product_type))
-
         non_changed_items_values = (product_id, product_id,)
 
         cur.execute(non_changed_items_statement, non_changed_items_values)
