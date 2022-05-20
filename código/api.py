@@ -44,8 +44,13 @@ class InsufficientPrivilegesException(Exception):
 
 
 class ProductNotFound(Exception):
-    def __init__(self, p_id, message='No product found with id: '):
+    def __init__(self, p_id, message='No product with id: '):
         super(ProductNotFound, self).__init__(message + str(p_id))
+
+
+class ProductNotAvailableForUpdate(Exception):
+    def __init__(self, p_id, message='Cannot update product with id: '):
+        super(ProductNotAvailableForUpdate, self).__init__(message + str(p_id))
 
 
 class ProductWithoutStockAvailable(Exception):
@@ -297,6 +302,7 @@ def register_user():
         return flask.jsonify(response)
 
     try:
+        # only admin user can register sellers and other admins
         if payload['type'] != 'buyers' and (payload['type'] == 'sellers' or payload['type'] == 'admins'):
             admin_check(f" to register {payload['type']}")
 
@@ -304,7 +310,7 @@ def register_user():
         user_id_statement = 'select max(user_id) from users;'
         cur.execute(user_id_statement)
         rows = cur.fetchone()
-        user_id = rows[0] + 1  # user 0, platform admin, is expected to always exist
+        user_id = rows[0] + 1  # user 0, first platform admin, is expected to always exist
 
         values = [user_id, payload['username'], payload['password'], payload['email']]
         type_values = [user_id]
@@ -352,9 +358,9 @@ def register_user():
 ##
 # PUT http://localhost:8080/dbproj/user
 ##
-@app.route('/dbproj/user/', methods=['PUT'])
+@app.route('/dbproj/user', methods=['PUT'])
 def login_user():
-    logger.info('PUT /dbproj/user/')
+    logger.info('PUT /dbproj/user')
 
     payload = flask.request.get_json()
 
@@ -375,6 +381,7 @@ def login_user():
         row = cur.fetchone()
 
         if row is not None:
+            # create login token valid for 20 minutes
             auth_token = jwt.encode({'user': row[0],
                                      'aud': app.config['SESSION_COOKIE_NAME'],
                                      'iat': datetime.utcnow(),
@@ -382,6 +389,7 @@ def login_user():
                                     app.config['SECRET_KEY'])
 
             try:
+                # test token is not corrupted before returning login success
                 jwt.decode(auth_token, app.config['SECRET_KEY'], audience=app.config['SESSION_COOKIE_NAME'],
                            algorithms=["HS256"])
 
@@ -396,12 +404,12 @@ def login_user():
         conn.commit()
 
     except InvalidAuthenticationException as error:
-        logger.error(f'PUT /dbproj/user/ {error}')
+        logger.error(f'PUT /dbproj/user {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'PUT /dbproj/user/ {error}')
+        logger.error(f'PUT /dbproj/user {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
         conn.rollback()
 
@@ -535,18 +543,18 @@ def update_product(product_id):
     # get current time for the new version of the product
     version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    type_statement = 'select gettype(%s);'
-    type_values = (product_id,)
-
     try:
         # check if the user is a seller
-        seller_check(" to update a product")
+        seller_id = seller_check(" to update a product")
+
+        type_statement = 'select gettype(%s, %s);'
+        type_values = (product_id, seller_id)
 
         # check if the product exists and get its type
         cur.execute(type_statement, type_values)
         product_type = cur.fetchall()[0][0]
         if product_type == 'invalid':
-            raise ProductNotFound(product_id)
+            raise ProductNotAvailableForUpdate(product_id)
 
         # verify the payload
         for i in payload:
@@ -733,8 +741,9 @@ def buy_products():
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
         conn.commit()
 
-    except (TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable, CouponNotSubscribed,
-            CouponExpired) as error:
+    except (
+    TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable, CouponNotSubscribed,
+    CouponExpired) as error:
         logger.error(f'POST /dbproj/order - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
@@ -948,49 +957,6 @@ def post_question(product_id=None, parents_question_id=None):
 
 
 ##
-# Get notifications
-##
-# To use it, access through postman:
-##
-# GET http://localhost:8080/dbproj/inbox
-##
-@app.route('/dbproj/inbox', methods=['GET'])
-def get_notifications():
-    logger.info('GET /dbproj/inbox')
-
-    conn = db_connection()
-    cur = conn.cursor()
-
-    try:
-        user_id = user_check(" to see notification inbox")
-
-        statement = 'select notif_time, notification_id, content from notifications where users_user_id = %s'
-        values = [user_id]
-
-        cur.execute(statement, values)
-        notifications = cur.fetchall()
-
-        response = {'status': StatusCodes['success'], 'results': notifications}
-        conn.commit()
-
-    except (TokenError, InsufficientPrivilegesException) as error:
-        logger.error(f'GET /dbproj/inbox - error: {error}')
-        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
-        conn.rollback()
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'GET /dbproj/inbox - error: {error}')
-        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
-        conn.rollback()
-
-    finally:
-        if conn is not None:
-            conn.close()
-
-    return flask.jsonify(response)
-
-
-##
 # Obtain information about a product with product_id <product_id>
 ##
 # To use it, access through Postman:
@@ -1009,7 +975,7 @@ def get_product_info(product_id):
         # Get info about the product that have the product_id correspondent to the one given
         statement = 'select name, stock, description, ' \
                     "(select string_agg(price || ' - ' || version, ',') from products where product_id = %s), " \
-                    "(select concat(avg(rating)::float,';',string_agg(comment,',')) from ratings where products_product_id = %s) " \
+                    "(select concat(round(cast(avg(rating) as numeric), 2),';',string_agg(comment,',')) from ratings where products_product_id = %s) " \
                     'from products ' \
                     'where product_id = %s and version = (select max(version) from products where product_id = %s) '
         values = (product_id,) * 4
@@ -1071,8 +1037,6 @@ def get_stats():
         rows = cur.fetchall()
 
         sale_stats = [{'month': r[0], 'total_value': r[1], 'orders': r[2]} for r in rows]
-
-        # print(sale_stats)  # debug
 
         response = {'status': StatusCodes['success'], 'results': sale_stats}
 
@@ -1198,7 +1162,6 @@ def subscribe_campaign(campaign_id):
     time_now = time_now.strftime("%Y-%m-%d %H:%M:%S")
     expiration_date = expiration_date.strftime("%Y-%m-%d %H:%M:%S")
 
-
     subscribe_statement = 'update campaigns set coupons = coupons - 1 ' \
                           'where campaign_id = %s and %s between date_start and date_end and coupons > 0;'
     subscribe_values = (campaign_id, time_now)
@@ -1212,7 +1175,6 @@ def subscribe_campaign(campaign_id):
     try:
         # check if the user is a buyer
         user_id = buyer_check(" to subscribe to coupon campaign")
-
 
         # check if the campaign is valid and if it is, decrement by one the coupon count
         cur.execute(subscribe_statement, subscribe_values)
@@ -1301,6 +1263,49 @@ def get_campaign_stats():
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /report/campaign - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return flask.jsonify(response)
+
+
+##
+# Get notifications
+##
+# To use it, access through postman:
+##
+# GET http://localhost:8080/dbproj/inbox
+##
+@app.route('/dbproj/inbox', methods=['GET'])
+def get_notifications():
+    logger.info('GET /dbproj/inbox')
+
+    conn = db_connection()
+    cur = conn.cursor()
+
+    try:
+        user_id = user_check(" to see notification inbox")
+
+        statement = 'select notif_time, notification_id, content from notifications where users_user_id = %s'
+        values = [user_id]
+
+        cur.execute(statement, values)
+        notifications = cur.fetchall()
+
+        response = {'status': StatusCodes['success'], 'results': notifications}
+        conn.commit()
+
+    except (TokenError, InsufficientPrivilegesException) as error:
+        logger.error(f'GET /dbproj/inbox - error: {error}')
+        response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+        conn.rollback()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        logger.error(f'GET /dbproj/inbox - error: {error}')
+        response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+        conn.rollback()
 
     finally:
         if conn is not None:
