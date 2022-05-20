@@ -1025,15 +1025,15 @@ def get_stats():
     conn = db_connection()
     cur = conn.cursor()
 
-    statement = 'select  to_char(o.order_date, \'MM-YYYY\') as month, round(cast(sum(o.price_total) as numeric), 2), count(so.orders_id) ' \
-                'from orders as o, sellers_orders as so ' \
-                'where so.sellers_users_user_id = %s and so.orders_id = o.id and o.order_date > (CURRENT_DATE - interval \'1 year\') ' \
+    statement = 'select  to_char(order_date, \'MM-YYYY\') as month, round(cast(sum(price_total) as numeric), 2), count(id) ' \
+                'from orders ' \
+                'where order_date > (CURRENT_DATE - interval \'1 year\') ' \
                 'group by month;'
 
     try:
-        seller_id = seller_check(" to obtain sale stats")
+        user_check(" to obtain sale stats")
 
-        cur.execute(statement, [seller_id])
+        cur.execute(statement)
         rows = cur.fetchall()
 
         sale_stats = [{'month': r[0], 'total_value': r[1], 'orders': r[2]} for r in rows]
