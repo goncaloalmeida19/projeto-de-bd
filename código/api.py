@@ -306,6 +306,10 @@ def register_user():
         if payload['type'] != 'buyers' and (payload['type'] == 'sellers' or payload['type'] == 'admins'):
             admin_check(f" to register {payload['type']}")
 
+        # lock the users table to ensure that
+        # no errors regarding the user id calculation occur in simultaneous user creation attempts
+        cur.execute('lock table users;')
+
         # Get new user_id
         user_id_statement = 'select max(user_id) from users;'
         cur.execute(user_id_statement)
@@ -331,8 +335,8 @@ def register_user():
         cur.execute(statement, values)
         cur.execute(type_statement, type_values)
 
-        conn.commit()
         response = {'status': StatusCodes['success'], 'results': user_id}
+        conn.commit()
 
     except (TokenError, InsufficientPrivilegesException) as error:
         logger.error(f'POST /dbproj/user/ - error: {error}')
@@ -365,6 +369,7 @@ def login_user():
     payload = flask.request.get_json()
 
     conn = db_connection()
+    conn.set_session(readonly=True)
     cur = conn.cursor()
 
     # logger.debug(f'PUT /dbproj/user/ - payload: {payload}')
@@ -458,6 +463,10 @@ def add_product():
     product_type = payload['type']
 
     try:
+        # lock the products table to ensure that
+        # no errors regarding the product id calculation occur in simultaneous product creation attempts
+        cur.execute('lock table products;')
+
         # Get the seller id
         seller_id = seller_check(" to add a new product")
 
@@ -573,7 +582,7 @@ def update_product(product_id):
             'from products, {prod_type} '
             'where product_id = %s '
             'and version =(select max(version) from products where product_id = %s) '
-            'and products_product_id = product_id and version = products_version;'
+            'and products_product_id = product_id and version = products_version for update;'
         ).format(prod_type=sql.Identifier(product_type))
         non_changed_items_values = (product_id, product_id,)
 
@@ -664,6 +673,13 @@ def buy_products():
     try:
         # Get the buyer id
         buyer_id = buyer_check(" to perform an order")
+
+        # lock the products and orders tables to ensure that:
+        # - no deadlock occurs while 2 buyers simultaneously try to retrieve products for their orders
+        # - no errors regarding the order id calculation occur
+        # - no errors regarding stock update occur
+        cur.execute('lock table products;')
+        cur.execute('lock table orders;')
 
         # Get the order id
         order_id_statement = 'select max(id) from orders '
@@ -896,6 +912,9 @@ def post_question(product_id=None, parents_question_id=None):
         return flask.jsonify(response)
 
     try:
+        # lock the questions table to ensure that no errors regarding the question id calculation occur in simultaneous question creation attempts
+        cur.execute('lock table questions;')
+
         statement = 'select * from ' \
                     '(select max(question_id) from questions where products_product_id = %s) as q_ids, ' \
                     '(select max(version) from products where product_id = %s) as p_vers;'
@@ -920,8 +939,6 @@ def post_question(product_id=None, parents_question_id=None):
 
             cur.execute(parent_question_statement, parent_question_values)
             parent_question_rows = cur.fetchone()
-
-            print(parent_question_rows)
 
             if parent_question_rows is None:
                 raise ParentQuestionNotFound(parents_question_id)
@@ -965,7 +982,9 @@ def post_question(product_id=None, parents_question_id=None):
 @app.route('/dbproj/product/<product_id>', methods=['GET'])
 def get_product_info(product_id):
     logger.info('GET /dbproj/product/<product_id>')
+
     conn = db_connection()
+    conn.set_session(readonly=True)
     cur = conn.cursor()
 
     try:
@@ -995,13 +1014,17 @@ def get_product_info(product_id):
 
         # Response of the status of obtaining a product and the information obtained
         response = {'status': StatusCodes['success'], 'results': content}
+        conn.commit()
 
     except (TokenError, InsufficientPrivilegesException, ProductNotFound) as error:
         logger.error(f'GET /dbproj/product/<product_id> - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+        conn.rollback()
+
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /dbproj/product/<product_id> - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+        conn.rollback()
 
     finally:
         if conn is not None:
@@ -1022,6 +1045,7 @@ def get_stats():
     logger.info('GET /dbproj/report/year')
 
     conn = db_connection()
+    conn.set_session(readonly=True)
     cur = conn.cursor()
 
     statement = 'select  to_char(order_date, \'MM-YYYY\') as month, round(cast(sum(price_total) as numeric), 2), count(id) ' \
@@ -1038,14 +1062,17 @@ def get_stats():
         sale_stats = [{'month': r[0], 'total_value': r[1], 'orders': r[2]} for r in rows]
 
         response = {'status': StatusCodes['success'], 'results': sale_stats}
+        conn.commit()
 
     except (TokenError, InsufficientPrivilegesException) as error:
         logger.error(f'/dbproj/report/year - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+        conn.rollback()
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'/dbproj/report/year - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+        conn.rollback()
 
     finally:
         if conn is not None:
@@ -1110,6 +1137,9 @@ def add_campaign():
         if cur.fetchall()[0][0]:
             raise AlreadyInCampaign
 
+        # lock the campaign table to ensure that no errors regarding the campaign id calculation occur in simultaneous campaign creation attempts
+        cur.execute('lock table campaigns;')
+
         # get the id of the new campaign
         cur.execute(campaign_id_statement)
         campaign_id = cur.fetchone()[0]
@@ -1119,9 +1149,8 @@ def add_campaign():
         # insert the new campaign into the campaigns table
         cur.execute(campaign_statement, campaign_values)
 
-        # commit the transaction
-        conn.commit()
         response = {'status': StatusCodes['success'], 'results': f'{campaign_id}'}
+        conn.commit()
 
     except (AlreadyInCampaign, TokenError, InsufficientPrivilegesException) as error:
         logger.error(f'POST /campaign - error: {error}')
@@ -1186,6 +1215,9 @@ def subscribe_campaign(campaign_id):
         if cur.fetchall()[0][0]:
             raise UserAlreadySubscribed(campaign_id)
 
+        # lock the coupon table to ensure that no errors regarding the coupon id calculation occur in simultaneous user subscriptions
+        cur.execute('lock table coupons;')
+
         # get the id of the new coupon
         cur.execute(gen_coupon_statement)
         coupon_id = cur.fetchall()[0][0]
@@ -1228,6 +1260,7 @@ def get_campaign_stats():
     logger.info('GET /dbproj/report/campaign')
 
     conn = db_connection()
+    conn.set_session(readonly=True)
     cur = conn.cursor()
 
     stats_statement = "select campaign_id," \
@@ -1254,14 +1287,17 @@ def get_campaign_stats():
             results.append(content)  # append the stats of each campaign to the results
 
         response = {'status': StatusCodes['success'], 'results': results}
+        conn.commit()
 
     except (TokenError, InsufficientPrivilegesException) as error:
         logger.error(f'GET /report/campaign - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
+        conn.rollback()
 
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'GET /report/campaign - error: {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
+        conn.rollback()
 
     finally:
         if conn is not None:

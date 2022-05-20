@@ -816,7 +816,7 @@ def give_rating_feedback(product_id):
 
     try:
         # Get the buyer id
-        buyer_id = buyer_check(" to perform a purchase")
+        buyer_id = buyer_check(" to rate a product")
 
         # Get info about the product that will be rated (the one already bought)
         statement = 'select orders.id, product_quantities.products_version ' \
