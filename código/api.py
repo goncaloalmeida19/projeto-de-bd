@@ -741,7 +741,7 @@ def buy_products():
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
         conn.commit()
 
-    except ( TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable,
+    except (TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable,
             CouponNotSubscribed, CouponExpired) as error:
         logger.error(f'POST /dbproj/order - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}

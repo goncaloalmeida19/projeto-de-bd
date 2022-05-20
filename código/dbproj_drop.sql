@@ -1,5 +1,9 @@
 \c dbproj
 
+drop function if exists q_notif() cascade;
+drop function if exists sale_notif() cascade;
+drop function if exists rating_notif() cascade;
+
 drop table if exists admins cascade;
 drop table if exists buyers cascade;
 drop table if exists campaigns cascade;

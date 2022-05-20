@@ -44,7 +44,7 @@ begin
 
     insert into notifications
     values (notif_id, user_id,
-            CONCAT('New comment nº', new.question_id, ' regarding your product nº ', new.products_product_id, ': ''',
+            CONCAT('New comment n.', new.question_id, ' regarding your product n.', new.products_product_id, ': ''',
                    new.question_text, ''''));
 
     if parent_user_id is not NULL then
@@ -56,8 +56,8 @@ begin
         end if;
         insert into notifications
         values (notif_id, parent_user_id,
-                CONCAT('New reply nº', new.question_id, ' to your comment nº', new.questions_question_id,
-                       ' on product nº ', new.products_product_id, ': ''', new.question_text, ''''));
+                CONCAT('New reply n.', new.question_id, ' to your comment n.', new.questions_question_id,
+                       ' on product n.', new.products_product_id, ': ''', new.question_text, ''''));
     end if;
 
     return new;
@@ -97,7 +97,7 @@ begin
 
 		insert into notifications
         values (notif_id, line.sellers_users_user_id,
-            CONCAT('New order nº', new.id, ' including your products'));
+            CONCAT('New order n.', new.id, ' including your products'));
 	end loop;
 
 
@@ -109,7 +109,7 @@ begin
     end if;
     insert into notifications
     values (notif_id, buyer_id,
-            CONCAT('Your order nº', new.id, ' for a total of ', new.price_total, ' has been confirmed'));
+            CONCAT('Your order n.', new.id, ' for a total of ', new.price_total, ' has been confirmed'));
 
     return new;
 end;
@@ -135,7 +135,7 @@ begin
 
     insert into notifications
     values (notif_id, seller_id,
-            CONCAT('Your product nº', new.products_product_id, ' (version ', new.products_version,
+            CONCAT('Your product n.', new.products_product_id, ' (version ', new.products_version,
                 ') has been rated a ', new.rating,
                 ' with the comment ''', new.comment, ''''));
 
