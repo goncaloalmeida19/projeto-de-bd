@@ -1,3 +1,10 @@
+"""
+Trabalho realizado por:
+Gonçalo Almeida, aluno Nº 2020218868
+Guilherme Branco, aluno Nº 2020216924
+João Santos, aluno Nº 2020218995
+"""
+
 import flask
 import logging
 import psycopg2
