@@ -358,9 +358,9 @@ def register_user():
 ##
 # PUT http://localhost:8080/dbproj/user
 ##
-@app.route('/dbproj/user/', methods=['PUT'])
+@app.route('/dbproj/user', methods=['PUT'])
 def login_user():
-    logger.info('PUT /dbproj/user/')
+    logger.info('PUT /dbproj/user')
 
     payload = flask.request.get_json()
 
@@ -404,12 +404,12 @@ def login_user():
         conn.commit()
 
     except InvalidAuthenticationException as error:
-        logger.error(f'PUT /dbproj/user/ {error}')
+        logger.error(f'PUT /dbproj/user {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
 
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'PUT /dbproj/user/ {error}')
+        logger.error(f'PUT /dbproj/user {error}')
         response = {'status': StatusCodes['internal_error'], 'errors': str(error)}
         conn.rollback()
 
