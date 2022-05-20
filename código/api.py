@@ -62,7 +62,7 @@ class ProductWithoutStockAvailable(Exception):
 
 class AlreadyRated(Exception):
     def __init__(self, p_id, p_version, o_id, message1="Product with id '", message2="' and version '",
-                 message3="' from order '", message4="' has already been rated: "):
+                 message3="' from order '", message4="' has already been rated"):
         super(AlreadyRated, self).__init__(
             message1 + str(p_id) + message2 + p_version + message3 + str(o_id) + message4)
 
@@ -801,7 +801,7 @@ def give_rating_feedback(product_id):
 
     try:
         # Get the buyer id
-        buyer_id = buyer_check(" to perform a purchase")
+        buyer_id = buyer_check(" to rate a product")
 
         # Get info about the product that will be rated (the one already bought)
         statement = 'select orders.id, product_quantities.products_version ' \
