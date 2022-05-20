@@ -262,6 +262,18 @@ columns_names = {
 # ENDPOINTS
 ##########################################################
 
+@app.route('/dbproj/')
+def landing_page():
+    return """
+
+    Welcome to EANOS!!!  <br/>
+    <br/>
+    Check the sources for instructions on how to use the endpoints!<br/>
+    <br/>
+    Best BD students of 2022<br/>
+    <br/>
+    """
+
 
 ##
 # Register a user with a JSON payload
@@ -675,7 +687,7 @@ def buy_products():
         buyer_id = buyer_check(" to perform an order")
 
         # lock the products and orders tables to ensure that:
-        # - no deadlock occurs while 2 buyers simultaneously try to retrieve products for their orders
+        # - deadlocks from 2 buyers simultaneously trying to retrieve products are avoided
         # - no errors regarding the order id calculation occur
         # - no errors regarding stock update occur
         cur.execute('lock table products;')
