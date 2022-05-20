@@ -297,6 +297,7 @@ def register_user():
         return flask.jsonify(response)
 
     try:
+        # only admin user can register sellers and other admins
         if payload['type'] != 'buyers' and (payload['type'] == 'sellers' or payload['type'] == 'admins'):
             admin_check(f" to register {payload['type']}")
 
@@ -304,7 +305,7 @@ def register_user():
         user_id_statement = 'select max(user_id) from users;'
         cur.execute(user_id_statement)
         rows = cur.fetchone()
-        user_id = rows[0] + 1  # user 0, platform admin, is expected to always exist
+        user_id = rows[0] + 1  # user 0, first platform admin, is expected to always exist
 
         values = [user_id, payload['username'], payload['password'], payload['email']]
         type_values = [user_id]
@@ -375,6 +376,7 @@ def login_user():
         row = cur.fetchone()
 
         if row is not None:
+            # create login token valid for 20 minutes
             auth_token = jwt.encode({'user': row[0],
                                      'aud': app.config['SESSION_COOKIE_NAME'],
                                      'iat': datetime.utcnow(),
@@ -382,6 +384,7 @@ def login_user():
                                     app.config['SECRET_KEY'])
 
             try:
+                # test token is not corrupted before returning login success
                 jwt.decode(auth_token, app.config['SECRET_KEY'], audience=app.config['SESSION_COOKIE_NAME'],
                            algorithms=["HS256"])
 
