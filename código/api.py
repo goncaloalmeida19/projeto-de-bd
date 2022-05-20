@@ -82,6 +82,11 @@ class NoCampaignsFound(Exception):
         super(NoCampaignsFound, self).__init__(message)
 
 
+class UserAlreadySubscribed(Exception):
+    def __init__(self, campaign_id, message="User has already subscribed the campaign with id "):
+        super(UserAlreadySubscribed, self).__init__(message + str(campaign_id))
+
+
 class CouponNotSubscribed(Exception):
     def __init__(self, c_id, message='User has not subscribed to the coupon with id: '):
         super(CouponNotSubscribed, self).__init__(message + str(c_id))
@@ -1198,6 +1203,8 @@ def subscribe_campaign(campaign_id):
                           'where campaign_id = %s and %s between date_start and date_end and coupons > 0;'
     subscribe_values = (campaign_id, time_now)
 
+    user_already_subscribed_statement = 'select exists(select 1 from coupons where buyers_users_user_id = %s and campaigns_campaign_id = %s)'
+
     gen_coupon_statement = 'select coalesce(max(coupon_id) + 1, 1) from coupons;'
 
     insert_coupon_statement = f'insert into coupons (coupon_id, used, discount_applied, expiration_date, campaigns_campaign_id, buyers_users_user_id) values (%s,%s,%s,%s,%s,%s);'
@@ -1206,10 +1213,17 @@ def subscribe_campaign(campaign_id):
         # check if the user is a buyer
         user_id = buyer_check(" to subscribe to coupon campaign")
 
+
         # check if the campaign is valid and if it is, decrement by one the coupon count
         cur.execute(subscribe_statement, subscribe_values)
         if cur.rowcount == 0:
             raise CampaignExpiredOrNotFound
+
+        # check if the user has already subscribed to this campaign
+        user_already_subscribed_values = (user_id, campaign_id)
+        cur.execute(user_already_subscribed_statement, user_already_subscribed_values)
+        if cur.fetchall()[0][0]:
+            raise UserAlreadySubscribed(campaign_id)
 
         # get the id of the new coupon
         cur.execute(gen_coupon_statement)
@@ -1224,7 +1238,7 @@ def subscribe_campaign(campaign_id):
 
         conn.commit()
 
-    except (TokenError, InsufficientPrivilegesException, CampaignExpiredOrNotFound) as error:
+    except (TokenError, InsufficientPrivilegesException, CampaignExpiredOrNotFound, UserAlreadySubscribed) as error:
         logger.error(error)
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
