@@ -90,6 +90,9 @@ begin
             notif_id := notif_id + 1;
         end if;
 
+        insert into sellers_orders
+        values (line.sellers_users_user_id, new.id);
+
 		insert into notifications
         values (notif_id, line.sellers_users_user_id,
             CONCAT('New order nº', new.id, ' including your products'));

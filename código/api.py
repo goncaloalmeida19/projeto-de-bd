@@ -44,8 +44,13 @@ class InsufficientPrivilegesException(Exception):
 
 
 class ProductNotFound(Exception):
-    def __init__(self, p_id, message='You do not have a product registered with id: '):
+    def __init__(self, p_id, message='No product with id: '):
         super(ProductNotFound, self).__init__(message + str(p_id))
+
+
+class ProductNotAvailableForUpdate(Exception):
+    def __init__(self, p_id, message='Cannot update product with id: '):
+        super(ProductNotAvailableForUpdate, self).__init__(message + str(p_id))
 
 
 class ProductWithoutStockAvailable(Exception):
@@ -549,7 +554,7 @@ def update_product(product_id):
         cur.execute(type_statement, type_values)
         product_type = cur.fetchall()[0][0]
         if product_type == 'invalid':
-            raise ProductNotFound(product_id)
+            raise ProductNotAvailableForUpdate(product_id)
 
         # verify the payload
         for i in payload:
@@ -736,8 +741,9 @@ def buy_products():
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
         conn.commit()
 
-    except (TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable, CouponNotSubscribed,
-            CouponExpired) as error:
+    except (
+    TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable, CouponNotSubscribed,
+    CouponExpired) as error:
         logger.error(f'POST /dbproj/order - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
@@ -1019,20 +1025,18 @@ def get_stats():
     conn = db_connection()
     cur = conn.cursor()
 
-    statement = 'select  to_char(order_date, \'MM-YYYY\') as month, round(cast(sum(price_total) as numeric), 2), count(id) ' \
-                'from orders ' \
-                'where order_date > (CURRENT_DATE - interval \'1 year\') ' \
+    statement = 'select  to_char(o.order_date, \'MM-YYYY\') as month, round(cast(sum(o.price_total) as numeric), 2), count(so.orders_id) ' \
+                'from orders as o, sellers_orders as so ' \
+                'where so.sellers_users_user_id = %s and so.orders_id = o.id and o.order_date > (CURRENT_DATE - interval \'1 year\') ' \
                 'group by month;'
 
     try:
-        user_check(" to obtain sale stats")
+        seller_id = seller_check(" to obtain sale stats")
 
-        cur.execute(statement)
+        cur.execute(statement, [seller_id])
         rows = cur.fetchall()
 
         sale_stats = [{'month': r[0], 'total_value': r[1], 'orders': r[2]} for r in rows]
-
-        # print(sale_stats)  # debug
 
         response = {'status': StatusCodes['success'], 'results': sale_stats}
 
@@ -1158,7 +1162,6 @@ def subscribe_campaign(campaign_id):
     time_now = time_now.strftime("%Y-%m-%d %H:%M:%S")
     expiration_date = expiration_date.strftime("%Y-%m-%d %H:%M:%S")
 
-
     subscribe_statement = 'update campaigns set coupons = coupons - 1 ' \
                           'where campaign_id = %s and %s between date_start and date_end and coupons > 0;'
     subscribe_values = (campaign_id, time_now)
@@ -1172,7 +1175,6 @@ def subscribe_campaign(campaign_id):
     try:
         # check if the user is a buyer
         user_id = buyer_check(" to subscribe to coupon campaign")
-
 
         # check if the campaign is valid and if it is, decrement by one the coupon count
         cur.execute(subscribe_statement, subscribe_values)
