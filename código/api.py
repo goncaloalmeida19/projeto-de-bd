@@ -975,7 +975,7 @@ def get_product_info(product_id):
         # Get info about the product that have the product_id correspondent to the one given
         statement = 'select name, stock, description, ' \
                     "(select string_agg(price || ' - ' || version, ',') from products where product_id = %s), " \
-                    "(select concat(avg(rating)::float,';',string_agg(comment,',')) from ratings where products_product_id = %s) " \
+                    "(select concat(round(cast(avg(rating) as numeric), 2),';',string_agg(comment,',')) from ratings where products_product_id = %s) " \
                     'from products ' \
                     'where product_id = %s and version = (select max(version) from products where product_id = %s) '
         values = (product_id,) * 4
