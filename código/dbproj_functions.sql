@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 create or replace function gettype(product_id int) returns varchar
     language plpgsql
 as
