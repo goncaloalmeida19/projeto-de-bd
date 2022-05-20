@@ -44,7 +44,7 @@ class InsufficientPrivilegesException(Exception):
 
 
 class ProductNotFound(Exception):
-    def __init__(self, p_id, message='No product found with id: '):
+    def __init__(self, p_id, message='You do not have a product registered with id: '):
         super(ProductNotFound, self).__init__(message + str(p_id))
 
 
@@ -538,12 +538,12 @@ def update_product(product_id):
     # get current time for the new version of the product
     version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    type_statement = 'select gettype(%s);'
-    type_values = (product_id,)
-
     try:
         # check if the user is a seller
-        seller_check(" to update a product")
+        seller_id = seller_check(" to update a product")
+
+        type_statement = 'select gettype(%s, %s);'
+        type_values = (product_id, seller_id)
 
         # check if the product exists and get its type
         cur.execute(type_statement, type_values)
