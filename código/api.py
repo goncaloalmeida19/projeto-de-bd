@@ -697,8 +697,6 @@ def buy_products():
             cur.execute(product_version_statement, product_version_values)
             rows = cur.fetchall()
 
-            print(rows)
-
             if len(rows) == 0:
                 raise ProductNotFound(product_id)
 
