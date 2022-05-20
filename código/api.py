@@ -82,9 +82,14 @@ class NoCampaignsFound(Exception):
         super(NoCampaignsFound, self).__init__(message)
 
 
-class CouponNotFound(Exception):
-    def __init__(self, c_id, message='No Coupon found or user has not subscribed to the coupon with id: '):
-        super(CouponNotFound, self).__init__(message + str(c_id))
+class UserAlreadySubscribed(Exception):
+    def __init__(self, campaign_id, message="User has already subscribed the campaign with id "):
+        super(UserAlreadySubscribed, self).__init__(message + str(campaign_id))
+
+
+class CouponNotSubscribed(Exception):
+    def __init__(self, c_id, message='User has not subscribed to the coupon with id: '):
+        super(CouponNotSubscribed, self).__init__(message + str(c_id))
 
 
 class CouponAlreadyUsed(Exception):
@@ -456,7 +461,6 @@ def add_product():
         product_id = rows[0][0] + 1 if rows[0][0] is not None else 1
 
         version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        print(version)
 
         product_statement = 'insert into products values (%s, %s, %s, %s, %s, %s, %s);'
         product_values = (
@@ -671,7 +675,7 @@ def buy_products():
             rows = cur.fetchall()
 
             if len(rows) == 0:
-                raise CouponNotFound(coupon_id)
+                raise CouponNotSubscribed(coupon_id)
 
             if rows[0][3]:
                 raise CouponAlreadyUsed(coupon_id)
@@ -721,14 +725,15 @@ def buy_products():
         cur.execute(order_price_update_statement, order_price_update_values)
 
         # Update coupon info
-        coupon_statement = 'update coupons set used = true, discount_applied = %s * (%s / 100) where coupon_id = %s;'
-        coupon_values = (total_price, discount, coupon_id,)
-        cur.execute(coupon_statement, coupon_values)
+        if coupon_id != -1:
+            coupon_statement = 'update coupons set used = true, discount_applied = %s * (%s / 100) where coupon_id = %s;'
+            coupon_values = (total_price, discount, coupon_id,)
+            cur.execute(coupon_statement, coupon_values)
 
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
         conn.commit()
 
-    except (TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable, CouponNotFound,
+    except (TokenError, InsufficientPrivilegesException, ProductNotFound, ProductWithoutStockAvailable, CouponNotSubscribed,
             CouponExpired) as error:
         logger.error(f'POST /dbproj/order - error: {error}')
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
@@ -1155,6 +1160,8 @@ def subscribe_campaign(campaign_id):
                           'where campaign_id = %s and %s between date_start and date_end and coupons > 0;'
     subscribe_values = (campaign_id, time_now)
 
+    user_already_subscribed_statement = 'select exists(select 1 from coupons where buyers_users_user_id = %s and campaigns_campaign_id = %s)'
+
     gen_coupon_statement = 'select coalesce(max(coupon_id) + 1, 1) from coupons;'
 
     insert_coupon_statement = f'insert into coupons (coupon_id, used, discount_applied, expiration_date, campaigns_campaign_id, buyers_users_user_id) values (%s,%s,%s,%s,%s,%s);'
@@ -1163,10 +1170,17 @@ def subscribe_campaign(campaign_id):
         # check if the user is a buyer
         user_id = buyer_check(" to subscribe to coupon campaign")
 
+
         # check if the campaign is valid and if it is, decrement by one the coupon count
         cur.execute(subscribe_statement, subscribe_values)
         if cur.rowcount == 0:
             raise CampaignExpiredOrNotFound
+
+        # check if the user has already subscribed to this campaign
+        user_already_subscribed_values = (user_id, campaign_id)
+        cur.execute(user_already_subscribed_statement, user_already_subscribed_values)
+        if cur.fetchall()[0][0]:
+            raise UserAlreadySubscribed(campaign_id)
 
         # get the id of the new coupon
         cur.execute(gen_coupon_statement)
@@ -1181,7 +1195,7 @@ def subscribe_campaign(campaign_id):
 
         conn.commit()
 
-    except (TokenError, InsufficientPrivilegesException, CampaignExpiredOrNotFound) as error:
+    except (TokenError, InsufficientPrivilegesException, CampaignExpiredOrNotFound, UserAlreadySubscribed) as error:
         logger.error(error)
         response = {'status': StatusCodes['bad_request'], 'errors': str(error)}
         conn.rollback()
