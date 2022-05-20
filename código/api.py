@@ -720,9 +720,10 @@ def buy_products():
         cur.execute(order_price_update_statement, order_price_update_values)
 
         # Update coupon info
-        coupon_statement = 'update coupons set used = true, discount_applied = %s * (%s / 100) where coupon_id = %s;'
-        coupon_values = (total_price, discount, coupon_id,)
-        cur.execute(coupon_statement, coupon_values)
+        if coupon_id != -1:
+            coupon_statement = 'update coupons set used = true, discount_applied = %s * (%s / 100) where coupon_id = %s;'
+            coupon_values = (total_price, discount, coupon_id,)
+            cur.execute(coupon_statement, coupon_values)
 
         response = {'status': StatusCodes['success'], 'results': f'{order_id}'}
         conn.commit()
