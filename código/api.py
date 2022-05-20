@@ -45,7 +45,7 @@ class InsufficientPrivilegesException(Exception):
 
 class ProductNotFound(Exception):
     def __init__(self, p_id, message='No product found with id: '):
-        super(ProductNotFound, self).__init__(message + p_id)
+        super(ProductNotFound, self).__init__(message + str(p_id))
 
 
 class ProductWithoutStockAvailable(Exception):
