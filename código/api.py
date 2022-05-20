@@ -523,19 +523,23 @@ def update_product(product_id):
 
     # logger.debug(f'PUT /dbproj/product/<product_id> - payload: {payload}')
 
+    # get current time for the new version of the product
     version = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     type_statement = 'select gettype(%s);'
     type_values = (product_id,)
 
     try:
+        # check if the user is a seller
         seller_check(" to update a product")
 
+        # check if the product exists and get its type
         cur.execute(type_statement, type_values)
         product_type = cur.fetchall()[0][0]
         if product_type == 'invalid':
             raise ProductNotFound(product_id)
 
+        # verify the payload
         for i in payload:
             if i not in columns_names['products'] and i not in columns_names[product_type]:
                 response = {'status': StatusCodes['bad_request'], 'results': f'{i} is not a valid attribute'}
@@ -543,14 +547,8 @@ def update_product(product_id):
                     conn.close()
                 return flask.jsonify(response)
 
+        # get a list of the unchanged attributes of the product
         non_changed = list(set(columns_names[product_type] + columns_names['products']) - set(payload.keys()))
-
-        '''
-        non_changed_items_statement = f'select {",".join(non_changed)} from products,{product_type} ' \
-                                      'where product_id = %s ' \
-                                      'and version =(select max(version) from products where product_id = %s) ' \
-                                      'and products_product_id = product_id and version = products_version'
-        '''
 
         # get the data of the old version of the product
         non_changed_items_statement = psycopg2.sql.SQL(
@@ -566,7 +564,7 @@ def update_product(product_id):
         cur.execute(non_changed_items_statement, non_changed_items_values)
         results = cur.fetchall()[0]
 
-        # change the data, creating a new version
+        # change the data, creating a new version of the product
         new_data_products = tuple([payload[i] if i in list(payload.keys())
                                    else version if i == 'version' else results[non_changed.index(i)]
                                    for i in columns_names['products']])
@@ -1131,15 +1129,18 @@ def add_campaign():
     try:
         admin_id = admin_check(" to create a campaign")
 
+        # ensure that the new campaign isn't running at the same time as any other
         cur.execute(verify_dates_statement, verify_dates_values)
         if cur.fetchall()[0][0]:
             raise AlreadyInCampaign
 
+        # get the id of the new campaign
         cur.execute(campaign_id_statement)
         campaign_id = cur.fetchone()[0]
 
         campaign_values = tuple([campaign_id] + list(payload.values()) + [admin_id])
 
+        # insert the new campaign into the campaigns table
         cur.execute(campaign_statement, campaign_values)
 
         # commit the transaction
@@ -1177,13 +1178,13 @@ def subscribe_campaign(campaign_id):
     conn = db_connection()
     cur = conn.cursor()
 
+    # the generated coupon will expire in 30 days
     time_now = datetime.now()
     expiration_date = time_now + timedelta(days=30)
 
     time_now = time_now.strftime("%Y-%m-%d %H:%M:%S")
     expiration_date = expiration_date.strftime("%Y-%m-%d %H:%M:%S")
 
-    # campaign_expired_statement = 'select exists(select 1 from campaigns )'
 
     subscribe_statement = 'update campaigns set coupons = coupons - 1 ' \
                           'where campaign_id = %s and %s between date_start and date_end and coupons > 0;'
@@ -1194,15 +1195,19 @@ def subscribe_campaign(campaign_id):
     insert_coupon_statement = f'insert into coupons (coupon_id, used, discount_applied, expiration_date, campaigns_campaign_id, buyers_users_user_id) values (%s,%s,%s,%s,%s,%s);'
 
     try:
+        # check if the user is a buyer
         user_id = buyer_check(" to subscribe to coupon campaign")
 
+        # check if the campaign is valid and if it is, decrement by one the coupon count
         cur.execute(subscribe_statement, subscribe_values)
         if cur.rowcount == 0:
             raise CampaignExpiredOrNotFound
 
+        # get the id of the new coupon
         cur.execute(gen_coupon_statement)
         coupon_id = cur.fetchall()[0][0]
 
+        # insert the new coupon into the coupons table
         insert_coupon_values = (coupon_id, 'false', 0, expiration_date, campaign_id, user_id)
         cur.execute(insert_coupon_statement, insert_coupon_values)
 
@@ -1251,6 +1256,7 @@ def get_campaign_stats():
     try:
         user_check(" to obtain campaign stats")
 
+        # get the stats of the campaigns, if at least one exists
         cur.execute(stats_statement)
         rows = cur.fetchall()
         if not rows:
@@ -1262,7 +1268,7 @@ def get_campaign_stats():
             # logger.debug(row)
             content = {'campaign_id': int(row[0]), 'generated_coupons': int(row[1]),
                        'used_coupons': int(row[2]), 'total_discount_value': float(row[3])}
-            results.append(content)  # appending to the payload to be returned
+            results.append(content)  # append the stats of each campaign to the results
 
         response = {'status': StatusCodes['success'], 'results': results}
 
