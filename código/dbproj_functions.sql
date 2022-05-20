@@ -1,4 +1,6 @@
-create or replace function gettype(input_prod_id int, seller_id int) returns varchar
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+create or replace function gettype(product_id int) returns varchar
     language plpgsql
 as
 $$

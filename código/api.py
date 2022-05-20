@@ -322,7 +322,7 @@ def register_user():
             type_values.append(payload['nif'])
             type_values.append(payload['shipping_addr'])
 
-        statement = f'insert into users values(%s, %s, %s, %s);'
+        statement = f"insert into users values(%s, %s, crypt(%s, gen_salt('bf')), %s);"
 
         type_statement = psycopg2.sql.SQL('insert into {user_type} '
                                           'values(' + '%s, ' * (len(type_values) - 1) + ' %s);'
@@ -373,7 +373,7 @@ def login_user():
         response = {'status': StatusCodes['bad_request'], 'errors': 'username and password are required for login'}
         return flask.jsonify(response)
 
-    statement = 'select user_id, username from users where username = %s and password = %s;'
+    statement = 'select user_id, username from users where username = %s and password = crypt(%s, password);'
     values = (payload['username'], payload['password'])
 
     try:
